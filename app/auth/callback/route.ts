@@ -51,6 +51,49 @@ export async function GET(request: NextRequest) {
         if (error) {
             console.error('Code exchange error:', error)
             response = NextResponse.redirect(new URL('/login?error=auth_code_error', origin))
+            return response
+        }
+
+        // Get user and check role for redirect
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (user) {
+            // Check if user exists in users table
+            let { data: userProfile } = await supabase
+                .from('users')
+                .select('role')
+                .eq('id', user.id)
+                .single()
+
+            // If user doesn't exist in users table, create them with default 'user' role
+            if (!userProfile) {
+                const { data: newUser, error: insertError } = await supabase
+                    .from('users')
+                    .insert({
+                        id: user.id,
+                        email: user.email,
+                        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                        avatar_url: user.user_metadata?.avatar_url || null,
+                        role: 'user'
+                    })
+                    .select('role')
+                    .single()
+
+                if (insertError) {
+                    console.error('Error creating user profile:', insertError)
+                }
+                userProfile = newUser
+            }
+
+            // Redirect based on role
+            const redirectPath = userProfile?.role === 'admin' ? '/admin' : '/dashboard'
+            response = NextResponse.redirect(new URL(redirectPath, origin))
+
+            // Re-set cookies on the new response
+            const cookieStore = request.cookies.getAll()
+            cookieStore.forEach(cookie => {
+                response.cookies.set(cookie.name, cookie.value)
+            })
         }
 
         return response

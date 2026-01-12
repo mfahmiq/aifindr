@@ -33,6 +33,7 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
+    // Protect /admin - must be logged in AND be admin
     if (request.nextUrl.pathname.startsWith('/admin')) {
         // 1. Must be logged in
         if (!user) {
@@ -54,9 +55,19 @@ export async function updateSession(request: NextRequest) {
         console.log("Middleware: Role fetch result:", { userProfile, error })
 
         if (userProfile?.role !== 'admin') {
-            console.log("Middleware: User is not admin, redirecting to home. Role:", userProfile?.role)
+            console.log("Middleware: User is not admin, redirecting to dashboard. Role:", userProfile?.role)
             const url = request.nextUrl.clone()
-            url.pathname = '/'
+            url.pathname = '/dashboard'
+            return NextResponse.redirect(url)
+        }
+    }
+
+    // Protect /dashboard - must be logged in (any role)
+    if (request.nextUrl.pathname.startsWith('/dashboard')) {
+        if (!user) {
+            console.log("Middleware: No user found for dashboard, redirecting to login")
+            const url = request.nextUrl.clone()
+            url.pathname = '/login'
             return NextResponse.redirect(url)
         }
     }

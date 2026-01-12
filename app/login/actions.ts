@@ -43,8 +43,28 @@ export async function login(formData: FormData) {
         return { error: error.message }
     }
 
+    // Get user info to check role
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (user) {
+        const { data: userProfile } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+        revalidatePath('/', 'layout')
+
+        // Redirect based on role
+        if (userProfile?.role === 'admin') {
+            redirect('/admin')
+        } else {
+            redirect('/dashboard')
+        }
+    }
+
     revalidatePath('/', 'layout')
-    redirect('/admin')
+    redirect('/dashboard')
 }
 
 export async function signup(formData: FormData) {

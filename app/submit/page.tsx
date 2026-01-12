@@ -43,7 +43,9 @@ interface Category {
     slug: string
 }
 
-export default function SubmitToolPage() {
+import { Suspense } from 'react'
+
+const SubmitToolContent = () => {
     const searchParams = useSearchParams()
     const router = useRouter()
     const initialPlan = searchParams.get('plan') || 'free'
@@ -630,5 +632,17 @@ export default function SubmitToolPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function SubmitToolPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        }>
+            <SubmitToolContent />
+        </Suspense>
     )
 }

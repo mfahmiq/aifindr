@@ -1,0 +1,131 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import { verifySignature, getTransactionStatus } from '@/lib/midtrans'
+
+// Use service role client since this is a webhook
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json()
+
+        const {
+            order_id,
+            transaction_status,
+            fraud_status,
+            status_code,
+            gross_amount,
+            signature_key,
+            payment_type,
+            transaction_id
+        } = body
+
+        console.log('Midtrans webhook received:', { order_id, transaction_status, fraud_status })
+
+        // Verify signature (optional but recommended for production)
+        if (process.env.MIDTRANS_IS_PRODUCTION === 'true') {
+            const isValid = verifySignature(order_id, status_code, gross_amount, signature_key)
+            if (!isValid) {
+                console.error('Invalid signature for order:', order_id)
+                return NextResponse.json({ error: 'Invalid signature' }, { status: 403 })
+            }
+        }
+
+        // Determine payment status
+        let paymentStatus: 'pending' | 'success' | 'failed' | 'expired' | 'cancelled' = 'pending'
+
+        if (transaction_status === 'capture') {
+            paymentStatus = fraud_status === 'accept' ? 'success' : 'pending'
+        } else if (transaction_status === 'settlement') {
+            paymentStatus = 'success'
+        } else if (['cancel', 'deny'].includes(transaction_status)) {
+            paymentStatus = 'cancelled'
+        } else if (transaction_status === 'expire') {
+            paymentStatus = 'expired'
+        } else if (transaction_status === 'failure') {
+            paymentStatus = 'failed'
+        }
+
+        // Update payment record
+        const { data: payment, error: updateError } = await supabase
+            .from('payments')
+            .update({
+                status: paymentStatus,
+                payment_type,
+                midtrans_transaction_id: transaction_id,
+                midtrans_response: body,
+                updated_at: new Date().toISOString()
+            })
+            .eq('order_id', order_id)
+            .select('user_id, plan')
+            .single()
+
+        if (updateError) {
+            console.error('Error updating payment:', updateError)
+        }
+
+        // If payment successful, activate subscription
+        if (paymentStatus === 'success' && payment) {
+            const startsAt = new Date()
+            const endsAt = new Date()
+            endsAt.setMonth(endsAt.getMonth() + 1) // 1 month subscription
+
+            // Check for existing active subscription
+            const { data: existingSub } = await supabase
+                .from('subscriptions')
+                .select('id')
+                .eq('user_id', payment.user_id)
+                .eq('status', 'active')
+                .single()
+
+            if (existingSub) {
+                // Update existing subscription
+                await supabase
+                    .from('subscriptions')
+                    .update({
+                        plan: payment.plan,
+                        amount: parseFloat(gross_amount),
+                        status: 'active',
+                        starts_at: startsAt.toISOString(),
+                        ends_at: endsAt.toISOString(),
+                        payment_id: order_id,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', existingSub.id)
+            } else {
+                // Create new subscription
+                await supabase
+                    .from('subscriptions')
+                    .insert({
+                        user_id: payment.user_id,
+                        plan: payment.plan,
+                        amount: parseFloat(gross_amount),
+                        currency: 'IDR',
+                        status: 'active',
+                        starts_at: startsAt.toISOString(),
+                        ends_at: endsAt.toISOString(),
+                        payment_id: order_id,
+                        auto_renew: false
+                    })
+            }
+
+            console.log(`Subscription activated for user ${payment.user_id}, plan: ${payment.plan}`)
+        }
+
+        return NextResponse.json({ status: 'ok' })
+    } catch (error: any) {
+        console.error('Webhook processing error:', error)
+        return NextResponse.json(
+            { error: error.message || 'Webhook processing failed' },
+            { status: 500 }
+        )
+    }
+}
+
+// Allow GET for webhook verification
+export async function GET() {
+    return NextResponse.json({ status: 'ok', message: 'Midtrans webhook endpoint' })
+}

@@ -1,0 +1,88 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import {
+    Package,
+    Plus,
+    Eye,
+    ArrowUpRight,
+    Settings,
+    Loader2,
+    BarChart3,
+    TrendingUp,
+    MousePointer
+} from "lucide-react"
+import { motion } from "framer-motion"
+
+export default function DashboardAnalyticsPage() {
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex flex-col gap-6">
+            {/* Header */}
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+                <p className="text-muted-foreground">View detailed statistics for all your tools</p>
+            </div>
+
+            {/* Analytics Coming Soon */}
+            <Card className="border-2">
+                <CardContent className="py-20 text-center">
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-6">
+                        <BarChart3 className="w-10 h-10 text-blue-500" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">Analytics Dashboard</h3>
+                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                        Detailed analytics with views, clicks, referrers, and conversion tracking will be available here.
+                    </p>
+
+                    {/* Preview Stats */}
+                    <div className="grid gap-4 md:grid-cols-3 max-w-2xl mx-auto mb-6">
+                        {[
+                            { title: 'Total Views', value: '0', icon: Eye, trend: '+0%' },
+                            { title: 'Total Clicks', value: '0', icon: MousePointer, trend: '+0%' },
+                            { title: 'Conversion Rate', value: '0%', icon: TrendingUp, trend: '+0%' },
+                        ].map((stat) => (
+                            <div key={stat.title} className="p-4 rounded-xl bg-muted/50">
+                                <stat.icon className="w-5 h-5 text-muted-foreground mb-2" />
+                                <div className="text-2xl font-bold">{stat.value}</div>
+                                <div className="text-sm text-muted-foreground">{stat.title}</div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <p className="text-sm text-muted-foreground mb-4">
+                        Upgrade to Pro to unlock detailed analytics
+                    </p>
+                    <Link href="/pricing">
+                        <Button>
+                            Upgrade to Pro
+                            <ArrowUpRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    </Link>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}

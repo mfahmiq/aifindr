@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: Promise<{ slug: string }> }
 ) {
-    const slug = params.slug
+    const { slug } = await params
     const supabase = await createClient()
 
     // 1. Get tool ID

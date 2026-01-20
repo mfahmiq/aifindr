@@ -22,69 +22,122 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 
-import { PlusCircle, Edit, Trash2, FolderOpen, ChevronRight } from "lucide-react"
-import { useState } from "react"
-
-// Mock category data with counts
-const mockCategories = [
-    { id: '1', name: 'Chat', slug: 'chat', toolCount: 3, icon: '💬', color: 'blue' },
-    { id: '2', name: 'Image', slug: 'image', toolCount: 3, icon: '🎨', color: 'purple' },
-    { id: '3', name: 'Video', slug: 'video', toolCount: 1, icon: '🎬', color: 'red' },
-    { id: '4', name: 'Coding', slug: 'coding', toolCount: 1, icon: '💻', color: 'green' },
-    { id: '5', name: 'Productivity', slug: 'productivity', toolCount: 1, icon: '📊', color: 'orange' },
-    { id: '6', name: 'Audio', slug: 'audio', toolCount: 0, icon: '🎵', color: 'pink' },
-    { id: '7', name: 'Writing', slug: 'writing', toolCount: 0, icon: '✍️', color: 'yellow' },
-]
+import { PlusCircle, Edit, Trash2, FolderOpen, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import { categoriesService, CategoryWithCount } from "@/lib/services/categoriesService"
 
 export default function AdminCategoriesPage() {
-    const [categoriesList, setCategoriesList] = useState(mockCategories)
+    const [categoriesList, setCategoriesList] = useState<CategoryWithCount[]>([])
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [editingCategory, setEditingCategory] = useState<typeof mockCategories[0] | null>(null)
+    const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null)
 
     const [formData, setFormData] = useState({
         name: '',
         slug: '',
         icon: '',
+        color: 'blue',
+        description: '',
     })
+
+    // Fetch categories on mount
+    useEffect(() => {
+        fetchCategories()
+    }, [])
+
+    const fetchCategories = async () => {
+        try {
+            setLoading(true)
+            const data = await categoriesService.getCategoriesWithToolCount()
+            setCategoriesList(data)
+        } catch (error) {
+            console.error('Error fetching categories:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const openCreateDialog = () => {
         setEditingCategory(null)
-        setFormData({ name: '', slug: '', icon: '' })
+        setFormData({ name: '', slug: '', icon: '', color: 'blue', description: '' })
         setIsDialogOpen(true)
     }
 
-    const openEditDialog = (category: typeof mockCategories[0]) => {
+    const openEditDialog = (category: CategoryWithCount) => {
         setEditingCategory(category)
         setFormData({
             name: category.name,
             slug: category.slug,
-            icon: category.icon,
+            icon: category.icon || '',
+            color: category.color || 'blue',
+            description: category.description || '',
         })
         setIsDialogOpen(true)
     }
 
-    const handleSave = () => {
-        if (editingCategory) {
-            alert(`Category "${formData.name}" updated!`)
-        } else {
-            alert(`Category "${formData.name}" created!`)
+    const handleSave = async () => {
+        if (!formData.name || !formData.slug) {
+            alert('Name and slug are required')
+            return
         }
-        setIsDialogOpen(false)
+
+        try {
+            setSaving(true)
+            if (editingCategory) {
+                await categoriesService.updateCategory(editingCategory.id, {
+                    name: formData.name,
+                    slug: formData.slug,
+                    icon: formData.icon || '📁',
+                    color: formData.color,
+                    description: formData.description || undefined,
+                })
+            } else {
+                await categoriesService.createCategory({
+                    name: formData.name,
+                    slug: formData.slug,
+                    icon: formData.icon || '📁',
+                    color: formData.color,
+                    description: formData.description || undefined,
+                })
+            }
+            setIsDialogOpen(false)
+            await fetchCategories()
+        } catch (error: any) {
+            console.error('Error saving category:', error)
+            alert(error.message || 'Failed to save category')
+        } finally {
+            setSaving(false)
+        }
     }
 
-    const handleDelete = (categoryId: string) => {
+    const handleDelete = async (categoryId: string) => {
         const category = categoriesList.find(c => c.id === categoryId)
-        if (category && category.toolCount > 0) {
-            alert(`Cannot delete "${category.name}" - it has ${category.toolCount} tools assigned.`)
+        if (category && category.tool_count > 0) {
+            alert(`Cannot delete "${category.name}" - it has ${category.tool_count} tools assigned.`)
             return
         }
         if (confirm('Are you sure you want to delete this category?')) {
-            setCategoriesList(categoriesList.filter(c => c.id !== categoryId))
+            try {
+                await categoriesService.deleteCategory(categoryId)
+                await fetchCategories()
+            } catch (error: any) {
+                console.error('Error deleting category:', error)
+                alert(error.message || 'Failed to delete category')
+            }
         }
     }
 
     const generateSlug = (name: string) => {
         return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    }
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
     }
 
     return (
@@ -112,7 +165,7 @@ export default function AdminCategoriesPage() {
                 <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/20">
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold text-green-600">
-                            {categoriesList.reduce((sum, c) => sum + c.toolCount, 0)}
+                            {categoriesList.reduce((sum, c) => sum + c.tool_count, 0)}
                         </div>
                         <div className="text-sm text-muted-foreground">Total Tools</div>
                     </CardContent>
@@ -120,7 +173,7 @@ export default function AdminCategoriesPage() {
                 <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/20">
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold text-purple-600">
-                            {categoriesList.filter(c => c.toolCount > 0).length}
+                            {categoriesList.filter(c => c.tool_count > 0).length}
                         </div>
                         <div className="text-sm text-muted-foreground">Active Categories</div>
                     </CardContent>
@@ -128,7 +181,7 @@ export default function AdminCategoriesPage() {
                 <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-2 border-orange-500/20">
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold text-orange-600">
-                            {categoriesList.filter(c => c.toolCount === 0).length}
+                            {categoriesList.filter(c => c.tool_count === 0).length}
                         </div>
                         <div className="text-sm text-muted-foreground">Empty Categories</div>
                     </CardContent>
@@ -142,13 +195,13 @@ export default function AdminCategoriesPage() {
                         <CardContent className="p-4">
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="text-3xl">{category.icon}</div>
+                                    <div className="text-3xl">{category.icon || '📁'}</div>
                                     <div>
                                         <h3 className="font-semibold">{category.name}</h3>
                                         <p className="text-sm text-muted-foreground">/{category.slug}</p>
                                     </div>
                                 </div>
-                                <Badge variant="secondary">{category.toolCount} tools</Badge>
+                                <Badge variant="secondary">{category.tool_count} tools</Badge>
                             </div>
                             <div className="flex gap-2 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Button size="sm" variant="outline" onClick={() => openEditDialog(category)}>
@@ -160,7 +213,7 @@ export default function AdminCategoriesPage() {
                                     variant="outline"
                                     className="text-destructive"
                                     onClick={() => handleDelete(category.id)}
-                                    disabled={category.toolCount > 0}
+                                    disabled={category.tool_count > 0}
                                 >
                                     <Trash2 className="w-3 h-3 mr-1" />
                                     Delete
@@ -221,10 +274,19 @@ export default function AdminCategoriesPage() {
                                 placeholder="url-friendly-slug"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <Label>Description (optional)</Label>
+                            <Input
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="Short description"
+                            />
+                        </div>
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSave}>
+                        <Button onClick={handleSave} disabled={saving}>
+                            {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                             {editingCategory ? 'Update Category' : 'Create Category'}
                         </Button>
                     </DialogFooter>

@@ -26,6 +26,26 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
     DollarSign,
     TrendingUp,
     Users,
@@ -33,8 +53,9 @@ import {
     Loader2,
     Crown,
     Sparkles,
-    ArrowUpRight,
-    ArrowDownRight
+    MoreHorizontal,
+    Pencil,
+    CheckCircle2
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { subscriptionService, PLAN_PRICING } from "@/lib/services/subscriptionService"
@@ -50,6 +71,20 @@ export default function AdminSubscriptionsPage() {
         mrr: 0,
         arr: 0
     })
+
+    // Management State
+    const [selectedSub, setSelectedSub] = useState<SubscriptionWithUser | null>(null)
+    const [isManageOpen, setIsManageOpen] = useState(false)
+    const [manageForm, setManageForm] = useState({
+        plan: '',
+        status: '',
+        notes: '',
+        fulfillment: {
+            social_mention: false,
+            newsletter_feature: false
+        }
+    })
+    const [saving, setSaving] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,6 +105,69 @@ export default function AdminSubscriptionsPage() {
         }
         fetchData()
     }, [filter])
+
+    const handleManageClick = (sub: SubscriptionWithUser) => {
+        setSelectedSub(sub)
+        const meta = sub.metadata as any || {}
+        setManageForm({
+            plan: sub.plan,
+            status: sub.status,
+            notes: meta.admin_notes || '',
+            fulfillment: {
+                social_mention: meta.fulfillment_social_mention || false,
+                newsletter_feature: meta.fulfillment_newsletter_feature || false
+            }
+        })
+        setIsManageOpen(true)
+    }
+
+    const handleSaveManagement = async () => {
+        if (!selectedSub) return
+        setSaving(true)
+        try {
+            // Update main fields
+            if (manageForm.plan !== selectedSub.plan || manageForm.status !== selectedSub.status) {
+                await subscriptionService.updateSubscription(selectedSub.id, {
+                    plan: manageForm.plan as any,
+                    status: manageForm.status as any
+                })
+            }
+
+            // Update metadata
+            await subscriptionService.updateSubscriptionMetadata(selectedSub.id, {
+                admin_notes: manageForm.notes,
+                fulfillment_social_mention: manageForm.fulfillment.social_mention,
+                fulfillment_newsletter_feature: manageForm.fulfillment.newsletter_feature,
+                last_updated_by: 'admin' // In real app, put admin ID here
+            })
+
+            // Refresh local state (optimistic or re-fetch)
+            setSubscriptions(prev => prev.map(s => {
+                if (s.id === selectedSub.id) {
+                    return {
+                        ...s,
+                        plan: manageForm.plan as any,
+                        status: manageForm.status as any,
+                        metadata: {
+                            ...(s.metadata as object),
+                            admin_notes: manageForm.notes,
+                            fulfillment_social_mention: manageForm.fulfillment.social_mention,
+                            fulfillment_newsletter_feature: manageForm.fulfillment.newsletter_feature
+                        }
+                    }
+                }
+                return s
+            }))
+
+            setIsManageOpen(false)
+            alert("Subscription updated successfully") // Replace with toast
+        } catch (error) {
+            console.error('Error updating subscription:', error)
+            alert("Failed to update subscription")
+        } finally {
+            setSaving(false)
+        }
+    }
 
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('id-ID', {
@@ -232,7 +330,7 @@ export default function AdminSubscriptionsPage() {
                                     <TableHead>Status</TableHead>
                                     <TableHead>Amount</TableHead>
                                     <TableHead>Started</TableHead>
-                                    <TableHead>Expires</TableHead>
+                                    <TableHead>Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -241,7 +339,7 @@ export default function AdminSubscriptionsPage() {
                                         <TableCell>
                                             <div>
                                                 <p className="font-medium">{sub.users?.name || 'Unknown'}</p>
-                                                <p className="text-sm text-muted-foreground">{sub.users?.email}</p>
+                                                <p className="text-sm text-muted-foreground text-xs">{sub.users?.email}</p>
                                             </div>
                                         </TableCell>
                                         <TableCell>
@@ -259,7 +357,25 @@ export default function AdminSubscriptionsPage() {
                                             {sub.starts_at ? new Date(sub.starts_at).toLocaleDateString() : '-'}
                                         </TableCell>
                                         <TableCell>
-                                            {sub.ends_at ? new Date(sub.ends_at).toLocaleDateString() : 'Never'}
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <span className="sr-only">Open menu</span>
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                    <DropdownMenuItem onClick={() => navigator.clipboard.writeText(sub.id)}>
+                                                        Copy ID
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem onClick={() => handleManageClick(sub)}>
+                                                        <Pencil className="mr-2 h-4 w-4" />
+                                                        Manage Subscription
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -268,6 +384,103 @@ export default function AdminSubscriptionsPage() {
                     )}
                 </CardContent>
             </Card>
+
+            {/* Management Dialog */}
+            <Dialog open={isManageOpen} onOpenChange={setIsManageOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Manage Subscription</DialogTitle>
+                        <DialogDescription>
+                            Update plan details or track fulfillment for {selectedSub?.users?.name}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>Plan</Label>
+                                <Select
+                                    value={manageForm.plan}
+                                    onValueChange={(v) => setManageForm({ ...manageForm, plan: v })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="free">Free</SelectItem>
+                                        <SelectItem value="pro">Pro</SelectItem>
+                                        <SelectItem value="featured">Featured</SelectItem>
+                                        <SelectItem value="sponsor">Sponsor</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Status</Label>
+                                <Select
+                                    value={manageForm.status}
+                                    onValueChange={(v) => setManageForm({ ...manageForm, status: v })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="active">Active</SelectItem>
+                                        <SelectItem value="pending">Pending</SelectItem>
+                                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                                        <SelectItem value="expired">Expired</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        {manageForm.plan === 'sponsor' && (
+                            <div className="space-y-3 border p-3 rounded-md bg-muted/30">
+                                <Label className="text-yellow-600 font-semibold flex items-center">
+                                    <Crown className="w-3 h-3 mr-1" />
+                                    Sponsor Benefits
+                                </Label>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="social_mention"
+                                        checked={manageForm.fulfillment.social_mention}
+                                        onCheckedChange={(c) => setManageForm({
+                                            ...manageForm,
+                                            fulfillment: { ...manageForm.fulfillment, social_mention: !!c }
+                                        })}
+                                    />
+                                    <Label htmlFor="social_mention">Social Media Mention</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="newsletter"
+                                        checked={manageForm.fulfillment.newsletter_feature}
+                                        onCheckedChange={(c) => setManageForm({
+                                            ...manageForm,
+                                            fulfillment: { ...manageForm.fulfillment, newsletter_feature: !!c }
+                                        })}
+                                    />
+                                    <Label htmlFor="newsletter">Newsletter Feature</Label>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="space-y-2">
+                            <Label>Admin Notes</Label>
+                            <Textarea
+                                placeholder="Internal notes about this subscription..."
+                                value={manageForm.notes}
+                                onChange={(e) => setManageForm({ ...manageForm, notes: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsManageOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSaveManagement} disabled={saving}>
+                            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Save Changes
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

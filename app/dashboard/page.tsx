@@ -104,7 +104,7 @@ export default function DashboardPage() {
                 // Calculate real stats from tools
                 const totalViews = ownedTools?.reduce((sum, tool) => sum + (tool.view_count || 0), 0) || 0
                 const totalFavorites = ownedTools?.reduce((sum, tool) => sum + (tool.favorite_count || 0), 0) || 0
-                const totalClicks = 0 // Tool clicks tracked separately
+                const totalClicks = ownedTools?.reduce((sum, tool) => sum + ((tool as any).click_count || 0), 0) || 0
                 const avgRating = ownedTools?.length
                     ? ownedTools.reduce((sum, tool) => sum + (tool.rating || 0), 0) / ownedTools.length
                     : 0
@@ -373,7 +373,7 @@ export default function DashboardPage() {
                                         <div className="flex items-center gap-4">
                                             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
                                                 {tool.logo_url ? (
-                                                    <img src={tool.logo_url} alt={tool.name} className="w-8 h-8 rounded" />
+                                                    <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-8 h-8 rounded" />
                                                 ) : (
                                                     <Package className="w-6 h-6 text-primary" />
                                                 )}
@@ -472,7 +472,7 @@ export default function DashboardPage() {
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
                                                     {submission.logo_url ? (
-                                                        <img src={submission.logo_url} alt={submission.name} className="w-6 h-6 rounded" />
+                                                        <img src={submission.logo_url} alt={submission.name} referrerPolicy="no-referrer" className="w-6 h-6 rounded" />
                                                     ) : (
                                                         <Package className="w-5 h-5 text-blue-500" />
                                                     )}

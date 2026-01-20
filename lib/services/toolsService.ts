@@ -29,7 +29,7 @@ export const toolsService = {
         tool_tags (
           tags (name, slug)
         )
-      `)
+      `, { count: 'exact' })
 
         // Default to approved unless specific status requested
         if (filters?.status && filters.status !== 'all') {
@@ -77,6 +77,9 @@ export const toolsService = {
         if (filters?.features?.isVerified) query = query.eq('is_verified', true)
 
         // Sorting
+        // Always prioritize Sponsor/Featured tools (is_priority)
+        query = query.order('is_priority', { ascending: false })
+
         switch (filters?.sortBy) {
             case 'rating':
                 query = query.order('rating', { ascending: false })
@@ -156,21 +159,52 @@ export const toolsService = {
         return data as ToolWithRelations[]
     },
 
-    async getRelatedTools(categoryId: string, currentToolId: string, limit = 3) {
+    async getRelatedTools(categoryId: string, currentToolId: string, currentToolTagIds: string[] = [], limit = 3) {
         const supabase = createClient()
+        // Fetch candidates from same category, fetch tool_tags to compare
         const { data, error } = await supabase
             .from('tools')
             .select(`
-        *,
-        categories (name, slug, icon)
-      `)
+                *,
+                categories (name, slug, icon),
+                tool_tags (tag_id)
+            `)
             .eq('status', 'approved')
             .eq('category_id', categoryId)
             .neq('id', currentToolId)
-            .limit(limit)
+            .order('view_count', { ascending: false }) // Initial ordering by popularity
+            .limit(20) // Get pool of candidates
 
         if (error) throw error
-        return data as ToolWithRelations[]
+
+        if (!data || data.length === 0) return []
+
+        // If no tags to compare, just return top by popularity (limit)
+        if (currentToolTagIds.length === 0) {
+            return data.slice(0, limit) as ToolWithRelations[]
+        }
+
+        // Calculate relevance score
+        const scoredTools = data.map((tool: any) => {
+            let score = 0
+            // Base score for same category (already filtered)
+
+            // Tag overlap score
+            const toolTagIds = tool.tool_tags?.map((t: any) => t.tag_id) || []
+            const intersection = toolTagIds.filter((id: string) => currentToolTagIds.includes(id))
+            score += intersection.length * 5 // Weight for each matching tag
+
+            // Add popularity weight (logarithmic to prevent view count dominance)
+            score += Math.log10(tool.view_count || 1)
+
+            return { tool, score }
+        })
+
+        // Sort by score descending
+        scoredTools.sort((a, b) => b.score - a.score)
+
+        // Return top tools
+        return scoredTools.slice(0, limit).map(item => item.tool) as ToolWithRelations[]
     },
 
     async updateTool(id: string, updates: Partial<Tool>, client?: SupabaseClient) {

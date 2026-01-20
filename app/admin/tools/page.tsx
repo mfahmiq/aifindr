@@ -48,6 +48,13 @@ import {
     Zap
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Tool, ToolWithRelations } from "@/lib/types"
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -91,6 +98,9 @@ export default function AdminToolsPage() {
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [loading, setLoading] = useState(true)
     const [tools, setTools] = useState<ToolWithRelations[]>([])
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([])
+    const [selectedToolIds, setSelectedToolIds] = useState<Set<string>>(new Set())
+    const [batchLoading, setBatchLoading] = useState(false)
 
     // Fetch tools on mount
     const fetchTools = async () => {
@@ -110,6 +120,12 @@ export default function AdminToolsPage() {
 
     useEffect(() => {
         fetchTools()
+
+        // Fetch categories
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(err => console.error('Failed to fetch categories', err))
     }, [])
 
     // Editable tool state for benefits
@@ -133,6 +149,10 @@ export default function AdminToolsPage() {
         slug: '',
         logo_url: '',
         website_url: '',
+        video_url: '',
+        pricing_type: '',
+        category_id: '',
+        subscription_ends_at: '',
         short_description: '',
         long_description: ''
     })
@@ -140,8 +160,8 @@ export default function AdminToolsPage() {
     const pendingTools = tools.filter(t => !t.is_verified)
     const publishedTools = tools.filter(t => t.is_verified)
 
-    // Sort by plan priority: Featured > Sponsor > Pro > Free
-    const planPriority = { 'Featured': 0, 'Sponsor': 1, 'Pro': 2, 'Free': 3, 'null': 4 }
+    // Sort by plan priority: Sponsor > Featured > Pro > Free
+    const planPriority = { 'Sponsor': 0, 'Featured': 1, 'Pro': 2, 'Free': 3, 'null': 4 }
     const sortedTools = [...tools].sort((a, b) =>
         // @ts-ignore
         (planPriority[a.plan || 'null'] ?? 4) - (planPriority[b.plan || 'null'] ?? 4)
@@ -200,6 +220,92 @@ export default function AdminToolsPage() {
         }
     }
 
+    // Batch Actions
+    const handleSelectTool = (toolId: string, checked: boolean) => {
+        const newSelected = new Set(selectedToolIds)
+        if (checked) {
+            newSelected.add(toolId)
+        } else {
+            newSelected.delete(toolId)
+        }
+        setSelectedToolIds(newSelected)
+    }
+
+    const handleSelectAll = (tools: ToolWithRelations[], checked: boolean) => {
+        if (checked) {
+            const allIds = new Set(tools.map(t => t.id))
+            setSelectedToolIds(allIds)
+        } else {
+            setSelectedToolIds(new Set())
+        }
+    }
+
+    const handleBatchApprove = async () => {
+        if (selectedToolIds.size === 0) return
+        if (!confirm(`Approve ${selectedToolIds.size} tools?`)) return
+
+        setBatchLoading(true)
+        const selectedTools = tools.filter(t => selectedToolIds.has(t.id))
+        let successCount = 0
+
+        for (const tool of selectedTools) {
+            const success = await handleUpdateTool(tool.slug, {
+                is_verified: true,
+                status: 'approved'
+            })
+            if (success) successCount++
+        }
+
+        setBatchLoading(false)
+        setSelectedToolIds(new Set())
+        alert(`Successfully approved ${successCount} of ${selectedTools.length} tools! ✅`)
+    }
+
+    const handleBatchReject = async () => {
+        if (selectedToolIds.size === 0) return
+        const reason = prompt(`Enter rejection reason for ${selectedToolIds.size} tools:`)
+        if (!reason) return
+
+        setBatchLoading(true)
+        const selectedTools = tools.filter(t => selectedToolIds.has(t.id))
+        let successCount = 0
+
+        for (const tool of selectedTools) {
+            const success = await handleUpdateTool(tool.slug, {
+                status: 'rejected',
+                rejection_reason: reason
+            })
+            if (success) successCount++
+        }
+
+        setBatchLoading(false)
+        setSelectedToolIds(new Set())
+        alert(`Rejected ${successCount} of ${selectedTools.length} tools. ❌`)
+    }
+
+    const handleBatchDelete = async () => {
+        if (selectedToolIds.size === 0) return
+        if (!confirm(`Are you sure you want to DELETE ${selectedToolIds.size} tools? This cannot be undone!`)) return
+
+        setBatchLoading(true)
+        const selectedTools = tools.filter(t => selectedToolIds.has(t.id))
+        let successCount = 0
+
+        for (const tool of selectedTools) {
+            try {
+                const res = await fetch(`/api/tools/${tool.slug}`, { method: 'DELETE' })
+                if (res.ok) successCount++
+            } catch (e) {
+                console.error('Delete error:', e)
+            }
+        }
+
+        setBatchLoading(false)
+        setSelectedToolIds(new Set())
+        fetchTools()
+        alert(`Deleted ${successCount} of ${selectedTools.length} tools. 🗑️`)
+    }
+
     const handleSaveBenefits = async () => {
         if (!selectedTool) return
 
@@ -229,6 +335,10 @@ export default function AdminToolsPage() {
             slug: tool.slug,
             logo_url: tool.logo_url || '',
             website_url: tool.website_url || '',
+            video_url: tool.video_url || '',
+            pricing_type: tool.pricing_type || 'Free',
+            category_id: tool.category_id || '',
+            subscription_ends_at: tool.subscription_ends_at || '',
             short_description: tool.short_description || '',
             long_description: tool.long_description || ''
         })
@@ -245,153 +355,223 @@ export default function AdminToolsPage() {
         }
     }
 
-    const ToolsTable = ({ tools, isReviewMode = false }: { tools: ToolWithRelations[], isReviewMode?: boolean }) => (
-        <div className="rounded-xl border-2 bg-card overflow-hidden shadow-sm">
-            <Table>
-                <TableHeader>
-                    <TableRow className="bg-gradient-to-r from-muted/50 to-muted/30 hover:bg-muted/50">
-                        <TableHead className="w-[60px] font-semibold">Logo</TableHead>
-                        <TableHead className="font-semibold">Name</TableHead>
-                        <TableHead className="hidden md:table-cell font-semibold">Category</TableHead>
-                        <TableHead className="font-semibold">Plan</TableHead>
-                        <TableHead className="hidden lg:table-cell font-semibold">Subscription</TableHead>
-                        <TableHead className="font-semibold">Status</TableHead>
-                        <TableHead className="text-right font-semibold">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {loading ? (
-                        <TableRow>
-                            <TableCell colSpan={7} className="text-center h-24 text-muted-foreground">
-                                <span className="flex items-center justify-center gap-2"><Loader2 className="animate-spin w-4 h-4" /> Loading tools...</span>
-                            </TableCell>
-                        </TableRow>
-                    ) : tools.length === 0 ? (
-                        <TableRow>
-                            <TableCell colSpan={7} className="text-center h-24 text-muted-foreground">
-                                No tools found.
-                            </TableCell>
-                        </TableRow>
-                    ) : (
-                        tools.map((tool) => (
-                            <TableRow key={tool.id} className="hover:bg-muted/30 transition-colors">
-                                <TableCell className="font-medium">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-sm shadow-sm overflow-hidden">
-                                        {tool.logo_url ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={tool.logo_url} alt={tool.name} className="w-full h-full object-cover" />
-                                        ) : (
-                                            tool.name.substring(0, 2)
-                                        )}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="font-medium">
-                                    <div className="flex flex-col">
-                                        <span className="flex items-center gap-1.5">
-                                            {tool.name}
-                                            {tool.is_verified && <ShieldCheck className="w-4 h-4 text-blue-500" />}
-                                        </span>
-                                        <span className="text-xs text-muted-foreground md:hidden">
-                                            {tool.category?.name || 'Uncategorized'}
-                                        </span>
-                                    </div>
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                    {tool.category?.name || 'Uncategorized'}
-                                </TableCell>
-                                <TableCell>
-                                    {getPlanBadge(tool.plan)}
-                                </TableCell>
-                                <TableCell className="hidden lg:table-cell">
-                                    {(() => {
-                                        const days = getDaysRemaining(tool.subscription_ends_at)
-                                        if (days === null) return <span className="text-muted-foreground text-xs">-</span>
-                                        if (days <= 0) return <Badge variant="destructive">Expired</Badge>
-                                        if (days <= 7) return <Badge variant="outline" className="text-orange-500 border-orange-500">{days}d left</Badge>
-                                        return <Badge variant="outline" className="text-green-500 border-green-500">{days}d left</Badge>
-                                    })()}
-                                </TableCell>
-                                <TableCell>
-                                    <Badge variant={tool.is_verified ? "default" : "secondary"}>
-                                        {tool.is_verified ? "Published" : "Pending"}
-                                    </Badge>
-                                    {tool.status === 'rejected' && <Badge variant="destructive" className="ml-1">Rejected</Badge>}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    {isReviewMode ? (
-                                        <div className="flex justify-end gap-2">
-                                            <Button size="sm" variant="outline" onClick={() => handleApprove(tool)} className="text-green-600 hover:text-green-700 hover:bg-green-50">
-                                                <CheckCircle className="w-4 h-4 mr-1" /> Approve
-                                            </Button>
-                                            <Button size="sm" variant="outline" onClick={() => openToolDetailsDialog(tool)}>
-                                                <Pencil className="w-4 h-4" />
-                                            </Button>
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                                                        <XCircle className="w-4 h-4 mr-1" /> Reject
-                                                    </Button>
-                                                </DialogTrigger>
-                                                <DialogContent>
-                                                    <DialogHeader>
-                                                        <DialogTitle>Reject "{tool.name}"</DialogTitle>
-                                                        <DialogDescription>
-                                                            Please provide a reason for rejection. This will be sent to the submitter.
-                                                        </DialogDescription>
-                                                    </DialogHeader>
-                                                    <div className="py-4">
-                                                        <Label htmlFor="reject-reason">Rejection Note</Label>
-                                                        <Textarea
-                                                            id="reject-reason"
-                                                            placeholder="e.g. The tool seems to be a duplicate of..."
-                                                            value={rejectReason}
-                                                            onChange={(e) => setRejectReason(e.target.value)}
-                                                            className="mt-2"
-                                                        />
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <DialogClose asChild>
-                                                            <Button variant="outline">Cancel</Button>
-                                                        </DialogClose>
-                                                        <Button variant="destructive" onClick={() => handleReject(tool)}>
-                                                            Confirm Rejection
-                                                        </Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </div>
-                                    ) : (
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                                    <span className="sr-only">Open menu</span>
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem asChild>
-                                                    <Link href={`/tool/${tool.slug}`} target="_blank">View Live</Link>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => openToolDetailsDialog(tool)}>
-                                                    <Pencil className="w-4 h-4 mr-2" />
-                                                    Edit Details
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => openEditDialog(tool)}>
-                                                    Manage Benefits
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem className="text-destructive">Delete Tool</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    )}
-                                </TableCell>
+    const ToolsTable = ({ tools, isReviewMode = false }: { tools: ToolWithRelations[], isReviewMode?: boolean }) => {
+        const allSelected = tools.length > 0 && tools.every(t => selectedToolIds.has(t.id))
+        const someSelected = selectedToolIds.size > 0
+
+        return (
+            <div className="space-y-3">
+                {/* Batch Action Bar */}
+                {someSelected && (
+                    <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-primary/10 to-purple-500/10 rounded-xl border border-primary/20">
+                        <span className="text-sm font-medium">
+                            {selectedToolIds.size} tools selected
+                        </span>
+                        <div className="flex gap-2 ml-auto">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={handleBatchApprove}
+                                disabled={batchLoading}
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                            >
+                                {batchLoading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-1" />}
+                                Approve All
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={handleBatchReject}
+                                disabled={batchLoading}
+                                className="text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                            >
+                                <XCircle className="w-4 h-4 mr-1" />
+                                Reject All
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={handleBatchDelete}
+                                disabled={batchLoading}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                                Delete All
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setSelectedToolIds(new Set())}
+                            >
+                                Clear
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                <div className="rounded-xl border-2 bg-card overflow-hidden shadow-sm">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="bg-gradient-to-r from-muted/50 to-muted/30 hover:bg-muted/50">
+                                <TableHead className="w-[50px]">
+                                    <Checkbox
+                                        checked={allSelected}
+                                        onCheckedChange={(checked) => handleSelectAll(tools, !!checked)}
+                                    />
+                                </TableHead>
+                                <TableHead className="w-[60px] font-semibold">Logo</TableHead>
+                                <TableHead className="font-semibold">Name</TableHead>
+                                <TableHead className="hidden md:table-cell font-semibold">Category</TableHead>
+                                <TableHead className="font-semibold text-right">Views</TableHead>
+                                <TableHead className="font-semibold">Plan</TableHead>
+                                <TableHead className="hidden lg:table-cell font-semibold">Subscription</TableHead>
+                                <TableHead className="font-semibold">Status</TableHead>
+                                <TableHead className="text-right font-semibold">Actions</TableHead>
                             </TableRow>
-                        )))}
-                </TableBody>
-            </Table>
-        </div>
-    )
+                        </TableHeader>
+                        <TableBody>
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
+                                        <span className="flex items-center justify-center gap-2"><Loader2 className="animate-spin w-4 h-4" /> Loading tools...</span>
+                                    </TableCell>
+                                </TableRow>
+                            ) : tools.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
+                                        No tools found.
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                tools.map((tool) => (
+                                    <TableRow key={tool.id} className={`hover:bg-muted/30 transition-colors ${selectedToolIds.has(tool.id) ? 'bg-primary/5' : ''}`}>
+                                        <TableCell>
+                                            <Checkbox
+                                                checked={selectedToolIds.has(tool.id)}
+                                                onCheckedChange={(checked) => handleSelectTool(tool.id, !!checked)}
+                                            />
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-sm shadow-sm overflow-hidden">
+                                                {tool.logo_url ? (
+                                                    // eslint-disable-next-line @next/next/no-img-element
+                                                    <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    tool.name.substring(0, 2)
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="font-medium">
+                                            <div className="flex flex-col">
+                                                <span className="flex items-center gap-1.5">
+                                                    {tool.name}
+                                                    {tool.is_verified && <ShieldCheck className="w-4 h-4 text-blue-500" />}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground md:hidden">
+                                                    {tool.category?.name || 'Uncategorized'}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="hidden md:table-cell">
+                                            {tool.category?.name || 'Uncategorized'}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {tool.view_count?.toLocaleString() || '0'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {getPlanBadge(tool.plan)}
+                                        </TableCell>
+                                        <TableCell className="hidden lg:table-cell">
+                                            {(() => {
+                                                const days = getDaysRemaining(tool.subscription_ends_at)
+                                                if (days === null) return <span className="text-muted-foreground text-xs">-</span>
+                                                if (days <= 0) return <Badge variant="destructive">Expired</Badge>
+                                                if (days <= 7) return <Badge variant="outline" className="text-orange-500 border-orange-500">{days}d left</Badge>
+                                                return <Badge variant="outline" className="text-green-500 border-green-500">{days}d left</Badge>
+                                            })()}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={tool.is_verified ? "default" : "secondary"}>
+                                                {tool.is_verified ? "Published" : "Pending"}
+                                            </Badge>
+                                            {tool.status === 'rejected' && <Badge variant="destructive" className="ml-1">Rejected</Badge>}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {isReviewMode ? (
+                                                <div className="flex justify-end gap-2">
+                                                    <Button size="sm" variant="outline" onClick={() => handleApprove(tool)} className="text-green-600 hover:text-green-700 hover:bg-green-50">
+                                                        <CheckCircle className="w-4 h-4 mr-1" /> Approve
+                                                    </Button>
+                                                    <Button size="sm" variant="outline" onClick={() => openToolDetailsDialog(tool)}>
+                                                        <Pencil className="w-4 h-4" />
+                                                    </Button>
+                                                    <Dialog>
+                                                        <DialogTrigger asChild>
+                                                            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                                                                <XCircle className="w-4 h-4 mr-1" /> Reject
+                                                            </Button>
+                                                        </DialogTrigger>
+                                                        <DialogContent>
+                                                            <DialogHeader>
+                                                                <DialogTitle>Reject "{tool.name}"</DialogTitle>
+                                                                <DialogDescription>
+                                                                    Please provide a reason for rejection. This will be sent to the submitter.
+                                                                </DialogDescription>
+                                                            </DialogHeader>
+                                                            <div className="py-4">
+                                                                <Label htmlFor="reject-reason">Rejection Note</Label>
+                                                                <Textarea
+                                                                    id="reject-reason"
+                                                                    placeholder="e.g. The tool seems to be a duplicate of..."
+                                                                    value={rejectReason}
+                                                                    onChange={(e) => setRejectReason(e.target.value)}
+                                                                    className="mt-2"
+                                                                />
+                                                            </div>
+                                                            <DialogFooter>
+                                                                <DialogClose asChild>
+                                                                    <Button variant="outline">Cancel</Button>
+                                                                </DialogClose>
+                                                                <Button variant="destructive" onClick={() => handleReject(tool)}>
+                                                                    Confirm Rejection
+                                                                </Button>
+                                                            </DialogFooter>
+                                                        </DialogContent>
+                                                    </Dialog>
+                                                </div>
+                                            ) : (
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" className="h-8 w-8 p-0">
+                                                            <span className="sr-only">Open menu</span>
+                                                            <MoreHorizontal className="h-4 w-4" />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                        <DropdownMenuItem asChild>
+                                                            <Link href={`/tool/${tool.slug}`} target="_blank">View Live</Link>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openToolDetailsDialog(tool)}>
+                                                            <Pencil className="w-4 h-4 mr-2" />
+                                                            Edit Details
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => openEditDialog(tool)}>
+                                                            Manage Benefits
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem className="text-destructive">Delete Tool</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                )))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col gap-6">
@@ -447,7 +627,7 @@ export default function AdminToolsPage() {
                 <TabsContent value="all" className="mt-4">
                     <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
                         <Award className="w-3 h-3" />
-                        Sorted by Plan Priority: Featured → Sponsor → Pro → Free
+                        Sorted by Plan Priority: Sponsor → Featured → Pro → Free
                     </div>
                     <ToolsTable tools={sortedTools} />
                 </TabsContent>
@@ -504,8 +684,8 @@ export default function AdminToolsPage() {
                                         <div
                                             key={featureKey}
                                             className={`flex items-center gap-2 p-2 rounded-lg transition-colors ${isIncluded
-                                                    ? 'bg-green-500/10 text-green-700'
-                                                    : 'bg-muted/50 text-muted-foreground line-through'
+                                                ? 'bg-green-500/10 text-green-700'
+                                                : 'bg-muted/50 text-muted-foreground line-through'
                                                 }`}
                                         >
                                             {isIncluded ? (
@@ -581,6 +761,22 @@ export default function AdminToolsPage() {
                             </div>
                         </div>
                         <div className="space-y-2">
+                            <Label htmlFor="category">Category</Label>
+                            <Select
+                                value={toolDetails.category_id}
+                                onValueChange={(val) => setToolDetails({ ...toolDetails, category_id: val })}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {categories.map((c) => (
+                                        <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
                             <Label htmlFor="website">Website URL</Label>
                             <Input
                                 id="website"
@@ -595,6 +791,44 @@ export default function AdminToolsPage() {
                                 value={toolDetails.logo_url}
                                 onChange={(e) => setToolDetails({ ...toolDetails, logo_url: e.target.value })}
                                 placeholder="https://..."
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="pricing_type">Pricing Model</Label>
+                                <Select
+                                    value={toolDetails.pricing_type}
+                                    onValueChange={(val) => setToolDetails({ ...toolDetails, pricing_type: val })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select model" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Free">Free</SelectItem>
+                                        <SelectItem value="Freemium">Freemium</SelectItem>
+                                        <SelectItem value="Paid">Paid</SelectItem>
+                                        <SelectItem value="Free Trial">Free Trial</SelectItem>
+                                        <SelectItem value="Contact for Pricing">Contact for Pricing</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="video">Video URL</Label>
+                                <Input
+                                    id="video"
+                                    value={toolDetails.video_url}
+                                    onChange={(e) => setToolDetails({ ...toolDetails, video_url: e.target.value })}
+                                    placeholder="https://youtube.com/..."
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="ends_at">Subscription Ends</Label>
+                            <Input
+                                id="ends_at"
+                                type="date"
+                                value={toolDetails.subscription_ends_at ? new Date(toolDetails.subscription_ends_at).toISOString().split('T')[0] : ''}
+                                onChange={(e) => setToolDetails({ ...toolDetails, subscription_ends_at: e.target.value ? new Date(e.target.value).toISOString() : '' })}
                             />
                         </div>
                         <div className="space-y-2">
@@ -621,6 +855,6 @@ export default function AdminToolsPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </div>
+        </div >
     )
 }

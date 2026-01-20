@@ -598,6 +598,230 @@ const SubmitToolContent = () => {
                                         </div>
                                     </div>
 
+                                    {/* Sponsor Plan Options */}
+                                    {selectedPlan === 'sponsor' && (
+                                        <div className="space-y-6 p-6 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 rounded-xl border-2 border-yellow-500/20">
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <Megaphone className="w-5 h-5 text-yellow-500" />
+                                                <h3 className="font-semibold text-lg">Sponsor Options</h3>
+                                                <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">Exclusive</Badge>
+                                            </div>
+
+                                            {/* Ad Placement Selection */}
+                                            <div className="space-y-3">
+                                                <Label className="flex items-center gap-2">
+                                                    Ad Placement Location <span className="text-red-500">*</span>
+                                                </Label>
+                                                <RadioGroup value={adPlacement} onValueChange={setAdPlacement} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                    <Label
+                                                        htmlFor="sidebar"
+                                                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${adPlacement === 'sidebar'
+                                                            ? 'border-yellow-500 bg-yellow-500/10'
+                                                            : 'border-muted hover:border-yellow-500/50'}`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <RadioGroupItem value="sidebar" id="sidebar" />
+                                                            <div>
+                                                                <p className="font-medium">Sidebar Banner</p>
+                                                                <p className="text-xs text-muted-foreground">Appears on tool detail pages</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 100000).toLocaleString()}</p>
+                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <Badge variant={remainingSlots.sidebar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
+                                                                {remainingSlots.sidebar} slots left
+                                                            </Badge>
+                                                        </div>
+                                                    </Label>
+
+                                                    <Label
+                                                        htmlFor="navbar"
+                                                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${adPlacement === 'navbar'
+                                                            ? 'border-yellow-500 bg-yellow-500/10'
+                                                            : 'border-muted hover:border-yellow-500/50'} ${remainingSlots.navbar === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <RadioGroupItem value="navbar" id="navbar" disabled={remainingSlots.navbar === 0} />
+                                                            <div>
+                                                                <p className="font-medium">Navbar Premium</p>
+                                                                <p className="text-xs text-muted-foreground">Top of homepage navigation</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 200000).toLocaleString()}</p>
+                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <Badge variant={remainingSlots.navbar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
+                                                                {remainingSlots.navbar > 0 ? `${remainingSlots.navbar} slots left` : 'Sold out'}
+                                                            </Badge>
+                                                        </div>
+                                                    </Label>
+
+                                                    <Label
+                                                        htmlFor="banner"
+                                                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${adPlacement === 'banner'
+                                                            ? 'border-yellow-500 bg-yellow-500/10'
+                                                            : 'border-muted hover:border-yellow-500/50'} ${remainingSlots.banner === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <RadioGroupItem value="banner" id="banner" disabled={remainingSlots.banner === 0} />
+                                                            <div>
+                                                                <p className="font-medium">Hero Banner</p>
+                                                                <p className="text-xs text-muted-foreground">Large banner on homepage</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 500000).toLocaleString()}</p>
+                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <Badge variant={remainingSlots.banner > 0 ? "outline" : "destructive"} className="text-xs mt-1">
+                                                                {remainingSlots.banner > 0 ? `${remainingSlots.banner} slots left` : 'Sold out'}
+                                                            </Badge>
+                                                        </div>
+                                                    </Label>
+
+                                                    <Label
+                                                        htmlFor="inline"
+                                                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${adPlacement === 'inline'
+                                                            ? 'border-yellow-500 bg-yellow-500/10'
+                                                            : 'border-muted hover:border-yellow-500/50'}`}
+                                                    >
+                                                        <div className="flex items-center gap-3">
+                                                            <RadioGroupItem value="inline" id="inline" />
+                                                            <div>
+                                                                <p className="font-medium">Inline Feed</p>
+                                                                <p className="text-xs text-muted-foreground">Within tools listing grid</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 75000).toLocaleString()}</p>
+                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <Badge variant={remainingSlots.inline > 0 ? "outline" : "destructive"} className="text-xs mt-1">
+                                                                {remainingSlots.inline} slots left
+                                                            </Badge>
+                                                        </div>
+                                                    </Label>
+                                                </RadioGroup>
+                                            </div>
+
+                                            {/* Ad Duration Selection */}
+                                            <div className="space-y-3">
+                                                <Label className="flex items-center gap-2">
+                                                    <CalendarIcon className="w-4 h-4 text-yellow-500" />
+                                                    Ad Duration
+                                                    <span className="text-sm text-muted-foreground">(Base: 30 days included)</span>
+                                                </Label>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant="outline"
+                                                            className={cn(
+                                                                "w-full justify-start text-left font-normal h-12",
+                                                                !date && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                                            {date?.from ? (
+                                                                date.to ? (
+                                                                    <>
+                                                                        {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                                                        <span className="ml-auto text-muted-foreground">
+                                                                            ({Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24))} days)
+                                                                        </span>
+                                                                    </>
+                                                                ) : (
+                                                                    format(date.from, "LLL dd, y")
+                                                                )
+                                                            ) : (
+                                                                <span>Pick a date range</span>
+                                                            )}
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                            initialFocus
+                                                            mode="range"
+                                                            defaultMonth={date?.from}
+                                                            selected={date}
+                                                            onSelect={setDate}
+                                                            numberOfMonths={2}
+                                                            disabled={(date) => date < new Date()}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+
+                                                {/* Duration Quick Select */}
+                                                <div className="flex gap-2 flex-wrap">
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => setDate({ from: new Date(), to: addDays(new Date(), 30) })}
+                                                        className={date?.to && Math.ceil((date.to.getTime() - (date.from?.getTime() || 0)) / (1000 * 60 * 60 * 24)) === 30 ? 'border-yellow-500 bg-yellow-500/10' : ''}
+                                                    >
+                                                        30 Days (Included)
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => setDate({ from: new Date(), to: addDays(new Date(), 60) })}
+                                                        className={date?.to && Math.ceil((date.to.getTime() - (date.from?.getTime() || 0)) / (1000 * 60 * 60 * 24)) === 60 ? 'border-yellow-500 bg-yellow-500/10' : ''}
+                                                    >
+                                                        60 Days (+4 weeks)
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => setDate({ from: new Date(), to: addDays(new Date(), 90) })}
+                                                        className={date?.to && Math.ceil((date.to.getTime() - (date.from?.getTime() || 0)) / (1000 * 60 * 60 * 24)) === 90 ? 'border-yellow-500 bg-yellow-500/10' : ''}
+                                                    >
+                                                        90 Days (+8 weeks)
+                                                    </Button>
+                                                </div>
+                                            </div>
+
+                                            {/* Price Breakdown */}
+                                            <div className="bg-background/80 rounded-xl p-4 space-y-2">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-muted-foreground">Sponsor Plan Base</span>
+                                                    <span>Rp 750,000</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-muted-foreground">Ad Placement ({adPlacement})</span>
+                                                    <span className="text-green-500">Included (30 days)</span>
+                                                </div>
+                                                {date?.from && date?.to && (() => {
+                                                    const days = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24))
+                                                    const extraDays = Math.max(0, days - 30)
+                                                    const extraWeeks = Math.ceil(extraDays / 7)
+                                                    const weeklyRate = adPrices[adPlacement] || 100000
+                                                    const extraCost = extraWeeks * weeklyRate
+
+                                                    if (extraWeeks > 0) {
+                                                        return (
+                                                            <div className="flex justify-between text-sm">
+                                                                <span className="text-muted-foreground">
+                                                                    Extra Duration (+{extraWeeks} weeks)
+                                                                </span>
+                                                                <span className="text-yellow-600">
+                                                                    +Rp {extraCost.toLocaleString()}
+                                                                </span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    return null
+                                                })()}
+                                                <div className="border-t pt-2 mt-2 flex justify-between font-semibold">
+                                                    <span>Total</span>
+                                                    <span className="text-xl bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                                                        Rp {totalPrice.toLocaleString()}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <Button
                                         type="submit"
                                         size="lg"

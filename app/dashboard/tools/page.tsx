@@ -98,7 +98,7 @@ export default function DashboardToolsPage() {
                                     <div className="flex items-start gap-4">
                                         <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center flex-shrink-0">
                                             {tool.logo_url ? (
-                                                <img src={tool.logo_url} alt={tool.name} className="w-10 h-10 rounded-lg" />
+                                                <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-10 h-10 rounded-lg" />
                                             ) : (
                                                 <Package className="w-7 h-7 text-primary" />
                                             )}

@@ -288,6 +288,48 @@ export const subscriptionService = {
     },
 
     /**
+     * Update subscription metadata
+     */
+    async updateSubscriptionMetadata(id: string, metadata: any) {
+        const supabase = createClient()
+        // First get existing metadata
+        const { data: current } = await supabase
+            .from('subscriptions')
+            .select('metadata')
+            .eq('id', id)
+            .single()
+
+        const newMetadata = {
+            ...(current?.metadata as object || {}),
+            ...metadata
+        }
+
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .update({
+                metadata: newMetadata,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Subscription
+    },
+
+    /**
+     * Send admin notification (Mock)
+     */
+    async sendAdminNotification(type: 'new_sponsor' | 'subscription_cancelled', data: any) {
+        // In a real app, this would use Resend or another email provider
+        console.log(`[ADMIN NOTIFICATION] Type: ${type}`, JSON.stringify(data, null, 2))
+
+        // Log to database if needed, for now just console
+        return true
+    },
+
+    /**
      * Get subscription by ID
      */
     async getSubscriptionById(id: string) {

@@ -7,10 +7,142 @@ export interface ActiveAd extends Ad {
     // Extended fields if needed
 }
 
+export type AdPlacement = 'sidebar' | 'banner' | 'navbar' | 'top_banner' | 'inline' | 'footer_cta'
+
 export const adsService = {
     /**
+     * Get ALL ads for admin (including inactive)
+     */
+    async getAllAds() {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('ads')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error) throw error
+        return data as Ad[]
+    },
+
+    /**
+     * Create new ad placement
+     */
+    async createAd(ad: {
+        name: string
+        placement: string
+        link_url: string
+        title?: string
+        description?: string
+        image_url?: string
+        advertiser_name?: string
+        starts_at?: string
+        ends_at?: string
+        is_active?: boolean
+    }) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('ads')
+            .insert({
+                name: ad.name,
+                placement: ad.placement,
+                link_url: ad.link_url,
+                title: ad.title || null,
+                description: ad.description || null,
+                image_url: ad.image_url || null,
+                advertiser_name: ad.advertiser_name || null,
+                starts_at: ad.starts_at || new Date().toISOString(),
+                ends_at: ad.ends_at || null,
+                is_active: ad.is_active !== false,
+                impressions: 0,
+                clicks: 0
+            })
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Ad
+    },
+
+    /**
+     * Update ad placement
+     */
+    async updateAd(id: string, updates: {
+        name?: string
+        placement?: string
+        link_url?: string
+        title?: string
+        description?: string
+        image_url?: string
+        advertiser_name?: string
+        starts_at?: string
+        ends_at?: string
+        is_active?: boolean
+    }) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('ads')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data as Ad
+    },
+
+    /**
+     * Delete ad placement
+     */
+    async deleteAd(id: string) {
+        const supabase = createClient()
+        const { error } = await supabase
+            .from('ads')
+            .delete()
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    },
+
+    /**
+     * Get ads statistics
+     */
+    async getAdsStats() {
+        const supabase = createClient()
+        const { data: ads, error } = await supabase
+            .from('ads')
+            .select('id, is_active, starts_at, ends_at, impressions, clicks, placement')
+
+        if (error) throw error
+
+        const now = new Date()
+        const activeAds = ads?.filter(ad => {
+            if (!ad.is_active) return false
+            const startsAt = ad.starts_at ? new Date(ad.starts_at) : new Date(0)
+            const endsAt = ad.ends_at ? new Date(ad.ends_at) : new Date('2099-12-31')
+            return now >= startsAt && now <= endsAt
+        }) || []
+
+        const scheduled = ads?.filter(ad => {
+            if (!ad.is_active) return false
+            const startsAt = ad.starts_at ? new Date(ad.starts_at) : null
+            return startsAt && startsAt > now
+        }) || []
+
+        const totalImpressions = ads?.reduce((sum, ad) => sum + (ad.impressions || 0), 0) || 0
+        const totalClicks = ads?.reduce((sum, ad) => sum + (ad.clicks || 0), 0) || 0
+
+        return {
+            total: ads?.length || 0,
+            active: activeAds.length,
+            scheduled: scheduled.length,
+            totalImpressions,
+            totalClicks
+        }
+    },
+
+    /**
      * Get active ads by placement
-     * @param placement - 'navbar' | 'sidebar' | 'hero' | 'inline'
      */
     async getActiveAds(placement?: string) {
         const supabase = createClient()
@@ -169,7 +301,7 @@ export const adsService = {
                 sidebar: 5,
                 navbar: 2,
                 banner: 1,
-                inline: 3 // Default for inline
+                inline: 3
             }
         }
 
@@ -182,7 +314,6 @@ export const adsService = {
     async getAdsForDisplay(placement: string) {
         const settings = await this.getSettings()
         const setting = settings.find(s => s.placement === placement)
-        // Default max slots if not set
         const maxSlots = setting?.max_slots || (placement === 'sidebar' ? 5 : placement === 'navbar' ? 2 : 1)
 
         const ads = await this.getActiveAds(placement)

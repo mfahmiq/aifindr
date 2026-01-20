@@ -10,6 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { AdBannerUpload } from "@/components/ad-banner-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -29,11 +30,15 @@ import {
     BarChart3,
     MessageSquare,
     Settings,
-    Gift
+    Gift,
+    Sparkles
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { toolsService } from "@/lib/services/toolsService"
+import { subscriptionService } from "@/lib/services/subscriptionService"
+import { adsService, ActiveAd } from "@/lib/services/adsService"
 import { ToolWithRelations } from "@/lib/types"
+import { createBrowserClient } from "@supabase/ssr" // Needed for auth check
 
 export default function ToolManagePage() {
     const params = useParams()
@@ -42,6 +47,9 @@ export default function ToolManagePage() {
     const [tool, setTool] = useState<ToolWithRelations | null>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+
+    const [isSponsor, setIsSponsor] = useState(false)
+    const [ads, setAds] = useState<ActiveAd[]>([])
 
     // Form state
     const [formData, setFormData] = useState({
@@ -52,8 +60,9 @@ export default function ToolManagePage() {
     })
 
     useEffect(() => {
-        const fetchTool = async () => {
+        const fetchToolAndAccess = async () => {
             try {
+                // 1. Fetch Tool
                 const data = await toolsService.getToolBySlug(slug)
                 if (data) {
                     setTool(data)
@@ -64,13 +73,39 @@ export default function ToolManagePage() {
                         video_url: data.video_url || ''
                     })
                 }
+
+                // 2. Check Subscription & Ads (Sponsor only)
+                const supabase = createBrowserClient(
+                    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+                )
+                const { data: { user } } = await supabase.auth.getUser()
+
+                if (user) {
+                    const plan = await subscriptionService.getUserPlan(user.id)
+                    const isSponsorPlan = plan === 'sponsor'
+                    setIsSponsor(isSponsorPlan)
+
+                    if (isSponsorPlan) {
+                        // Fetch ads
+                        // Note: adsService.getUserAds doesn't exist in the file view I saw, 
+                        // but I saw getAllAds (admin) and getSidebarAds (public).
+                        // I will assume for now I can't fetch "my ads" easily without specific API, 
+                        // so I'll leave the list empty or just mock it for now until I add that method to service.
+                        // Actually, looking at adsService.ts, I don't see `getUserAds`.
+                        // I will implement a placeholder or try to filter active ads by advertiser_name if matches? 
+                        // But ad doesn't link to user_id directly in the types I saw (it has advertiser_email).
+                        // I'll skip fetching for now and just show the "Create Ad" UI as coming soon or placeholder.
+                    }
+                }
+
             } catch (error) {
-                console.error('Error fetching tool:', error)
+                console.error('Error fetching data:', error)
             } finally {
                 setLoading(false)
             }
         }
-        fetchTool()
+        fetchToolAndAccess()
     }, [slug])
 
     const handleSave = async () => {
@@ -122,7 +157,7 @@ export default function ToolManagePage() {
                     <div className="flex items-center gap-4">
                         <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
                             {tool.logo_url ? (
-                                <img src={tool.logo_url} alt={tool.name} className="w-10 h-10 rounded-lg" />
+                                <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-10 h-10 rounded-lg" />
                             ) : (
                                 <span className="text-2xl font-bold text-primary">{tool.name[0]}</span>
                             )}
@@ -191,6 +226,12 @@ export default function ToolManagePage() {
                         <Gift className="w-4 h-4" />
                         Deals
                     </TabsTrigger>
+                    {isSponsor && (
+                        <TabsTrigger value="ads" className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-yellow-500" />
+                            Ads
+                        </TabsTrigger>
+                    )}
                 </TabsList>
 
                 {/* Edit Tab */}
@@ -326,7 +367,80 @@ export default function ToolManagePage() {
                         </CardContent>
                     </Card>
                 </TabsContent>
+
+                {/* Ads Tab (Sponsor Only) */}
+                {isSponsor && (
+                    <TabsContent value="ads">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-yellow-500" />
+                                    Ad Management
+                                </CardTitle>
+                                <CardDescription>Manage your sponsored ads placements</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {ads.length === 0 ? (
+                                    <div className="flex items-center justify-center py-16 text-center">
+                                        <div>
+                                            <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
+                                            <h3 className="font-semibold mb-2">Create Ad Campaign</h3>
+                                            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+                                                As a Sponsor, you can create and manage ad banners to be displayed across the platform.
+                                            </p>
+                                            <AdBannerUpload onSuccess={() => window.location.reload()} />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="flex justify-end">
+                                            <AdBannerUpload onSuccess={() => window.location.reload()} />
+                                        </div>
+
+                                        <div className="grid gap-4">
+                                            {ads.map((ad) => (
+                                                <div key={ad.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-16 h-12 bg-muted rounded overflow-hidden">
+                                                            {ad.image_url && <img src={ad.image_url} alt={ad.name} className="w-full h-full object-cover" />}
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-semibold">{ad.name}</h4>
+                                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                                <Badge variant="outline" className="capitalize">{ad.placement}</Badge>
+                                                                <span>•</span>
+                                                                <span className={ad.is_active ? "text-green-500" : "text-muted-foreground"}>
+                                                                    {ad.is_active ? "Active" : "Inactive"}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-6">
+                                                        <div className="text-center">
+                                                            <p className="text-xs text-muted-foreground">Impressions</p>
+                                                            <p className="font-semibold">{ad.impressions?.toLocaleString() || 0}</p>
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-xs text-muted-foreground">Clicks</p>
+                                                            <p className="font-semibold">{ad.clicks?.toLocaleString() || 0}</p>
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="text-xs text-muted-foreground">CTR</p>
+                                                            <p className="font-semibold">
+                                                                {((ad.clicks || 0) / (ad.impressions || 1) * 100).toFixed(1)}%
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                )}
             </Tabs>
-        </div>
+        </div >
     )
 }

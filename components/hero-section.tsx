@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Search, Sparkles, Zap, Star, ArrowRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -7,8 +9,29 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
 export function HeroSection() {
+
+    const [searchQuery, setSearchQuery] = useState("")
+    const router = useRouter()
+
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            // Check if we are already on homepage to simple update params or push
+            const params = new URLSearchParams(window.location.search)
+            params.set('search', searchQuery)
+            params.delete('page') // Reset page on new search
+            router.push(`/?${params.toString()}`)
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleSearch()
+        }
+    }
+
     return (
         <div className="relative isolate overflow-hidden">
+            {/* ... existing background code ... */}
             {/* Animated gradient background */}
             <div className="absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/30 dark:via-purple-950/30 dark:to-pink-950/30" />
@@ -155,11 +178,15 @@ export function HeroSection() {
                         <Input
                             placeholder="Search 20+ AI tools..."
                             className="pl-12 h-14 rounded-full border-2 border-primary/20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary shadow-lg text-base"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <Button
                         size="lg"
                         className="w-full sm:w-auto rounded-full h-14 px-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 shadow-xl shadow-purple-500/25 text-base font-semibold group"
+                        onClick={handleSearch}
                     >
                         <Zap className="w-5 h-5 mr-2 group-hover:animate-pulse" />
                         Explore

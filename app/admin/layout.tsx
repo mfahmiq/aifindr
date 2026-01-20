@@ -64,18 +64,27 @@ export default function AdminLayout({
     children: React.ReactNode
 }) {
     const [pendingCount, setPendingCount] = useState(0)
+    const [pendingClaimsCount, setPendingClaimsCount] = useState(0)
 
     useEffect(() => {
-        const fetchPendingCount = async () => {
+        const fetchCounts = async () => {
             const supabase = createClient()
-            const { count } = await supabase
+
+            // Tools count
+            const { count: toolsCount } = await supabase
                 .from('tools')
                 .select('*', { count: 'exact', head: true })
                 .eq('status', 'pending')
+            if (toolsCount) setPendingCount(toolsCount)
 
-            if (count) setPendingCount(count)
+            // Claims count
+            const { count: claimsCount } = await supabase
+                .from('tool_claims')
+                .select('*', { count: 'exact', head: true })
+                .eq('status', 'pending')
+            if (claimsCount) setPendingClaimsCount(claimsCount)
         }
-        fetchPendingCount()
+        fetchCounts()
     }, [])
 
     return (
@@ -160,6 +169,9 @@ export default function AdminLayout({
                                         <item.icon className="h-4 w-4" />
                                     </div>
                                     {item.label}
+                                    {item.label === 'Tool Claims' && pendingClaimsCount > 0 && (
+                                        <Badge className="ml-auto text-xs bg-red-500 hover:bg-red-600 text-white border-0">{pendingClaimsCount}</Badge>
+                                    )}
                                 </Link>
                             ))}
                         </nav>
@@ -204,6 +216,8 @@ export default function AdminLayout({
                                         {item.label}
                                         {item.label === 'Tools' && pendingCount > 0 ? (
                                             <Badge className="ml-auto bg-red-500 hover:bg-red-600 text-white border-0">{pendingCount}</Badge>
+                                        ) : item.label === 'Tool Claims' && pendingClaimsCount > 0 ? (
+                                            <Badge className="ml-auto bg-red-500 hover:bg-red-600 text-white border-0">{pendingClaimsCount}</Badge>
                                         ) : item.badge && (
                                             <Badge className="ml-auto">{item.badge}</Badge>
                                         )}

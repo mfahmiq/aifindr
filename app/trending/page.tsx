@@ -152,8 +152,13 @@ export default function TrendingPage() {
                                                     </div>
 
                                                     {/* Logo */}
-                                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-lg shrink-0">
-                                                        {tool.name.substring(0, 2)}
+                                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-lg shrink-0 overflow-hidden">
+                                                        {tool.logo_url ? (
+                                                            // eslint-disable-next-line @next/next/no-img-element
+                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            tool.name.substring(0, 2)
+                                                        )}
                                                     </div>
 
                                                     {/* Info */}
@@ -215,8 +220,13 @@ export default function TrendingPage() {
                                                 <CardContent className="p-3 flex items-center gap-3">
                                                     <span className={`text-lg font-bold w-6 ${index === 0 ? 'text-yellow-500' : 'text-muted-foreground'
                                                         }`}>{index + 1}</span>
-                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-amber-500/10 flex items-center justify-center font-bold text-yellow-600 text-sm">
-                                                        {tool.name.substring(0, 2)}
+                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-amber-500/10 flex items-center justify-center font-bold text-yellow-600 text-sm overflow-hidden">
+                                                        {tool.logo_url ? (
+                                                            // eslint-disable-next-line @next/next/no-img-element
+                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            tool.name.substring(0, 2)
+                                                        )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="font-medium truncate">{tool.name}</div>
@@ -251,8 +261,13 @@ export default function TrendingPage() {
                                                 <CardContent className="p-3 flex items-center gap-3">
                                                     <span className={`text-lg font-bold w-6 ${index === 0 ? 'text-red-500' : 'text-muted-foreground'
                                                         }`}>{index + 1}</span>
-                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/10 flex items-center justify-center font-bold text-red-600 text-sm">
-                                                        {tool.name.substring(0, 2)}
+                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/10 flex items-center justify-center font-bold text-red-600 text-sm overflow-hidden">
+                                                        {tool.logo_url ? (
+                                                            // eslint-disable-next-line @next/next/no-img-element
+                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            tool.name.substring(0, 2)
+                                                        )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="font-medium truncate">{tool.name}</div>

@@ -2,26 +2,18 @@
 
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { ToolWithRelations } from "@/lib/types"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import {
-    Heart,
-    Eye,
-    CheckCircle,
-    ArrowUpRight,
-    Sparkles,
-    Bot,
-    Image,
-    Video,
-    Code,
-    Music,
-    FileText,
-    Mic,
-    MessageSquare,
-    Star,
     ExternalLink,
-    Zap
+    Star,
+    Check,
+    ArrowUp,
+    Zap,
+    Eye,
+    Sparkles
 } from "lucide-react"
 import { PLAN_NAMES } from "@/lib/constants"
 
@@ -30,38 +22,18 @@ interface ToolCardProps {
     index?: number
 }
 
-// Modern category styling with vibrant gradients
-const categoryConfig: Record<string, { icon: React.ElementType; gradient: string; textColor: string; bgColor: string }> = {
-    'Chat': { icon: MessageSquare, gradient: 'from-blue-500 to-cyan-500', textColor: 'text-blue-600', bgColor: 'bg-blue-500/10' },
-    'Image': { icon: Image, gradient: 'from-violet-500 to-purple-500', textColor: 'text-violet-600', bgColor: 'bg-violet-500/10' },
-    'Video': { icon: Video, gradient: 'from-rose-500 to-pink-500', textColor: 'text-rose-600', bgColor: 'bg-rose-500/10' },
-    'Coding': { icon: Code, gradient: 'from-emerald-500 to-teal-500', textColor: 'text-emerald-600', bgColor: 'bg-emerald-500/10' },
-    'Audio': { icon: Music, gradient: 'from-amber-500 to-orange-500', textColor: 'text-amber-600', bgColor: 'bg-amber-500/10' },
-    'Writing': { icon: FileText, gradient: 'from-cyan-500 to-blue-500', textColor: 'text-cyan-600', bgColor: 'bg-cyan-500/10' },
-    'Voice': { icon: Mic, gradient: 'from-red-500 to-rose-500', textColor: 'text-red-600', bgColor: 'bg-red-500/10' },
-    'Productivity': { icon: Zap, gradient: 'from-indigo-500 to-purple-500', textColor: 'text-indigo-600', bgColor: 'bg-indigo-500/10' },
-    'default': { icon: Bot, gradient: 'from-slate-500 to-gray-500', textColor: 'text-slate-600', bgColor: 'bg-slate-500/10' },
-}
-
 export function ToolCard({ tool, index = 0 }: ToolCardProps) {
-    const categoryName = tool.category && typeof tool.category === 'object'
-        ? tool.category.name
-        : (tool.category as unknown as string) || 'default'
-
-    const config = categoryConfig[categoryName] || categoryConfig['default']
-    const IconComponent = config.icon
-
     const planValue = tool.plan || PLAN_NAMES.FREE
     const isSponsor = planValue === PLAN_NAMES.SPONSOR
-    const isFeatured = planValue === PLAN_NAMES.FEATURED
+    const isFeatured = planValue === PLAN_NAMES.FEATURED || isSponsor // Sponsor is also featured
+    const isVerified = tool.is_verified
     const isPro = planValue === PLAN_NAMES.PRO
-    const isPremium = isSponsor || isFeatured || isPro
 
     // Premium badge configurations
     const getPremiumBadge = () => {
-        if (isSponsor) return { label: 'Sponsor', gradient: 'from-amber-500 to-orange-500', icon: Sparkles }
-        if (isFeatured) return { label: 'Featured', gradient: 'from-violet-500 to-purple-500', icon: Star }
-        if (isPro) return { label: 'Pro', gradient: 'from-blue-500 to-cyan-500', icon: Zap }
+        if (isSponsor) return { label: 'Featured', gradient: 'text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500', iconColor: 'text-rose-500' }
+        if (isFeatured) return { label: 'Featured', gradient: 'text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-blue-500', iconColor: 'text-purple-500' }
+        if (isPro) return { label: 'Pro', gradient: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500', iconColor: 'text-blue-500' }
         return null
     }
 
@@ -69,156 +41,129 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-            whileHover={{ y: -6, scale: 1.02 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+            whileHover={{ y: -6 }}
             className="h-full"
         >
-            <Link href={`/tool/${tool.slug}`} className="block h-full group">
-                <Card className={`
-                    relative h-full overflow-hidden
-                    bg-white dark:bg-gray-900
-                    border border-gray-200/80 dark:border-gray-700/80
-                    hover:border-transparent
-                    rounded-2xl
-                    transition-all duration-500 ease-out
-                    hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)]
-                    dark:hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)]
-                    ${isPremium ? 'ring-1 ring-offset-2 ring-offset-white dark:ring-offset-gray-900' : ''}
-                    ${isSponsor ? 'ring-amber-400/50' : isFeatured ? 'ring-violet-400/50' : isPro ? 'ring-blue-400/50' : ''}
-                `}>
-                    {/* Gradient accent bar at top */}
-                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${config.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+            <Card className={`
+                relative h-full flex flex-col items-center p-5
+                bg-white dark:bg-gray-900
+                border dark:border-gray-800
+                rounded-2xl
+                transition-all duration-300
+                group overflow-hidden
+                ${isFeatured ? 'shadow-[0_4px_20px_-2px_rgba(255,100,200,0.15)] border-rose-100 dark:border-rose-900/30' : 'shadow-md border-gray-100 dark:border-gray-800'}
+                hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.3)]
+                ${isFeatured ? 'hover:shadow-[0_8px_30px_-5px_rgba(255,100,200,0.25)]' : ''}
+            `}
+            >
+                {/* Glow Effect Background */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                    {/* Premium badge */}
+                {/* TOP Ribbon - Clean Corner */}
+                {(isSponsor || (tool.rating && tool.rating > 4.8)) && (
+                    <div className="absolute top-0 right-0 z-20 pointer-events-none overflow-hidden w-20 h-20 rounded-tr-2xl">
+                        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform translate-x-[30%] translate-y-[40%] rotate-45 shadow-sm uppercase tracking-widest">
+                            TOP
+                        </div>
+                    </div>
+                )}
+
+
+                {/* Top Row: Upvotes (Views can be tooltip or combined) & Featured Badge CENTERED */}
+                <div className="w-full flex items-start justify-between mb-4 z-10 relative">
+                    {/* Left: Stats */}
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
+                            <ArrowUp className="w-4 h-4 text-gray-400" />
+                            <span>{tool.favorite_count || 0}</span>
+                        </div>
+                        {/* Views */}
+                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                            <Eye className="w-3 h-3" />
+                            <span>{tool.view_count || 0}</span>
+                        </div>
+                    </div>
+
+                    {/* Center: Featured Badge (Gradient Text) */}
                     {premiumBadge && (
-                        <div className="absolute top-3 right-3 z-10">
-                            <Badge className={`bg-gradient-to-r ${premiumBadge.gradient} text-white border-0 shadow-lg px-2.5 py-1 text-xs font-medium`}>
-                                <premiumBadge.icon className="w-3 h-3 mr-1" />
+                        <div className="absolute left-1/2 -translate-x-1/2 top-0 flex items-center gap-1.5 pointer-events-none">
+                            <Star className={`w-4 h-4 ${premiumBadge.iconColor} fill-current`} />
+                            <span className={`font-bold text-sm uppercase tracking-wide ${premiumBadge.gradient}`}>
                                 {premiumBadge.label}
-                            </Badge>
+                            </span>
                         </div>
                     )}
 
-                    <div className="p-5">
-                        {/* Header with Logo and Info */}
-                        <div className="flex items-start gap-4">
-                            {/* Logo with gradient background */}
-                            <div className={`
-                                relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0
-                                bg-gradient-to-br ${config.gradient}
-                                shadow-lg
-                                group-hover:scale-110 group-hover:shadow-xl
-                                transition-all duration-300
+                    {/* Right: Pricing Type */}
+                    <div className="flex flex-col items-end gap-1">
+                        {tool.pricing_type && (
+                            <Badge variant="secondary" className={`
+                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
+                                ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
+                                    tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
+                                        tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :
+                                            'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200/50'}
                             `}>
-                                {tool.logo_url ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        src={tool.logo_url}
-                                        alt={tool.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <IconComponent className="w-7 h-7 text-white" />
-                                    </div>
-                                )}
-                                {/* Shine effect */}
-                                <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            </div>
+                                {tool.pricing_type}
+                            </Badge>
+                        )}
+                    </div>
+                </div>
 
-                            <div className="flex-1 min-w-0 pt-0.5">
-                                {/* Name with verified */}
-                                <div className="flex items-center gap-1.5">
-                                    <h3 className="font-bold text-gray-900 dark:text-white truncate text-base group-hover:text-primary transition-colors">
-                                        {tool.name}
-                                    </h3>
-                                    {tool.is_verified && (
-                                        <CheckCircle className="w-4 h-4 text-blue-500 shrink-0" fill="currentColor" />
-                                    )}
-                                </div>
-
-                                {/* Category & Pricing Badges */}
-                                <div className="flex items-center gap-2 mt-2">
-                                    <Badge variant="secondary" className={`${config.bgColor} ${config.textColor} border-0 text-xs font-medium px-2.5 py-0.5`}>
-                                        <IconComponent className="w-3 h-3 mr-1" />
-                                        {categoryName}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-xs px-2 py-0.5 border-gray-300 dark:border-gray-600">
-                                        {tool.pricing_type}
-                                    </Badge>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
-                            {tool.short_description}
-                        </p>
-
-                        {/* Tags */}
-                        {tool.tags && tool.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 mt-3">
-                                {tool.tags.slice(0, 3).map(tag => (
-                                    <span
-                                        key={tag.id}
-                                        className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                                    >
-                                        #{tag.name}
-                                    </span>
-                                ))}
+                {/* Main Content: Logo, Name, Description */}
+                <div className="flex-1 flex flex-col items-center text-center z-10 w-full px-2 mt-2">
+                    {/* Logo */}
+                    <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800">
+                        {tool.logo_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={tool.logo_url}
+                                alt={tool.name}
+                                referrerPolicy="no-referrer"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    e.currentTarget.parentElement?.classList.add('fallback-icon');
+                                }}
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400">
+                                <Zap className="w-8 h-8" />
                             </div>
                         )}
-
-                        {/* Footer with Stats */}
-                        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                            {/* Rating or New */}
-                            <div className="flex items-center gap-2">
-                                {tool.rating ? (
-                                    <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-lg">
-                                        <Star className="w-4 h-4 text-amber-500" fill="currentColor" />
-                                        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                            {tool.rating.toFixed(1)}
-                                        </span>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                                            ({tool.review_count || 0})
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <Badge variant="outline" className="text-xs text-emerald-600 border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800">
-                                        <Sparkles className="w-3 h-3 mr-1" />
-                                        New
-                                    </Badge>
-                                )}
-                            </div>
-
-                            {/* Stats & Arrow */}
-                            <div className="flex items-center gap-3">
-                                {(tool.view_count ?? 0) > 0 && (
-                                    <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                        <Eye className="w-3.5 h-3.5" />
-                                        {(tool.view_count ?? 0) >= 1000
-                                            ? `${((tool.view_count ?? 0) / 1000).toFixed(1)}k`
-                                            : tool.view_count}
-                                    </span>
-                                )}
-                                {(tool.favorite_count ?? 0) > 0 && (
-                                    <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                        <Heart className="w-3.5 h-3.5" />
-                                        {tool.favorite_count}
-                                    </span>
-                                )}
-
-                                {/* Animated arrow */}
-                                <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                    <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </Card>
-            </Link>
+
+                    {/* Name + Verified */}
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                        <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                            {tool.name}
+                        </h3>
+                        {isVerified && (
+                            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-yellow-400 text-white shadow-sm shrink-0">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-6 leading-relaxed px-2">
+                        &laquo; {tool.short_description} &raquo;
+                    </p>
+                </div>
+
+                {/* Footer: Visit Button */}
+                <div className="w-full z-10 mt-auto">
+                    <Link href={`/tool/${tool.slug}`} className="w-full block">
+                        <Button className="w-full bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-bold tracking-wide shadow-md shadow-blue-500/20 rounded-xl py-5 uppercase text-xs transition-transform active:scale-[0.98]">
+                            <ExternalLink className="w-3.5 h-3.5 mr-2" />
+                            Visit
+                        </Button>
+                    </Link>
+                </div>
+            </Card>
         </motion.div>
     )
 }

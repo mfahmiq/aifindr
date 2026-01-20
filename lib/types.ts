@@ -574,6 +574,7 @@ export type Database = {
                     has_free_trial: boolean | null
                     has_premium_support: boolean | null
                     id: string
+                    image_url: string | null
                     is_open_source: boolean | null
                     is_priority: boolean | null
                     is_verified: boolean | null
@@ -581,6 +582,7 @@ export type Database = {
                     dominant_color: string | null
                     long_description: string | null
                     name: string
+                    owner_id: string | null
                     plan: string | null
                     pricing_type: string | null
                     rating: number | null
@@ -607,6 +609,7 @@ export type Database = {
                     has_free_trial?: boolean | null
                     has_premium_support?: boolean | null
                     id?: string
+                    image_url?: string | null
                     is_open_source?: boolean | null
                     is_priority?: boolean | null
                     is_verified?: boolean | null
@@ -640,6 +643,7 @@ export type Database = {
                     has_free_trial?: boolean | null
                     has_premium_support?: boolean | null
                     id?: string
+                    image_url?: string | null
                     is_open_source?: boolean | null
                     is_priority?: boolean | null
                     is_verified?: boolean | null
@@ -709,6 +713,7 @@ export type Database = {
                     amount: number | null
                     currency: string | null
                     auto_renew: boolean | null
+                    metadata: Json | null
                     created_at: string | null
                     updated_at: string | null
                 }

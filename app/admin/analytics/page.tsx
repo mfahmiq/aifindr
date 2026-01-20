@@ -1,296 +1,248 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { analyticsService, DashboardStats } from "@/lib/services/analyticsService"
+import { TrendingUp, Eye, Heart, Package, Gift, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
 import {
     LineChart,
     Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
     BarChart,
     Bar,
     PieChart,
     Pie,
     Cell,
-    AreaChart,
-    Area
-} from 'recharts'
-import { TrendingUp, Eye, MousePointer, DollarSign, Users, ArrowUpRight, ArrowDownRight } from "lucide-react"
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    Legend
+} from "recharts"
 
-// Mock data for charts
-const visitorData = [
-    { name: 'Mon', visitors: 4000, pageViews: 6400 },
-    { name: 'Tue', visitors: 3000, pageViews: 4800 },
-    { name: 'Wed', visitors: 2000, pageViews: 3200 },
-    { name: 'Thu', visitors: 2780, pageViews: 4448 },
-    { name: 'Fri', visitors: 1890, pageViews: 3024 },
-    { name: 'Sat', visitors: 2390, pageViews: 3824 },
-    { name: 'Sun', visitors: 3490, pageViews: 5584 },
-]
-
-const revenueData = [
-    { name: 'Jan', revenue: 400 },
-    { name: 'Feb', revenue: 600 },
-    { name: 'Mar', revenue: 800 },
-    { name: 'Apr', revenue: 1000 },
-    { name: 'May', revenue: 1200 },
-    { name: 'Jun', revenue: 1500 },
-]
-
-const toolClicksData = [
-    { name: 'ChatGPT', clicks: 1200, color: '#8884d8' },
-    { name: 'Midjourney', clicks: 980, color: '#82ca9d' },
-    { name: 'Claude', clicks: 720, color: '#ffc658' },
-    { name: 'Copilot', clicks: 650, color: '#ff7300' },
-    { name: 'Runway', clicks: 420, color: '#00C49F' },
-]
-
-const searchTermsData = [
-    { term: 'ai image generator', count: 450 },
-    { term: 'chatgpt alternative', count: 380 },
-    { term: 'free ai tools', count: 320 },
-    { term: 'ai coding assistant', count: 290 },
-    { term: 'text to image ai', count: 250 },
-]
-
-const categoryData = [
-    { name: 'Chat', value: 35, color: '#8884d8' },
-    { name: 'Image', value: 28, color: '#82ca9d' },
-    { name: 'Video', value: 15, color: '#ffc658' },
-    { name: 'Coding', value: 12, color: '#ff7300' },
-    { name: 'Other', value: 10, color: '#00C49F' },
-]
+const COLORS = ['#8b5cf6', '#06b6d4', '#22c55e', '#f59e0b', '#ef4444', '#ec4899', '#6366f1']
 
 export default function AdminAnalyticsPage() {
+    const [stats, setStats] = useState<DashboardStats | null>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetchStats()
+    }, [])
+
+    const fetchStats = async () => {
+        try {
+            setLoading(true)
+            const data = await analyticsService.getDashboardStats()
+            setStats(data)
+        } catch (error) {
+            console.error('Error fetching analytics:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
+    }
+
+    if (!stats) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-muted-foreground">Failed to load analytics data</p>
+            </div>
+        )
+    }
+
     return (
         <div className="flex flex-col gap-6">
-            <div>
-                <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
-                <p className="text-muted-foreground">Monitor your platform performance</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+                    <p className="text-muted-foreground">Platform performance and insights</p>
+                </div>
+                <Badge variant="outline" className="w-fit">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    Live Data
+                </Badge>
             </div>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card>
+                <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/20">
                     <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Total Views</p>
-                                <p className="text-2xl font-bold">52.4K</p>
-                            </div>
-                            <div className="flex items-center text-green-500 text-sm">
-                                <ArrowUpRight className="w-4 h-4" />
-                                +12%
-                            </div>
+                        <Eye className="w-6 h-6 text-purple-500 mb-2" />
+                        <div className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</div>
+                        <div className="text-sm text-muted-foreground">Total Views</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-red-500/10 to-pink-500/10 border-2 border-red-500/20">
+                    <CardContent className="p-4">
+                        <Heart className="w-6 h-6 text-red-500 mb-2" />
+                        <div className="text-2xl font-bold">{stats.totalFavorites.toLocaleString()}</div>
+                        <div className="text-sm text-muted-foreground">Total Favorites</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-2 border-blue-500/20">
+                    <CardContent className="p-4">
+                        <Package className="w-6 h-6 text-blue-500 mb-2" />
+                        <div className="text-2xl font-bold">{stats.totalTools}</div>
+                        <div className="text-sm text-muted-foreground">Approved Tools</div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/20">
+                    <CardContent className="p-4">
+                        <Gift className="w-6 h-6 text-green-500 mb-2" />
+                        <div className="text-2xl font-bold">{stats.activeDeals}</div>
+                        <div className="text-sm text-muted-foreground">Active Deals</div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Charts Row */}
+            <div className="grid md:grid-cols-2 gap-6">
+                {/* Weekly Views Chart */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Weekly Traffic</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[300px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={stats.recentViews}>
+                                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                                    <XAxis dataKey="date" className="text-xs" />
+                                    <YAxis className="text-xs" />
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: 'hsl(var(--background))',
+                                            border: '1px solid hsl(var(--border))',
+                                            borderRadius: '8px'
+                                        }}
+                                    />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="views"
+                                        stroke="#8b5cf6"
+                                        strokeWidth={2}
+                                        dot={{ fill: '#8b5cf6' }}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Category Distribution */}
                 <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Unique Visitors</p>
-                                <p className="text-2xl font-bold">18.2K</p>
-                            </div>
-                            <div className="flex items-center text-green-500 text-sm">
-                                <ArrowUpRight className="w-4 h-4" />
-                                +8%
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Ext. Link Clicks</p>
-                                <p className="text-2xl font-bold">4.3K</p>
-                            </div>
-                            <div className="flex items-center text-red-500 text-sm">
-                                <ArrowDownRight className="w-4 h-4" />
-                                -3%
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Avg. Session</p>
-                                <p className="text-2xl font-bold">3m 24s</p>
-                            </div>
-                            <div className="flex items-center text-green-500 text-sm">
-                                <ArrowUpRight className="w-4 h-4" />
-                                +5%
-                            </div>
+                    <CardHeader>
+                        <CardTitle>Category Distribution</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[300px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={stats.categoryDistribution}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={100}
+                                        paddingAngle={5}
+                                        dataKey="count"
+                                        nameKey="name"
+                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                    >
+                                        {stats.categoryDistribution.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
-            <Tabs defaultValue="traffic" className="w-full">
-                <TabsList>
-                    <TabsTrigger value="traffic">Traffic</TabsTrigger>
-                    <TabsTrigger value="revenue">Revenue</TabsTrigger>
-                    <TabsTrigger value="tools">Tool Performance</TabsTrigger>
-                    <TabsTrigger value="search">Search Terms</TabsTrigger>
-                </TabsList>
+            {/* Top Tools */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Top Performing Tools</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {stats.topTools.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-8">No tools data available yet</p>
+                    ) : (
+                        <div className="h-[350px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={stats.topTools} layout="vertical">
+                                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                                    <XAxis type="number" className="text-xs" />
+                                    <YAxis
+                                        dataKey="name"
+                                        type="category"
+                                        width={150}
+                                        className="text-xs"
+                                        tick={{ fontSize: 12 }}
+                                    />
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: 'hsl(var(--background))',
+                                            border: '1px solid hsl(var(--border))',
+                                            borderRadius: '8px'
+                                        }}
+                                        formatter={(value) => [`${value} views`, 'Views']}
+                                    />
+                                    <Bar
+                                        dataKey="views"
+                                        fill="#8b5cf6"
+                                        radius={[0, 4, 4, 0]}
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
-                <TabsContent value="traffic" className="mt-6">
-                    <div className="grid lg:grid-cols-3 gap-6">
-                        <Card className="lg:col-span-2">
-                            <CardHeader>
-                                <CardTitle>Visitors & Page Views</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="h-[300px]">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={visitorData}>
-                                            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                                            <XAxis dataKey="name" className="text-xs" />
-                                            <YAxis className="text-xs" />
-                                            <Tooltip
-                                                contentStyle={{
-                                                    backgroundColor: 'hsl(var(--card))',
-                                                    border: '1px solid hsl(var(--border))',
-                                                    borderRadius: '8px'
-                                                }}
-                                            />
-                                            <Area type="monotone" dataKey="pageViews" stackId="1" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
-                                            <Area type="monotone" dataKey="visitors" stackId="2" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.3} />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
+            {/* Summary Table */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Category Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        {stats.categoryDistribution.map((cat, index) => (
+                            <div key={cat.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className="w-3 h-3 rounded-full"
+                                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                    />
+                                    <span className="font-medium">{cat.name}</span>
                                 </div>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Traffic by Category</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="h-[300px]">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={categoryData}
-                                                innerRadius={60}
-                                                outerRadius={80}
-                                                paddingAngle={5}
-                                                dataKey="value"
-                                            >
-                                                {categoryData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
+                                <div className="flex items-center gap-4">
+                                    <Badge variant="secondary">{cat.count} tools</Badge>
+                                    <span className="text-muted-foreground text-sm">
+                                        {stats.totalTools > 0
+                                            ? ((cat.count / stats.totalTools) * 100).toFixed(1)
+                                            : 0}%
+                                    </span>
                                 </div>
-                                <div className="flex flex-wrap gap-2 justify-center mt-4">
-                                    {categoryData.map(cat => (
-                                        <div key={cat.name} className="flex items-center gap-1 text-xs">
-                                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }} />
-                                            {cat.name}
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        ))}
+                        {stats.categoryDistribution.length === 0 && (
+                            <p className="text-center text-muted-foreground py-4">No category data available</p>
+                        )}
                     </div>
-                </TabsContent>
-
-                <TabsContent value="revenue" className="mt-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Revenue Over Time</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="h-[300px]">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={revenueData}>
-                                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                                        <XAxis dataKey="name" className="text-xs" />
-                                        <YAxis className="text-xs" />
-                                        <Tooltip
-                                            formatter={(value) => [`$${value}`, 'Revenue']}
-                                            contentStyle={{
-                                                backgroundColor: 'hsl(var(--card))',
-                                                border: '1px solid hsl(var(--border))',
-                                                borderRadius: '8px'
-                                            }}
-                                        />
-                                        <Bar dataKey="revenue" fill="#22c55e" radius={[4, 4, 0, 0]} />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="tools" className="mt-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Top Performing Tools (by Clicks)</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="h-[300px]">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={toolClicksData} layout="vertical">
-                                        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                                        <XAxis type="number" className="text-xs" />
-                                        <YAxis type="category" dataKey="name" className="text-xs" width={80} />
-                                        <Tooltip
-                                            contentStyle={{
-                                                backgroundColor: 'hsl(var(--card))',
-                                                border: '1px solid hsl(var(--border))',
-                                                borderRadius: '8px'
-                                            }}
-                                        />
-                                        <Bar dataKey="clicks" radius={[0, 4, 4, 0]}>
-                                            {toolClicksData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
-                                            ))}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="search" className="mt-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Popular Search Terms</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                {searchTermsData.map((item, index) => (
-                                    <div key={item.term} className="flex items-center gap-4">
-                                        <span className="text-muted-foreground w-6">{index + 1}.</span>
-                                        <div className="flex-1">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <span className="font-medium">{item.term}</span>
-                                                <span className="text-sm text-muted-foreground">{item.count} searches</span>
-                                            </div>
-                                            <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-primary rounded-full"
-                                                    style={{ width: `${(item.count / searchTermsData[0].count) * 100}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
+                </CardContent>
+            </Card>
         </div>
     )
 }

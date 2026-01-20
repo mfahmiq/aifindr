@@ -1,21 +1,49 @@
 "use client"
 
+import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
+
 import { HeroSection } from "@/components/hero-section"
 import { ToolCard } from "@/components/tool-card"
 import { FilterSidebar, defaultFilters } from "@/components/filter-sidebar"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { TopBannerAd, SidebarAd, InlineToolAd, FooterCtaAd, SponsorToolBanner } from "@/components/ad-sections"
-import { ToolWithRelations } from "@/lib/types" // Updated import
-import React, { useState, useEffect } from "react"
-import Link from "next/link"
-import { TrendingUp, ArrowRight, Loader2 } from "lucide-react"
+import { CategoryLists } from "@/components/category-lists"
 import { Button } from "@/components/ui/button"
+import { ToolWithRelations } from "@/lib/types"
+
+const ITEMS_PER_PAGE = 12
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  // Initialize filters from URL if possible, or use effect to update
+  // Since we use useState for filters, we'll update it via effect when searchParams change
   const [filters, setFilters] = useState(defaultFilters)
   const [tools, setTools] = useState<ToolWithRelations[]>([])
   const [loading, setLoading] = useState(true)
   const [inlineAds, setInlineAds] = useState<any[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
+
+  // Sync URL params to filters state on load/change
+  useEffect(() => {
+    const search = searchParams.get('search') || ''
+    const category = searchParams.get('category') || 'All'
+
+    setFilters(prev => {
+      // Only update if changed to avoid loop/render thrashing
+      if (prev.search === search && prev.category === category) return prev
+      return {
+        ...prev,
+        search,
+        category
+      }
+    })
+  }, [searchParams])
 
   // Fetch inline ads
   useEffect(() => {
@@ -31,7 +59,12 @@ export default function Home() {
     fetchAds()
   }, [])
 
-  // Fetch tools when filters change
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filters])
+
+  // Fetch tools when filters or page change
   useEffect(() => {
     const fetchTools = async () => {
       setLoading(true)
@@ -50,14 +83,19 @@ export default function Home() {
 
         if (filters.sortBy) params.append('sortBy', filters.sortBy)
 
+        params.append('limit', ITEMS_PER_PAGE.toString())
+        params.append('page', currentPage.toString())
+
         const res = await fetch(`/api/tools?${params.toString()}`)
         if (!res.ok) throw new Error('Failed to fetch')
 
         const data = await res.json()
         setTools(data.tools || [])
+        setTotalCount(data.count || 0)
       } catch (error) {
         console.error("Error fetching tools:", error)
         setTools([])
+        setTotalCount(0)
       } finally {
         setLoading(false)
       }
@@ -66,7 +104,7 @@ export default function Home() {
     // Debounce search slightly
     const timer = setTimeout(fetchTools, 300)
     return () => clearTimeout(timer)
-  }, [filters])
+  }, [filters, currentPage])
 
   return (
     <div className="min-h-screen">
@@ -94,7 +132,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold">
                 {filters.category === 'All' ? 'All Tools' : filters.category}
                 <span className="text-muted-foreground font-normal ml-2">
-                  ({loading ? '...' : tools.length})
+                  ({loading ? '...' : totalCount})
                 </span>
               </h2>
               <Link href="/trending">
@@ -154,7 +192,96 @@ export default function Home() {
                 </Button>
               </div>
             )}
+
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-10">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="gap-1"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </Button>
+
+                <div className="flex items-center gap-1">
+                  {/* First page */}
+                  {currentPage > 3 && (
+                    <>
+                      <Button
+                        variant={currentPage === 1 ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setCurrentPage(1)}
+                        className="w-9 h-9 p-0"
+                      >
+                        1
+                      </Button>
+                      {currentPage > 4 && <span className="px-2 text-muted-foreground">...</span>}
+                    </>
+                  )}
+
+                  {/* Page numbers around current */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => {
+                      if (totalPages <= 7) return true
+                      return Math.abs(page - currentPage) <= 2
+                    })
+                    .map(page => (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="w-9 h-9 p-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+
+                  {/* Last page */}
+                  {currentPage < totalPages - 2 && totalPages > 7 && (
+                    <>
+                      {currentPage < totalPages - 3 && <span className="px-2 text-muted-foreground">...</span>}
+                      <Button
+                        variant={currentPage === totalPages ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setCurrentPage(totalPages)}
+                        className="w-9 h-9 p-0"
+                      >
+                        {totalPages}
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="gap-1"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+
+            {/* Show current page info */}
+            {!loading && totalCount > 0 && (
+              <p className="text-center text-sm text-muted-foreground mt-4">
+                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount} tools
+              </p>
+            )}
           </div>
+        </div>
+
+        {/* Category Lists Section */}
+        <div className="-mx-4 md:-mx-0 mt-8">
+          <CategoryLists />
         </div>
 
         {/* Newsletter Section */}

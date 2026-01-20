@@ -22,6 +22,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { toolsService } from "@/lib/services/toolsService"
 import { ToolWithRelations } from "@/lib/types"
+import { appendUTMParams } from "@/lib/utm"
 
 export default function ComparePage() {
     const [tools, setTools] = useState<ToolWithRelations[]>([])
@@ -142,8 +143,17 @@ export default function ComparePage() {
                                         <X className="w-4 h-4" />
                                     </Button>
                                     <CardHeader className="text-center pb-2">
-                                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary text-2xl mx-auto mb-3 shadow-lg">
-                                            {selectedTools[slot].name.substring(0, 2)}
+                                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary text-2xl mx-auto mb-3 shadow-lg overflow-hidden">
+                                            {selectedTools[slot].logo_url ? (
+                                                <img
+                                                    src={selectedTools[slot].logo_url}
+                                                    alt={selectedTools[slot].name}
+                                                    referrerPolicy="no-referrer"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                selectedTools[slot].name.substring(0, 2)
+                                            )}
                                         </div>
                                         <CardTitle className="text-xl">{selectedTools[slot].name}</CardTitle>
                                         <Badge className="mx-auto mt-2" variant="outline">{getCategoryName(selectedTools[slot])}</Badge>
@@ -200,8 +210,17 @@ export default function ComparePage() {
                                                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 cursor-pointer transition-colors border border-transparent hover:border-primary/20"
                                                 onClick={() => addTool(tool)}
                                             >
-                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary">
-                                                    {tool.name.substring(0, 2)}
+                                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary overflow-hidden">
+                                                    {tool.logo_url ? (
+                                                        <img
+                                                            src={tool.logo_url}
+                                                            alt={tool.name}
+                                                            referrerPolicy="no-referrer"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        tool.name.substring(0, 2)
+                                                    )}
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="font-semibold">{tool.name}</div>
@@ -287,10 +306,10 @@ export default function ComparePage() {
                                                 {selectedTools.map(tool => (
                                                     <td key={tool.id} className="text-center py-6 px-6">
                                                         <Button asChild className="bg-gradient-to-r from-primary to-purple-500">
-                                                            <Link href={tool.website_url || '#'} target="_blank">
+                                                            <a href={appendUTMParams(tool.website_url || '', { enabled: true, source: 'indoai', medium: 'compare', campaign: tool.name.toLowerCase().replace(/\s+/g, '-') })} target="_blank" rel="noopener noreferrer">
                                                                 <ExternalLink className="w-4 h-4 mr-2" />
                                                                 Visit
-                                                            </Link>
+                                                            </a>
                                                         </Button>
                                                     </td>
                                                 ))}

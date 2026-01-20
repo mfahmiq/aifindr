@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { verifySignature, getTransactionStatus } from '@/lib/midtrans'
+import { subscriptionService } from '@/lib/services/subscriptionService'
 
 // Use service role client since this is a webhook
 const supabase = createClient(
@@ -113,6 +114,16 @@ export async function POST(request: NextRequest) {
             }
 
             console.log(`Subscription activated for user ${payment.user_id}, plan: ${payment.plan}`)
+
+            // Notify admin if new Sponsor (for manual benefits like Social Media mention)
+            if (payment.plan === 'sponsor') {
+                await subscriptionService.sendAdminNotification('new_sponsor', {
+                    userId: payment.user_id,
+                    plan: payment.plan,
+                    amount: gross_amount,
+                    timestamp: new Date().toISOString()
+                })
+            }
         }
 
         return NextResponse.json({ status: 'ok' })

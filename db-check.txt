@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Napkin AI",
+    "logo_url": "https://www.aixploria.com/wp-content/uploads/favicons/napkin-ai.png"
+  },
+  {
+    "name": "Lyrics to Song AI",
+    "logo_url": "https://www.aixploria.com/wp-content/uploads/favicons/lyrics-to-song-ai.png"
+  },
+  {
+    "name": "Nextify AI",
+    "logo_url": "https://www.aixploria.com/wp-content/uploads/favicons/nextify-ai.png"
+  },
+  {
+    "name": "Typli.ai",
+    "logo_url": "https://www.aixploria.com/wp-content/uploads/favicons/typli-ai.png"
+  },
+  {
+    "name": "InfronAI",
+    "logo_url": "https://www.aixploria.com/wp-content/uploads/favicons/infronai.png"
+  }
+]

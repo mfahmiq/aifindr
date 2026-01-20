@@ -1,0 +1,3326 @@
+[
+  {
+    "name": "TranslateGemma",
+    "slug": "translategemma-google-deepmind-ai",
+    "shortDescription": "A collection of open-source translation models developed by Google DeepMind covering 55+ languages with dedicated two-step training (on billions of translation pairs)",
+    "longDescription": "",
+    "websiteUrl": "https://blog.google/innovation-and-ai/technology/developers-tools/translategemma/?id=TranslateGemma",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/TranslateGemma-google-deepmind-ai.webp",
+    "categories": [
+      "#Latest AI",
+      "#Translation"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Translation"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5555555555556,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/translategemma-google-deepmind-ai/"
+  },
+  {
+    "name": "Typli.ai",
+    "slug": "typli-ai",
+    "shortDescription": "Use over 180 tools to generate texts, letters, emails, summaries, or product descriptions. This powerful platform also includes features for rephrasing, structuring long content, and creating images",
+    "longDescription": "",
+    "websiteUrl": "https://typli.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/typli_ai___ai_writing_tools_with_superpowers_.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/typli-ai/"
+  },
+  {
+    "name": "Kutt AI",
+    "slug": "kutt-ai",
+    "shortDescription": "Produce videos from text or images by defining the mood, visual effects, and output format. Several built-in tools also make it easy to create animated avatars and replace faces or bodies",
+    "longDescription": "",
+    "websiteUrl": "https://kutt.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/kutt_ai___free_ai_video_generator__text___image_to_video.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/kutt-ai/"
+  },
+  {
+    "name": "Imgtovid AI",
+    "slug": "imgtovid-ai",
+    "shortDescription": "Bring your photos to life in videos with realistic movements and cinematic effects using several AI models (Kling, Runway, Luma, Veo3). The platform generates videos with full control over movement intensity, camera angles, and artistic styles",
+    "longDescription": "",
+    "websiteUrl": "https://www.imgtovid.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/image_to_video_ai___free_ai_video_generator_online___imgtovid.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/imgtovid-ai/"
+  },
+  {
+    "name": "Listagrow AI",
+    "slug": "listagrow-ai",
+    "shortDescription": "Automate the integration and optimization of your product listings by transforming your images or raw data into complete pages with titles, descriptions, tags, and SEO metadata. The tool also checks for duplicates and enriches incomplete listings. Integration possible with Shopify or WooCommerce",
+    "longDescription": "",
+    "websiteUrl": "https://listagrow.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/listagrow_ai__product_listing___catalog_onboarding_ai_suite.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/listagrow-ai/"
+  },
+  {
+    "name": "Nextify AI",
+    "slug": "nextify-ai",
+    "shortDescription": "Quickly generate advertising videos (and UGC) from a simple idea or product photo. Take advantage of numerous templates, scenes, and avatars to create videos tailored to TikTok, Instagram, Facebook, and YouTube",
+    "longDescription": "",
+    "websiteUrl": "https://www.nextify.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_ad_video_generator___create_ad_creative___ugc_ads_by_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/nextify-ai/"
+  },
+  {
+    "name": "Pixalytica",
+    "slug": "pixalytica",
+    "shortDescription": "Get comprehensive identity verification reports quickly by uploading a photo and analyzing the information available online. You will receive a structured summary that includes profiles found, public mentions, risk indicators, and additional data",
+    "longDescription": "",
+    "websiteUrl": "https://pixalytica.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_based_kyc_reports_created_using_facial_recognition.webp",
+    "categories": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/pixalytica/"
+  },
+  {
+    "name": "InfronAI",
+    "slug": "infronai",
+    "shortDescription": "A centralized platform that allows you to operate, monitor, and connect multiple AI models or services through a single access point. You benefit from performance monitoring, unified billing, fault tolerance, and high-availability infrastructure",
+    "longDescription": "",
+    "websiteUrl": "https://infron.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/infronai___reliable_ai_model_interface_for_growing_business.webp",
+    "categories": [
+      "#Business",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Business",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/infronai/"
+  },
+  {
+    "name": "Lyrics to Song AI",
+    "slug": "lyrics-to-song-ai",
+    "shortDescription": "Turn your lyrics into complete songs with vocals, instruments, and arrangements in the musical style of your choice. You can set the genre, tempo, and mood to generate songs that can last several minutes",
+    "longDescription": "",
+    "websiteUrl": "https://lyricstosong.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/lyrics_to_song___convert_lyrics_to_song_with_ai___free_lyrics_to_song_generator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/lyrics-to-song-ai/"
+  },
+  {
+    "name": "Gemini Personal Intelligence: Review & Test – Google’s Real Personal AI",
+    "slug": "gemini-personal-intelligence",
+    "shortDescription": "A next-generation mobile AI assistant that truly understands you and performs tasks across all your Google apps. It can manage your emails, calls, messages, reminders, control your smart home, and much more",
+    "longDescription": "\n\n\n\nQuick summary: Gemini Personal Intelligence is the upgrade that finally turns Google’s chatbot into a proactive Chief of Staff. By securely connecting to your Gmail, Photos, and Calendar, it stops guessing and starts knowing.",
+    "websiteUrl": "https://gemini.google/us/overview/personal-intelligence/?id=GeminiPersonalIntelligence&hl=en",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/Personal-Intelligence-from-Gemini.webp",
+    "categories": [
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/gemini-personal-intelligence/"
+  },
+  {
+    "name": "Claude Healthcare",
+    "slug": "claude-healthcare-ai",
+    "shortDescription": "An AI solution dedicated to healthcare professionals that automates prior authorizations, insurance appeal reviews, clinical documentation, and patient coordination. The assistant can also connect to CMS, ICD-10, NPI Registry, and PubMed databases",
+    "longDescription": "",
+    "websiteUrl": "https://claude.com/solutions/healthcare?id=ClaudeHealthcare",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/Healthcare-Claude-ai.webp",
+    "categories": [
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/claude-healthcare-ai/"
+  },
+  {
+    "name": "GLM-Image",
+    "slug": "glm-image-z-ai",
+    "shortDescription": "An open-source AI image generator with 16 billion parameters that excels at displaying text. This model also supports image editing, style transfer, identity preservation, and multi-subject consistency",
+    "longDescription": "",
+    "websiteUrl": "https://z.ai/blog/glm-image?id=GLM-Image",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/GLM-Image-z-ai.webp",
+    "categories": [
+      "#Github Projects",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Github Projects",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5714285714286,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/glm-image-z-ai/"
+  },
+  {
+    "name": "Shutterstock AI Review 2026: The Safest Image Generator for Brands",
+    "slug": "shutterstock-ai",
+    "shortDescription": "The famous image bank now incorporates AI generation. This means you can create images from simple instructions. The platform has partnered with OpenAI, Meta, and LG AI Research to offer you millions of photos, videos, music, and models with commercial licenses",
+    "longDescription": "\n\n\n\nQuick summary: In 2026, Shutterstock is no longer just a stock photo site. It has become the safest generative AI platform for enterprise marketing. Its integration with Databricks and OpenAI makes it the “adult in the room” for copyright-safe visuals.",
+    "websiteUrl": "https://www.shutterstock.com/?irclickid=wB0WphSgDxycTEIRKPS8%3A2viUkpSkRTWf0OxR40&irgwc=1&afsrc=1&pl=5293708-42119",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_image_generator__text_to_image_online_tool___shutterstock.webp",
+    "categories": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/shutterstock-ai/"
+  },
+  {
+    "name": "Remove Watermarks MarkGone",
+    "slug": "remove-watermarks-markgone",
+    "shortDescription": "Quickly remove unwanted watermarks from your photos and images online. You can also erase text, logos, or distracting objects without altering the rest of your image",
+    "longDescription": "",
+    "websiteUrl": "https://www.removewatermarks.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/remove_watermarks_from_photos___videos_online_free___markgone-1.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/remove-watermarks-markgone/"
+  },
+  {
+    "name": "Mockuplabs.ai",
+    "slug": "mockuplabs-ai",
+    "shortDescription": "Create realistic product mockups for posters, packaging, or T-shirts from an image (or pre-existing templates). The tool offers several scenes, angles, and backgrounds to integrate your creations and generate renderings that can be used in your stores, portfolios, or social media accounts",
+    "longDescription": "",
+    "websiteUrl": "https://www.mockuplabs.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/free_mockup_generator___mockup_ai_for_any_product.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/mockuplabs-ai/"
+  },
+  {
+    "name": "Klodsy",
+    "slug": "klodsy-outfit-maker-ai",
+    "shortDescription": "Transform your physical wardrobe into a digital platform with virtual fitting thanks to AI that shows you how outfits really look on you. Upload your clothes or choose from the catalog, automatically generate stylish combinations, and more",
+    "longDescription": "",
+    "websiteUrl": "https://klodsy.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/klodsy___virtual_try_on_app___ai_fashion___outfit_generator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Fashion",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Fashion",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/klodsy-outfit-maker-ai/"
+  },
+  {
+    "name": "ChatGPT Health",
+    "slug": "chatgpt-health-ai",
+    "shortDescription": "A specialized version that helps interpret medical records, prepare for consultations, and find fitness advice by connecting to Apple Health. The assistant answers medical questions from over 200 million users. Available on the waitlist",
+    "longDescription": "",
+    "websiteUrl": "https://openai.com/index/introducing-chatgpt-health/?id=ChatGPTHealth",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/introducing_chatgpt_health___openai.webp",
+    "categories": [
+      "#Healthcare",
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "tags": [
+      "#Healthcare",
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.3333333333333,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/chatgpt-health-ai/"
+  },
+  {
+    "name": "MakeBestMusic",
+    "slug": "makebestmusic",
+    "shortDescription": "Generate music tracks from a prompt or lyrics, with a choice of styles, tempo, and instruments. You can also load an existing track to remix it, extract stems, or remove vocals",
+    "longDescription": "",
+    "websiteUrl": "https://makebestmusic.com/?pid=PIDP9Vm9i21B",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_music_generator___ai_powered_music_production_suite.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/makebestmusic/"
+  },
+  {
+    "name": "Colorart",
+    "slug": "colorart",
+    "shortDescription": "Create coloring pages from a simple idea or your own photos, with detailed outlines ready to print. This platform also offers options to improve the quality of your images",
+    "longDescription": "",
+    "websiteUrl": "https://colorart.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/free_ai_coloring_pages_generator___photos_to_art___colorart_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/colorart/"
+  },
+  {
+    "name": "PXZ Image Generator",
+    "slug": "pxz-image-generator",
+    "shortDescription": "Generate images from text or photos by choosing from several styles and output formats. This AI tool provides adjustments to guide composition, colors, or overall mood, You can create AI images with models like Nano Banana, Seedream, or Flux",
+    "longDescription": "",
+    "websiteUrl": "https://pxz.ai/tools/image-generator",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/online_ai_image_generator_free___create_ai_generated_images_fast.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/pxz-image-generator/"
+  },
+  {
+    "name": "Visual Field Test",
+    "slug": "visual-field-test",
+    "shortDescription": "Test your peripheral vision directly online with a series of interactive grids that assess the extent and responsiveness of your visual field. At the end of the test, you will receive feedback and a visualization of your results",
+    "longDescription": "",
+    "websiteUrl": "https://visualfieldtest.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/visual_field_test___detect_blind_spots_online___visual_field_test.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/visual-field-test/"
+  },
+  {
+    "name": "WhatsApp Schedule Message",
+    "slug": "whatsapp-schedule-message",
+    "shortDescription": "Schedule WhatsApp messages in advance for a specific date and time so you never forget to send reminders or important announcements. Add multiple recipients, create recurring messages, and organize your communications more easily",
+    "longDescription": "",
+    "websiteUrl": "https://wadesk.io/whatsapp-schedule-message",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/free_whatsapp_schedule_message___24_7_auto_send___wadesk.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/whatsapp-schedule-message/"
+  },
+  {
+    "name": "AVCLabs Video Blur AI",
+    "slug": "avclabs-video-blur-ai",
+    "shortDescription": "Automatically blur faces, license plates, backgrounds, or remove unwanted objects from your videos using AI. This editor can process multiple elements simultaneously and intelligently restore deleted areas",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.avclabs.com/video-blur-ai.html",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/avclabs_video_blur_ai__professional_video_blurring_and_object_removal_software___avclabs.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/avclabs-video-blur-ai/"
+  },
+  {
+    "name": "ColorPage Lab",
+    "slug": "colorpage-lab",
+    "shortDescription": "Create coloring pages from text or images you upload, with crisp outlines suitable for printing. The tool offers several layout styles for clear drawings, perfect for children or creative paper projects",
+    "longDescription": "",
+    "websiteUrl": "https://aicoloringpage.org/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/colorpage_lab___coloring_pages___coloring_pages_generator___ai_coloring_pages_generator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/colorpage-lab/"
+  },
+  {
+    "name": "Png AI",
+    "slug": "png-ai",
+    "shortDescription": "Quickly generates PNG images from simple descriptions or existing files, with support for transparent backgrounds and various styles. The tool also offers remix features to quickly combine or reinterpret your images",
+    "longDescription": "",
+    "websiteUrl": "https://www.png.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/free_ai_png_generator_to_creating_stunning_png_images_instantly.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/png-ai/"
+  },
+  {
+    "name": "Kirkify AI",
+    "slug": "kirkify-ai",
+    "shortDescription": "Turn a photo into a “Kirkified” image inspired by the wave of viral memes in just a few clicks. Upload a JPG or PNG, apply the signature effect, and export a visual ready to be shared on your social networks",
+    "longDescription": "",
+    "websiteUrl": "https://kirkifyai.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/kirkify_ai___kirkified_meme_generator___free_online.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/kirkify-ai/"
+  },
+  {
+    "name": "Sketchflow.ai",
+    "slug": "sketchflow-ai",
+    "shortDescription": "Turn an idea, description, or reference image into a complete web or mobile interface with screens, user flows, and interactive prototypes. The tool generates multi-page mockups and offers customizable styles",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.sketchflow.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_design_to_code__build_web___apps_faster.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code",
+      "#Websites & Design"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code",
+      "#Websites & Design"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/sketchflow-ai/"
+  },
+  {
+    "name": "Final Round AI",
+    "slug": "final-round-ai-interview",
+    "shortDescription": "Prepare for every stage of an interview with realistic simulations, a database of questions for each role, and a tool that suggests structured responses. The service also offers optimized resume creation, cover letters, and performance analysis",
+    "longDescription": "",
+    "websiteUrl": "https://www.finalroundai.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/final_round_ai__your_ai_interview_assistant___prep_tools.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/final-round-ai-interview/"
+  },
+  {
+    "name": "WriteHybrid AI Humanizer",
+    "slug": "writehybrid-ai-humanizer",
+    "shortDescription": "AI that rewrites your texts to achieve a more fluid and natural style, adapted to human reading. This gives you content that is ready to be published, such as articles, reports, or long documents. Ability to work continuously on multiple texts",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.writehybrid.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/ai_humanizer_and_humanize_ai_text___500_free_words_monthly___writehybrid.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/writehybrid-ai-humanizer/"
+  },
+  {
+    "name": "BeautyPlus Image Enhancer",
+    "slug": "beautyplus-image-enhancer",
+    "shortDescription": "Improve the quality of your photos online with automatic adjustments that enhance sharpness, detail, and lighting. Quickly correct visual imperfections to achieve more balanced photos",
+    "longDescription": "",
+    "websiteUrl": "https://www.beautyplus.com/image-enhancer",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/free_ai_image_enhancer___enhance_photo_quality_online-1.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/beautyplus-image-enhancer/"
+  },
+  {
+    "name": "ZenMux",
+    "slug": "zenmux",
+    "shortDescription": "Access all leading AI models (GPT-5, Claude, Gemini, DeepSeek, Grok-4) through a single API compatible with OpenAI and Anthropic. The platform aggregates official providers through intelligent routing  (API) to balance quality and cost",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://zenmux.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/zenmux.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#ChatBots",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#ChatBots",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/zenmux/"
+  },
+  {
+    "name": "MiniMax M2.1",
+    "slug": "minimax-m2-1",
+    "shortDescription": "An open-source model optimized for autonomous coding that rivals Claude Sonnet 4.5 while costing 10 times less. Specialized in multilingual coding, tool usage, and long-horizon planning",
+    "longDescription": "",
+    "websiteUrl": "https://www.minimax.io/news/minimax-m21?id=MiniMaxM2.1",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/MiniMax-M2-1-code-ai-engineering.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.375,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/minimax-m2-1/"
+  },
+  {
+    "name": "IQuest-Coder-V1",
+    "slug": "iquest-coder-v1",
+    "shortDescription": "An open-source model with 40 billion parameters specializing in code that outperforms Claude Sonnet with an 81% success rate on SWE-Bench. Its architecture, trained on rest evolution, guarantees professional-quality code",
+    "longDescription": "",
+    "websiteUrl": "https://iquestlab.github.io/?id=IQuest-Coder-V1",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2026/01/IQuest-Coder-v1-iquestlab.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/iquest-coder-v1/"
+  },
+  {
+    "name": "ReelMuse AI",
+    "slug": "reelmuse-ai",
+    "shortDescription": "Centralize all your content creation on a single platform. This all-in-one tool generates videos (from text or images), AI music, and artistic images. It also offers advanced features such as lip sync",
+    "longDescription": "",
+    "websiteUrl": "https://www.reelmuse.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/reelmuse_ai___all_in_one_ai_platform___ai_kissing_effect___video__image__audio_creator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Music",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Music",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/reelmuse-ai/"
+  },
+  {
+    "name": "AIimageToVideo.pro",
+    "slug": "aiimagetovideo-pro",
+    "shortDescription": "Bring your photos to life with realistic cinematic videos and natural physics. This tool uses models such as Hailuo 2.3 or Kling to transform your portraits, products, or logos into videos with quality up to 1080p",
+    "longDescription": "",
+    "websiteUrl": "https://aiimagetovideo.pro/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_image_to_video__free_image_to_video_ai_generator_online.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/aiimagetovideo-pro/"
+  },
+  {
+    "name": "PhotoCat Image Extender",
+    "slug": "photocat-image-extender",
+    "shortDescription": "Enlarge your images or their backgrounds while maintaining sharpness and detail for different publication formats. You can widen a landscape, add space around a portrait, or adapt a visual to the requirements of social media platforms (without visible distortion)",
+    "longDescription": "",
+    "websiteUrl": "https://photocat.com/image-extender/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_image_extender_free___expand_images_naturally_with_uncrop_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/photocat-image-extender/"
+  },
+  {
+    "name": "Airbrush",
+    "slug": "airbrush-background-remover",
+    "shortDescription": "Quickly remove the background from your photos and get professional transparent PNGs. Then replace them with colored backgrounds, predefined or AI-generated backgrounds",
+    "longDescription": "",
+    "websiteUrl": "https://airbrush.com/background-remover",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/online_ai_background_remover___remove_background_from_image_for_free.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/airbrush-background-remover/"
+  },
+  {
+    "name": "JoyFun AI",
+    "slug": "joyfun-ai",
+    "shortDescription": "Turn text or images into short, dynamic clips directly from your browser (no registration required). This platform has many tools, including tools to swap faces in a video",
+    "longDescription": "",
+    "websiteUrl": "https://joyfun.ai/?id=JoyFunAI",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_ai_video_generator__face_swap___effects___joyfun_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/joyfun-ai/"
+  },
+  {
+    "name": "OpenLover AI",
+    "slug": "openlover-ai",
+    "shortDescription": "The next-level Adult AI companion tool. Featuring unlimited NSFW roleplay games, stunning videos, uncensored images, and much more in development",
+    "longDescription": "",
+    "websiteUrl": "https://candy.ai/characters/new?cid=w8gc5ef66rj6hpmf3382frpa&gender=female&spot=&adg=",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/openlover-ai-gf.webp",
+    "categories": [
+      "#AI Girlfriend"
+    ],
+    "tags": [
+      "#AI Girlfriend"
+    ],
+    "pricingType": "Trial",
+    "sourceUrl": "https://www.aixploria.com/en/openlover-ai/"
+  },
+  {
+    "name": "Vibecode.dev",
+    "slug": "vibecode-dev",
+    "shortDescription": "Create native iOS and Android mobile apps directly from your phone by simply describing your idea with Vibecode.dev. Test in real time and share easily via App Clips",
+    "longDescription": "",
+    "websiteUrl": "https://www.vibecodeapp.com/?id=Vibecode.dev",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Vibecode-AI-Mobile-App.webp",
+    "categories": [
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.4444444444444,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/vibecode-dev/"
+  },
+  {
+    "name": "WeDLM",
+    "slug": "wedlm-llm-tencent-ai",
+    "shortDescription": "A Tencent diffusion language model capable of producing multiple tokens in parallel, with inference speeds up to 10 times faster than traditional autoregressive LLMs. Compatible with standard causal attention and native KV cache, optimized via vLLM",
+    "longDescription": "",
+    "websiteUrl": "https://wedlm.github.io/?id=WeDLM",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/WeDLM-Reconciling-Diffusion-Language-Models.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/wedlm-llm-tencent-ai/"
+  },
+  {
+    "name": "Google MedASR",
+    "slug": "google-medasr-ai",
+    "shortDescription": "Easily transcribe medical dictations and exchanges between doctors and patients. The system is based on a voice recognition model with 105 million parameters, trained on 5,000 hours of medical data covering radiology and internal medicine",
+    "longDescription": "",
+    "websiteUrl": "https://developers.google.com/health-ai-developer-foundations/medasr?id=GoogleMedASR",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/medasr-google-ai-model-1.webp",
+    "categories": [
+      "#Github Projects",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Github Projects",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5833333333333,
+    "reviewCount": 12,
+    "sourceUrl": "https://www.aixploria.com/en/google-medasr-ai/"
+  },
+  {
+    "name": "Azoma",
+    "slug": "azoma-ai",
+    "shortDescription": "Enhance your presence on ChatGPT Shopping, Amazon Rufus, Perplexity, and Google AI Overviews with a comprehensive GEO platform. Real-time citation tracking, competitive analysis, and content production designed for LLMs",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.azoma.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/azoma__end_to_end_generative_engine_optimization_software_for_enterprises.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#SEO"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#SEO"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/azoma-ai/"
+  },
+  {
+    "name": "Chatterbox Turbo",
+    "slug": "chatterbox-turbo-ressemble-ai",
+    "shortDescription": "Recreate a voice from 5 seconds of audio and produce real-time speech synthesis (open source TTS model licensed under MIT). Integrated PerTh watermark for verification, suitable for chatbots, customer support, and avatars",
+    "longDescription": "",
+    "websiteUrl": "https://www.resemble.ai/chatterbox-turbo/?id=ChatterboxTurbo",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Chatterbox-Turbo-Resemble-AI.webp",
+    "categories": [
+      "#Github Projects",
+      "#Latest AI",
+      "#Text To Speech"
+    ],
+    "tags": [
+      "#Github Projects",
+      "#Latest AI",
+      "#Text To Speech"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/chatterbox-turbo-ressemble-ai/"
+  },
+  {
+    "name": "VISBOOM",
+    "slug": "visboom",
+    "shortDescription": "Generate high-quality product visuals without a traditional photoshoot. Create images using models, and offer virtual try-ons for clothing and shoes. Change backgrounds and improve resolution with a single click",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.visboom.com/?relCode=YDX7EJBG",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/visboom__ai_fashion_model___product_visuals_creator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Fashion",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Fashion",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/visboom/"
+  },
+  {
+    "name": "Google Titans+MIRAS",
+    "slug": "google-titans-miras",
+    "shortDescription": "An AI architecture with integrated long-term memory, selective updating based on a surprise signal, and context extended beyond 2 million tokens. MIRAS unifies transformers and linear RNNs thanks to optimized associative memory",
+    "longDescription": "",
+    "websiteUrl": "https://research.google/blog/titans-miras-helping-ai-have-long-term-memory/?id=GoogleTitans+MIRAS",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Titans-MIRAS-Helping-AI-have-long-term-memory-google.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Future Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Future Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/google-titans-miras/"
+  },
+  {
+    "name": "Vora",
+    "slug": "vora-ai",
+    "shortDescription": "Generate and enhance Sora videos with fast 4K conversion, watermark removal, and native audio synchronization in less than 25 seconds. Can reproduce the style of existing viral videos and remove watermarks",
+    "longDescription": "",
+    "websiteUrl": "https://www.fineshare.com/ai-video/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/vora__free_ai_video_generator___make_creativity_easier.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.375,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/vora-ai/"
+  },
+  {
+    "name": "NVIDIA Nemotron 3",
+    "slug": "nvidia-nemotron-3",
+    "shortDescription": "Build specialized AI agents with a family of open-source models optimized for multi-agent systems, hybrid MoE, and with context up to 1M tokens. Enjoy 4x higher throughput than Nemotron 2 Nano.",
+    "longDescription": "",
+    "websiteUrl": "https://nvidianews.nvidia.com/news/nvidia-debuts-nemotron-3-family-of-open-models?id=NVIDIANemotron3",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/nemotron-3-nvidia.llm-models.webp",
+    "categories": [
+      "#AI Agents",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#AI Agents",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5555555555556,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/nvidia-nemotron-3/"
+  },
+  {
+    "name": "Wellows: The “Google Analytics” for the ChatGPT Era? Our Unfiltered Review (2026)",
+    "slug": "wellows-ai-visibility",
+    "shortDescription": "Analyze and monitor your brand's visibility in responses from ChatGPT, Gemini, Perplexity, and Google AI (citations, mentions, and sentiments). Optimize your strategy with the KIVA SEO agent: keyword research, SERP analysis, hidden opportunity detection, and content creation",
+    "longDescription": "Wellows might just be the wake-up call your marketing strategy has been waiting for. You spend hours polishing your SEO for Google, right? You obsess over backlinks and meta tags. But here is a scary thought: millions of people are now asking ChatGPT, Gemini, or Perplexity for answers. Your brand might be completely invisible there.\n\nWe have been testing a new breed of tools lately. Our focus? Generative Engine Optimization (GEO). Wellows claims to be the “single source of truth” for this new reality. It says it can tell you exactly how AI sees you, and more importantly, how to make it like you.\n\nSo, is this tool a must-have for 2026, or just another dashboard to ignore? We connected our accounts, ran the agents, and analyzed the data. Here is what we found.",
+    "websiteUrl": "https://wellows.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Wellows-AI-Search-Visibility-geo-seo.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#SEO"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#SEO"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/wellows-ai-visibility/"
+  },
+  {
+    "name": "Holo AI",
+    "slug": "holo-ai",
+    "shortDescription": "Paste your website URL and automatically get ad copy, video scripts, and headlines ready to use on Meta, TikTok, and Google Ads. The service analyzes your pages, identifies your value proposition, and generates several ad variations that can be tested immediately",
+    "longDescription": "",
+    "websiteUrl": "https://tryholo.ai/?im_ref=UeJU9ZSgDxycTEIRKPS8%3A2viUkpSkW2uf0OxR40&utm_ad_id=3273895&irgwc=1&afsrc=1",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/holo___ai_marketing_tool_for_ads__social_posts___emails-2.webp",
+    "categories": [
+      "#Business",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#Business",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/holo-ai/"
+  },
+  {
+    "name": "Pipedrive: full review and test of the sales CRM (2026)",
+    "slug": "pipedrive-crm",
+    "shortDescription": "Sales management tool designed to track every opportunity, from initial contact to closing. You can view your pipeline, automate follow-ups with AI, schedule activities, and use charts or reports to increase your conversion rate",
+    "longDescription": "Pipedrive grabs your attention immediately. Why? Because it doesn’t look like a spreadsheet designed in the 90s. We have tested dozens of CRM platforms, and most feel like data prisons where sales souls go to die. This tool is different. It treats sales like a game you can actually win.\n\nWe tested the latest version to see if the reality matches the reputation. You might know it as the “visual” CRM. However, recent updates suggest it has become much more. Sales teams today want speed, not administrative headaches. So does Pipedrive deliver that speed, or is it just a pretty face? Let’s find out together.\n\nPipedrive is a customer relationship management (CRM) platform built specifically for salespeople. That distinction matters a lot. Many competitors try to do everything. Marketing, HR, finance. And they end up doing nothing well. Pipedrive, on the other hand, focuses strictly on one goal: moving deals from “lead” to “closed.”",
+    "websiteUrl": "https://aff.trypipedrive.com/3fxj0pzvmefg?id=Pipedrive",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/sales_crm___pipeline_management_software___pipedrive.webp",
+    "categories": [
+      "#Business",
+      "#Latest AI",
+      "#Sales & Conversion"
+    ],
+    "tags": [
+      "#Business",
+      "#Latest AI",
+      "#Sales & Conversion"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4444444444444,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/pipedrive-crm/"
+  },
+  {
+    "name": "Modelfy 3D",
+    "slug": "modelfy-3d",
+    "shortDescription": "Convert your 2D images into high-precision 3D models (up to 300,000 polygons) ready for use in games, 3D printing, or visualization. With PBR textures and GLB/OBJ/STL exports",
+    "longDescription": "",
+    "websiteUrl": "https://modelfy.art/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/modelfy_3d___ai_image_to_3d_model_generator.webp",
+    "categories": [
+      "#3D model",
+      "#AIxploria Selection",
+      "#Art",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#3D model",
+      "#AIxploria Selection",
+      "#Art",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/modelfy-3d/"
+  },
+  {
+    "name": "Face Shape Detector",
+    "slug": "face-shape-detector",
+    "shortDescription": "Upload a photo of your face and receive an analysis of your face shape (square, oval, round, heart-shaped, oblong, etc.) in just a few seconds. The results include suggestions for hairstyles, makeup, and glasses that suit your proportions to help guide your style choices.",
+    "longDescription": "",
+    "websiteUrl": "https://faceshapedetector.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_face_shape_detector___free_face_shape_analyzer.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Fashion",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Fashion",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/face-shape-detector/"
+  },
+  {
+    "name": "Nano Imagine",
+    "slug": "nano-imagine",
+    "shortDescription": "An ultra-fast image generator that converts your prompts into studio-quality illustrations in just 10 seconds. Powered by the Nano Banana Pro model, it excels at rendering text and offers native 4K upscaling",
+    "longDescription": "",
+    "websiteUrl": "https://nanoimagine.art/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_image_generator_online___create_free_art_in_seconds-2.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/nano-imagine/"
+  },
+  {
+    "name": "YouWare",
+    "slug": "youware",
+    "shortDescription": "Turn your idea into a fully functional website or application with a single prompt. YouWare generates code, produces responsive pages, dashboards, or prototypes, and then allows you to publish quickly with a shareable link",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.youware.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/youware___ai_coding_platform_where_vibe_coders_love.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/youware/"
+  },
+  {
+    "name": "AIGNE DocSmith",
+    "slug": "aigne-docsmith",
+    "shortDescription": "Automatically generate and update your codebase documentation with AI agents that map the repo, write pages, diagrams, translations, and publish in multiple languages",
+    "longDescription": "",
+    "websiteUrl": "https://docsmith.aigne.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/aigne_docsmith___ai_powered_code_documentation.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/aigne-docsmith/"
+  },
+  {
+    "name": "PXZ Video Generator",
+    "slug": "pxz-video-generator",
+    "shortDescription": "Create images and videos for free by combining several popular models (Kling, Runway, Pika, Luma, Flux, SD3, Ideogram). Animate your creations from text or images",
+    "longDescription": "",
+    "websiteUrl": "https://pxz.ai/tools/video-generator",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_image_to_video_generator___turn_photos_into_videos_online.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/pxz-video-generator/"
+  },
+  {
+    "name": "AI Song Creator App",
+    "slug": "ai-song-creator-app",
+    "shortDescription": "Turn your ideas into music tracks up to 8 minutes long with custom genre, instrument, and vocal options. This AI generates a complete musical structure with verses, choruses, and chords. Tracks can be downloaded in WAV or MP3 format",
+    "longDescription": "",
+    "websiteUrl": "https://aisongcreator.app/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_music_generator___create_8_min_royalty_free_songs.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/ai-song-creator-app/"
+  },
+  {
+    "name": "Moonmate",
+    "slug": "moonmate",
+    "shortDescription": "Start NSFW chats with AI companions designed for flirting, teasing, and adult scenarios. Conversations evolve based on your choices to create an intimate and interactive experience",
+    "longDescription": "",
+    "websiteUrl": "https://candy.ai/characters/new?cid=wp06hi2mojos9pmf33685icm&gender=female&spot=&adg=",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/moonmate___lifelike_roleplay_chatbots_for_emotional_companionship.webp",
+    "categories": [
+      "#AI Girlfriend"
+    ],
+    "tags": [
+      "#AI Girlfriend"
+    ],
+    "pricingType": "Trial",
+    "sourceUrl": "https://www.aixploria.com/en/moonmate/"
+  },
+  {
+    "name": "T5Gemma 2",
+    "slug": "t5gemma-2-google-ai",
+    "shortDescription": "A family of open-source encoder-decoder models with 2 to 9 billion parameters, based on Gemma 2, with higher inference efficiency than decoder-only models. Available on Hugging Face, Kaggle, and Vertex AI",
+    "longDescription": "",
+    "websiteUrl": "https://huggingface.co/google?id=T5Gemma2",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/T5Gemma-2-google-open-source.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/t5gemma-2-google-ai/"
+  },
+  {
+    "name": "Wan2.6",
+    "slug": "wan2-6-video",
+    "shortDescription": "Generate 1080p videos at 24 frames per second with a maximum duration of 15 seconds, featuring consistent multi-take voiceovers and native video lip-syncing. Videos can be generated from reference images while maintaining the appearance and voice",
+    "longDescription": "",
+    "websiteUrl": "https://create.wan.video/generate/video/generate?model=wan2.6&id=Wan2.6",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/wan2-6-ai-video-generator.webp",
+    "categories": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/wan2-6-video/"
+  },
+  {
+    "name": "UX Pilot AI",
+    "slug": "ux-pilot-ai",
+    "shortDescription": "Create mockups, wireframes, and product screens in minutes with a simple prompt. The tool generates page structures, suggests interface flows, and lets you export your creations to platforms like Figma or as code ready for implementation",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://uxpilot.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/UX-Pilot-Superfast-UX-UI-Design-with-AI.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Websites & Design"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Websites & Design"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/ux-pilot-ai/"
+  },
+  {
+    "name": "Photo Editor AI",
+    "slug": "photo-editor-ai",
+    "shortDescription": "Edit and enhance your photos directly in your browser (no registration required). Perform specific edits such as background removal, targeted retouching, text replacement in an image, or style transfer",
+    "longDescription": "",
+    "websiteUrl": "https://photoeditorai.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_ai_photo_editor_online___edit__transform___enhance.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.375,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/photo-editor-ai/"
+  },
+  {
+    "name": "AI Vector",
+    "slug": "ai-vector",
+    "shortDescription": "Instantly convert your images (PNG, JPG, or JPEG) into clean, scalable SVG vector files. Ideal for logos, illustrations, or websites. AI analyzes shapes and colors to produce clean, accurate vectors",
+    "longDescription": "",
+    "websiteUrl": "https://aivector.ai/en",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_vector__convert_png_to_svg_online_instantly.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/ai-vector/"
+  },
+  {
+    "name": "Sharp Apple",
+    "slug": "sharp-monocular-apple-ai",
+    "shortDescription": "An open source project from Apple that generates a photorealistic 3D representation from a single photo in less than a second on a GPU. You can produce a 3D view of the captured scene and navigate around it with high-resolution rendering in real time",
+    "longDescription": "",
+    "websiteUrl": "https://apple.github.io/ml-sharp/?id=SharpApple",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/sharp.webp",
+    "categories": [
+      "#3D model",
+      "#Github Projects",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#3D model",
+      "#Github Projects",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/sharp-monocular-apple-ai/"
+  },
+  {
+    "name": "Seedance 1.5 Pro: ByteDance’s new video generator with audio",
+    "slug": "seedance-1-5-pro",
+    "shortDescription": "Create cinematic videos in 1080p with natively synchronized audio from text or images. With sophisticated camera movements (long tracking shots, Hitchcock-style zooms), precise lip-syncing, contextual understanding of the narrative, and facial expressions",
+    "longDescription": "Seedance 1.5 Pro has arrived, and it makes quite a noise. Literally. While the tech community spent months watching silent, ghostly AI clips, ByteDance quietly built a tool that speaks. We spent the last week testing this engine, and the results surprised us. This is not just another image-to-video generator. It’s a complete storytelling engine that fuses sound and visuals in a single step.\n\nYou might think you’ve seen it all with previous tools. Yet, this update brings something fresh to your editing timeline. The days of stitching generic stock music onto AI clips are over. So, let’s look at why this tool creates such a buzz among content creators and marketers.\n\nSeedance 1.5 Pro is the latest generative video model developed by ByteDance. It focuses on one massive headache in the industry: audio-visual synchronization. Most competitors generate pixels first and sound later. This tool generates both simultaneously.",
+    "websiteUrl": "https://seed.bytedance.com/en/seedance1_5_pro?id=Seedance1.5pro",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Seedance-1-5-pro-bytedance.webp",
+    "categories": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/seedance-1-5-pro/"
+  },
+  {
+    "name": "Gemini 3 Flash Review: The Speed Demon That Actually Thinks",
+    "slug": "gemini-3-flash",
+    "shortDescription": "Enjoy professional-level intelligence with extreme speed and efficiency (and at a reduced cost). This model uses 30% fewer tokens and is very good at agentic coding",
+    "longDescription": "Gemini 3 Flash has just landed on our dashboard. Frankly, it feels like Google strapped a rocket engine to a library. If you thought the previous Flash models were quick, this update might just make your blink seem slow. We spent the last week throwing everything at it, from complex Python scripts to hour-long video analysis. And the results are in: speed is no longer a trade-off for intelligence.\n\nIn this review, we take a deep look at what makes Gemini 3 Flash a potential game-changer. It’s built for developers and creators who are tired of watching loading spinners. Does it really consume 30% fewer tokens? Is the “agentic coding” just marketing fluff? Let’s find out.\n\nGemini 3 Flash is Google’s latest iteration of its high-efficiency AI model family. It was released as part of the broader Gemini 3 rollout. While its big brother, Gemini 3 Pro, handles the heavy reasoning, Flash is built for one thing: extreme velocity without stupidity.",
+    "websiteUrl": "https://deepmind.google/models/gemini/flash/?id=Gemini3Flash",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/gemini-3-flash.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/gemini-3-flash/"
+  },
+  {
+    "name": "GPT Image 1.5: ChatGPT’s New Image Generator (Test & Review)",
+    "slug": "gpt-image-1-5-chatgpt-openai",
+    "shortDescription": "Generate and edit your images directly in ChatGPT. This model is up to 4× faster and preserves essential details such as facial features. Benefit from better instruction tracking, increased visual consistency, and a dedicated creative studio-style interface.",
+    "longDescription": "GPT Image 1.5 is the next-generation image generator built into ChatGPT. It lets you create and edit illustrations from text descriptions (prompts), with faster output and stronger visual consistency.\n\nGPT Image 1.5 has just landed on our screens, and the team is buzzing. We’ve been looking forward to this update since the first rumors started circulating. OpenAI promises output that runs circles around the previous version, plus razor-sharp accuracy for your visuals.\n\nOur editorial team spent the evening “torturing” the algorithm with impossible requests. (Yes, we even asked for a giraffe eating fondue without spilling a drop.) The verdict is clear: this version is set to become a go-to for content creators.",
+    "websiteUrl": "https://openai.com/index/new-chatgpt-images-is-here/?id=GPTImage1.5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/GPT-Image-1.5_chatgpt-ai-model.webp",
+    "categories": [
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/gpt-image-1-5-chatgpt-openai/"
+  },
+  {
+    "name": "Aimy Ads Review: The Chatbot That Buys Your TV and Social Ads",
+    "slug": "aimy-ads",
+    "shortDescription": "Launch and manage your advertising campaigns on Google, Meta, TikTok, etc. Use an AI tool that plans, executes, optimizes, and analyzes your campaigns without requiring media buying expertise.",
+    "longDescription": "Aimy Ads might just be the marketing sidekick you did not know you were missing. Ever opened Facebook Business Manager and felt the sudden urge to throw your laptop out the window? You are not alone. That dashboard looks like the cockpit of a spaceship. One wrong click? Poof, your budget is gone.\n\n\n\nWe tested Aimy to see if it truly simplifies this chaos. Picture this: you text a friend who happens to be a world-class media buyer. They just handle everything for you. That is the promise here.",
+    "websiteUrl": "https://www.aimyads.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/aimy_ads___conversational_ai_tool_for_advertising_small_businesses.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/aimy-ads/"
+  },
+  {
+    "name": "ClickUp Agents: The Virtual Assistant That Actually Reads Your Mind (and Your Docs)",
+    "slug": "clickup-agents",
+    "shortDescription": "Automate your work with AI agents that answer questions, generate weekly reports, and provide real-time insights. Benefit from integrations with Google Drive, GitHub, Salesforce, and over 20 other applications.",
+    "longDescription": "ClickUp Agents might just be the digital caffeine shot your team desperately craves. We all know the chaos of Monday mornings. You open your laptop, and notifications pile up like dirty laundry. It feels overwhelming. But imagine a helper that doesn’t drink coffee or complain about the weather. Better yet, it knows your company’s history better than the CEO. That’s exactly what we found when we tested ClickUp’s new AI capabilities.\n\nAre you tired of answering “Where is that file?” for the hundredth time? Then stay with us. We dug deep into this tool to see if it lives up to the hype.\n\nTo be precise, “ClickUp Agents” is the autonomous muscle behind ClickUp Brain. Think of it as a super-smart librarian who also happens to be a project manager.",
+    "websiteUrl": "https://try.web.clickup.com/aix-agents?id=ClickUpAgents",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ClickUp-Ambient-Agents-AI.webp",
+    "categories": [
+      "#AI Agents",
+      "#Business",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AI Agents",
+      "#Business",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.25,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/clickup-agents/"
+  },
+  {
+    "name": "Disco (Google Labs): The Browser That Builds Apps For You",
+    "slug": "disco-google-ai-tab",
+    "shortDescription": "Experience a new way of browsing with GenTabs, an AI that transforms your open tabs into personalized web applications (based on your goal). Create SEO workflows, custom dashboards, or interactive tools from your browsing context.",
+    "longDescription": "We’ve all been there. You start with a simple question. Twenty minutes later, your browser looks like a crime scene. Dozens of tabs squeeze together until you can’t even see the icons. You feel overwhelmed. You lose track of everything. That’s exactly what Google Labs wants to fix with Disco and its standout feature, GenTabs.\n\nWe tested this experimental browser to see if it truly cleans up the digital clutter. The promise is bold: take your chaotic research and turn it into a neat, custom web application. Picture this: planning a trip without juggling fifty different windows. Sounds good, right? Let’s find out if Disco lives up to the hype.\n\nDisco is a new “discovery vehicle” from Google Labs. It’s not just Chrome with a fresh coat of paint. It works differently. The real magic comes from a feature called GenTabs. This tool is powered by the Gemini 3 AI model. It changes how you interact with the web by going beyond simple link lists.",
+    "websiteUrl": "https://labs.google/disco/?id=DiscoGoogle",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Disco-google-labs-ai-tab.webp",
+    "categories": [
+      "#Latest AI",
+      "#Productivity"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Productivity"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/disco-google-ai-tab/"
+  },
+  {
+    "name": "Google Skills: The Caffeine Shot Your Tech Career Craves",
+    "slug": "google-skills",
+    "shortDescription": "Access over 3,000 courses, AI certifications from Google Cloud, DeepMind, and Grow with Google on a single platform. Get personalized learning paths (and 35 free monthly credits)",
+    "longDescription": "Google Skills might just be the most exciting bookmark you add to your browser this year. We recently spent a week on this massive platform, and frankly, it feels like a cheat code for the tech industry. Want to master AI? It’s here.\n\nLooking for cloud certification? Also here. Google finally stopped forcing us to jump between different sites. They brought everything under one roof. It’s about time.\n\nWe know how exhausting it can be to hunt for quality tutorials. You start on YouTube, drift to a random blog, and end up confused. This hub changes all of that. It consolidates resources from the biggest names in tech. We’re talking about Google Cloud, DeepMind, and the popular Grow with Google programs. Most of it costs zero dollars. So why is everyone buzzing about it?",
+    "websiteUrl": "https://www.skills.google/?id=GoogleSkills",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Google-Skills-ai-course.webp",
+    "categories": [
+      "#Education / Studies",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Education / Studies",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5555555555556,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/google-skills/"
+  },
+  {
+    "name": "Shopify SimGym",
+    "slug": "shopify-simgym-ai-simulation",
+    "shortDescription": "Simulate the buyer experience on your Shopify store with AI profiles that browse your pages like real customers. You get concrete feedback before rolling out theme changes or marketing campaigns",
+    "longDescription": "",
+    "websiteUrl": "https://apps.shopify.com/simgym?irclickid=QyVzJ7SgDxycTEIRKPS8%3A2viUkpSkWU3f0OxR40&irgwc=1&afsrc=1&partner=5293708&affpt=excluded&utm_channel=affiliates&iradid=1061744",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/shopify-simgym-ai-simulation.webp",
+    "categories": [
+      "#E-commerce",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#E-commerce",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/shopify-simgym-ai-simulation/"
+  },
+  {
+    "name": "Wollo.ai Review: When AI Characters Meets Astrology (And It Actually Works!)",
+    "slug": "wollo-ai",
+    "shortDescription": "Engage in conversations with AI characters whose personalities are designed to simulate realistic and varied exchanges. This platform allows you to create, discover, and interact with AI personas.",
+    "longDescription": "Wollo.ai might just be the most intriguing surprise we tested this month. Forget stiff, robotic assistants that only set timers or summarize PDFs. Here, you step into a vibrant social network full of digital entities with deep personalities.\n\nDuring our tests, we spent hours chatting with a sarcastic cyberpunk hacker and a shy librarian. The fluidity of those exchanges genuinely impressed us. So, if you want a platform that mixes social interaction with a pinch of stardust, keep reading.\n\nWollo.ai is a next-generation platform dedicated to AI character creation and interaction. Think of it as a blend of social media and an immersive roleplaying game. You don’t just “chat” with a bot. Instead, you enter a relationship with a persona that remembers details and evolves over time.",
+    "websiteUrl": "https://wollo.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_character_chat___wollo-1.webp",
+    "categories": [
+      "#AI Characters",
+      "#AIxploria Selection",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AI Characters",
+      "#AIxploria Selection",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/wollo-ai/"
+  },
+  {
+    "name": "GPT-5.2 Review: The AI That Finally Learned to Think Before Speaking",
+    "slug": "gpt-5-2-openai-model",
+    "shortDescription": "The OpenAI model built for long and complicated tasks. It has fewer hallucinations and improved multi-step reasoning. This LLM is great for creating tables, presentations, analyzing long documents, and coding",
+    "longDescription": "GPT-5.2 has landed. And frankly, it feels like the class genius who actually studies for the exam instead of just memorizing the textbook. If you felt exhausted by the endless stream of “faster but dumber” updates, this one might catch you off guard. We finally have a model designed to sit down, take a deep breath, and solve the hard stuff without making things up.\n\nI spent the last week testing this new engine from OpenAI. Is it the magic bullet for every task? No. But for the heavy lifting, it changes the game entirely.\n\nThink of GPT-5.2 not as a chatbot, but as a reasoning engine. Previous versions acted like an eager improviser, spitting out the first likely word to maintain the flow. This model behaves differently. It possesses a “Chain of Thought” architecture.",
+    "websiteUrl": "https://openai.com/index/introducing-gpt-5-2/?id=GPT-5.2",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/gpt-5-2-openai-chatgpt-model.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4444444444444,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/gpt-5-2-openai-model/"
+  },
+  {
+    "name": "Noiz Agent",
+    "slug": "noiz-agent",
+    "shortDescription": "Create podcasts, audiobooks, and videos with cinematic emotional voice cloning that laughs, whispers, and breathes naturally. The tool supports many languages and can also produce detailed transcripts to help you quickly assimilate information",
+    "longDescription": "",
+    "websiteUrl": "https://agent.noiz.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/gather___give_every_idea_a_voice.webp",
+    "categories": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Transcriber"
+    ],
+    "tags": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Transcriber"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/noiz-agent/"
+  },
+  {
+    "name": "Lip Sync AI",
+    "slug": "lip-sync-ai",
+    "shortDescription": "Give any static image a voice. This tool animates faces by precisely synchronizing lip movements with your audio file. Features a Precision mode for complex angles and head movements, and a realistic video translation system",
+    "longDescription": "",
+    "websiteUrl": "https://www.lipsyncai.org/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/lip_sync_ai__ai_lip_sync_animation_generator_free.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/lip-sync-ai/"
+  },
+  {
+    "name": "Rosie AI",
+    "slug": "rosie-ai",
+    "shortDescription": "An on-call operator available day and night who takes your calls, answers questions, filters spam, and captures key information. This AI can even schedule appointments for you",
+    "longDescription": "",
+    "websiteUrl": "https://heyrosie.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Rosie-AI-Call-Answering-Service-24-7-Phone-Support-1.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Customer Support",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Customer Support",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/rosie-ai/"
+  },
+  {
+    "name": "Dechecker",
+    "slug": "dechecker-ai-checker",
+    "shortDescription": "A text checker that analyzes writing style to identify passages that may have been automatically generated by AI and helps you make your writing more natural and credible",
+    "longDescription": "",
+    "websiteUrl": "https://dechecker.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_checker___trusted_ai_detector_for_gpt5__claude___gemini.webp",
+    "categories": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "tags": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/dechecker-ai-checker/"
+  },
+  {
+    "name": "Lip Sync Studio",
+    "slug": "lip-sync-studio",
+    "shortDescription": "Don't let out-of-sync dubbing ruin your content. This tool automatically synchronizes the lips of any character, human, animal, or 3D avatar, with your audio track. Also works for multilingual dubbing",
+    "longDescription": "",
+    "websiteUrl": "https://lipsync.studio/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/LipSync-Studio-Tool.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/lip-sync-studio/"
+  },
+  {
+    "name": "AdMakeAI",
+    "slug": "admakeai",
+    "shortDescription": "Stop guessing which ads will work. This all-in-one platform spies on your competitors' strategies and automatically generates dozens of conversion-optimized text and image variations, ready to launch on your networks",
+    "longDescription": "",
+    "websiteUrl": "https://admakeai.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/AdMake-AI-Research-Competitor-Ads.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/admakeai/"
+  },
+  {
+    "name": "Yolly AI",
+    "slug": "yolly-ai",
+    "shortDescription": "Create 4K videos with sound and high-resolution images from text or photos. This platform gives you access to over 20 AI models (Veo 3, Kling, Seedance, DALL-E, Flux, etc.)",
+    "longDescription": "",
+    "websiteUrl": "https://www.yolly.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/AI-Video-Image-Generator-Create-Videos-yolly-ai.png",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/yolly-ai/"
+  },
+  {
+    "name": "Devstral2 Mistral",
+    "slug": "devstral2-mistral-vibe-code",
+    "shortDescription": "Code faster with two open-source models (1.3B and 123B parameters) and a CLI agent that explores, modifies, and executes multi-file changes in natural language. Features 256K context tokens and Git integration",
+    "longDescription": "",
+    "websiteUrl": "https://mistral.ai/news/devstral-2-vibe-cli?id=Devstral2Mistral",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Devstral-2-and-Mistral-Vibe-CLI.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/devstral2-mistral-vibe-code/"
+  },
+  {
+    "name": "HitPaw VikPea",
+    "slug": "hitpaw-vikpea",
+    "shortDescription": "Give your blurry or pixelated videos a new lease on life. This software restores missing details, revives the colors of old black-and-white films, and boosts resolution up to 8K for crystal-clear clarity",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.hitpaw.com/vikpea-video-enhancer.html",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/official__hitpaw_vikpea___best_ai_video_enhancer_software_for_4k_8k_upscaling.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Latest AI",
+      "#Video Edition"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.375,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/hitpaw-vikpea/"
+  },
+  {
+    "name": "Websites.ly",
+    "slug": "websites-ly",
+    "shortDescription": "Create your own website by simply describing your idea. ‍ AI will generate the design, text, and code in seconds (responsive and SEO-friendly). You'll also get pro templates, custom domain, and code editor",
+    "longDescription": "",
+    "websiteUrl": "https://websites.ly/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/build_stunning_websites_without_code___websites_ly.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code",
+      "#Websites & Design"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code",
+      "#Websites & Design"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/websites-ly/"
+  },
+  {
+    "name": "VOMO AI",
+    "slug": "vomo-ai",
+    "shortDescription": "Don't let a single word go unheard. Record your meetings, lectures, or memos and instantly get a perfect written transcript (in 50+ languages). The tool also generates smart summaries to save you valuable time",
+    "longDescription": "",
+    "websiteUrl": "https://vomo.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/vomo___ai_meeting_notetaker___audio_video_transcription.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Summarizer",
+      "#Transcriber"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Summarizer",
+      "#Transcriber"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/vomo-ai/"
+  },
+  {
+    "name": "Product Link To Video",
+    "slug": "product-link-to-video",
+    "shortDescription": "Instantly turn any product link into a viral video ad. Simply paste the URL of your store (Shopify, Amazon, etc.), and the tool automatically extracts images and information to create a complete promotional clip",
+    "longDescription": "",
+    "websiteUrl": "https://admaker.ai/product-video-maker",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_ai_product_link_to_video_maker___turn_url_to_video.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.4545454545455,
+    "reviewCount": 11,
+    "sourceUrl": "https://www.aixploria.com/en/product-link-to-video/"
+  },
+  {
+    "name": "PixPretty AI Photo Editor",
+    "slug": "pixpretty-ai",
+    "shortDescription": "An easy-to-use photo editor that instantly removes backgrounds, retouches portraits, and adjusts colors to produce clean, professional-looking images. Also enjoy customizable presets, RAW processing, and facial morphing tools",
+    "longDescription": "",
+    "websiteUrl": "https://pixpretty.tenorshare.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/pixpretty___best_photo_editing_app_for_pc___al_portait_retouching.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4166666666667,
+    "reviewCount": 12,
+    "sourceUrl": "https://www.aixploria.com/en/pixpretty-ai/"
+  },
+  {
+    "name": "Freudly AI Therapist",
+    "slug": "freudly-ai-therapist",
+    "shortDescription": "Chat continuously with artificial intelligence specially designed for mental support and psychological listening. Conversations are geared toward understanding your emotions and helping you reflect on your personal life",
+    "longDescription": "",
+    "websiteUrl": "https://freudly.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_therapist_online___free_therapy_sessions_24_7___freudly.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/freudly-ai-therapist/"
+  },
+  {
+    "name": "Luckpal",
+    "slug": "luckpal",
+    "shortDescription": "A personalized guide inspired by Eastern metaphysical traditions, offering predictions about your career, fortune, love life, and the right time to take action. A kind of companion that helps you reflect on your destiny",
+    "longDescription": "",
+    "websiteUrl": "https://www.luckypal.app/en",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/luckpal___ai_fortune_master___explore_your_destiny___luckpal.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Amazing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Amazing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/luckpal/"
+  },
+  {
+    "name": "Refly.ai: Build no-code workflows, automate tasks, and monetize your creations",
+    "slug": "refly-ai-workflow",
+    "shortDescription": "Automate your daily tasks by creating visual workflows, without code, powered by an AI co-pilot. Over 3,000 integrations are available, along with community templates, and you can monetize your workflows by earning credits every time other users run them",
+    "longDescription": "Refly.ai introduces a vibe workflow platform that enables non-technical creators to build, reuse, and share high-impact AI workflows through simple prompts and a visual canvas—no code required.\n\nN8N for non-technical: Build workflows with the simplicity of Lego bricks. Refly.ai enables knowledge workers to remove repetitive tasks without technical hurdles.\n\nCanva for workflow: As Canva brought design to everyone, Refly.ai does the same for workflow creation so anyone can build and share automations with ease.",
+    "websiteUrl": "https://refly.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Refly-ai-Vibe-Workflow-.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5714285714286,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/refly-ai-workflow/"
+  },
+  {
+    "name": "Cuties.ai: The NSFW AI Companion That Might Just Steal Your Heart (and Your Weekend)",
+    "slug": "cuties-ai",
+    "shortDescription": "Chat with AI girlfriends that are close to perfection. This NSFW platform allows you to easily create the virtual woman of your dreams. You can generate high-quality images and videos",
+    "longDescription": "Cuties.ai has arrived to shake up the digital companionship scene. And honestly? We were not ready for how good it is. Those clunky, robotic chatbots from last year? Gone. This platform combines smart conversation with stunning visuals. If you have been looking for a virtual partner who actually gets you, this might be your stop.\n\nOur team tested it extensively (for science, obviously). The results were surprisingly impressive.\n\nCuties.ai is an AI-powered platform designed for creating AI girlfriends. It leans heavily into NSFW content. That means no restrictive filters like you find on mainstream AI tools. You build a character, define her personality, and start chatting.",
+    "websiteUrl": "https://candy.ai/?cid=warcnquo9esbupmfj2bkh4h6&gender=female&spot=&adg=",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/cuties_ai__the_most_realistic_ai_sex_chat_for_dirty_nsfw_talk.webp",
+    "categories": [
+      "#AI Girlfriend"
+    ],
+    "tags": [
+      "#AI Girlfriend"
+    ],
+    "pricingType": "Trial",
+    "sourceUrl": "https://www.aixploria.com/en/cuties-ai/"
+  },
+  {
+    "name": "Cartoonize AI",
+    "slug": "cartoonize-ai",
+    "shortDescription": "An AI tool that converts your photos, landscapes, or animals into cartoon (comic book style), anime, or illustration versions. You upload your image, choose a style, and get a stylish image that stays true to the original with smart preservation of features and expressions",
+    "longDescription": "",
+    "websiteUrl": "https://cartoonize.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/photo_to_cartoon_ai_generator___cartoonize_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Art",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/cartoonize-ai/"
+  },
+  {
+    "name": "Didoo AI",
+    "slug": "didoo-ai",
+    "shortDescription": "Turn your product link into high-performance Meta ads optimized 24/7 by AI. This tool runs automated Facebook and Instagram campaigns using powerful AI agents",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://didoo.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/didoo_ai___your_24_7_ai_meta_growth_officer.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/didoo-ai/"
+  },
+  {
+    "name": "Photiu",
+    "slug": "photiu-ai",
+    "shortDescription": "Easily remove the background from your photos with AI precision (up to 4K). Make manual adjustments to crop your photos or replace the background with a color or image",
+    "longDescription": "",
+    "websiteUrl": "https://www.photiu.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/remove_background__upscale___erase_objects___photiu_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/photiu-ai/"
+  },
+  {
+    "name": "MuseVideo",
+    "slug": "musevideo",
+    "shortDescription": "Don't limit your creativity to just one model: use them all. This studio brings together the best in visual creation (Sora, Veo, Kling). Generate cinematic videos without having to subscribe to multiple expensive subscriptions",
+    "longDescription": "",
+    "websiteUrl": "https://musevideo.ai/?id=MuseVideo",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/musevideo___ai_video_generator___create_videos_from_text___images.webp",
+    "categories": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/musevideo/"
+  },
+  {
+    "name": "Live Avatar Alibaba",
+    "slug": "live-avatar-alibaba",
+    "shortDescription": "Create (very) long animated videos featuring talking characters based on your voice. Generation is done in real time. Perfect for interviews, tutorials, anime-style avatars, or even virtual presenters",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://liveavatar.github.io/?id=LiveAvatarAlibaba",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/live-avatar-ai-alibaba.webp",
+    "categories": [
+      "#Avatars",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Avatars",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/live-avatar-alibaba/"
+  },
+  {
+    "name": "AiPPT.com",
+    "slug": "aippt-com",
+    "shortDescription": "Generate professional PowerPoint and Google Slides presentations in seconds. Transform your texts, documents, PDFs, and URLs into compelling slides using AI. Numerous templates are also available on the platform",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.aippt.com/landingpage/sem",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/aippt___create_stunning_presentations_in_seconds.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Presentation"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Presentation"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/aippt-com/"
+  },
+  {
+    "name": "ATS Resume Checker",
+    "slug": "ats-resume-checker",
+    "shortDescription": "Analyze how compatible your resume is with recruiters' ATS systems. This AI tool gives you recommendations on how to optimize keywords, structure, and formatting. Maximize your chances of getting through automatic filters and landing more interviews",
+    "longDescription": "",
+    "websiteUrl": "https://tripleten.com/tools/ats-resume-checker/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ats_resume_checker___100__free.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/ats-resume-checker/"
+  },
+  {
+    "name": "Interview Q&A AI",
+    "slug": "interview-qa-ai",
+    "shortDescription": "Don't let any question throw you off balance during your interviews. This tool generates customized simulations and helps you structure powerful responses. Master your speech and turn every question from the recruiter into an opportunity to demonstrate your value",
+    "longDescription": "",
+    "websiteUrl": "https://tripleten.com/tools/interview-questions-and-answers-generator/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/interview_questions_and_answers_generator.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/interview-qa-ai/"
+  },
+  {
+    "name": "MusicArt",
+    "slug": "musicart",
+    "shortDescription": "Stop searching through sound banks. Just describe the music playing in your mind, a Lo-Fi beat for work, an energetic rock intro, and instantly get your own track",
+    "longDescription": "",
+    "websiteUrl": "https://www.musicart.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/best_ai_music_maker___free_music_generator___musicart_ai-1.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/musicart/"
+  },
+  {
+    "name": "Warmup Tool",
+    "slug": "warmup-tool",
+    "shortDescription": "Avoid having your new WhatsApp accounts blocked. This tool simulates natural human conversations to gradually “warm up” your numbers, boosting their reputation before launching your mass campaigns",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://warmer.wadesk.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/whatsapp_warmup_tool___bulk_sender_with_anti_ban_protection.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/warmup-tool/"
+  },
+  {
+    "name": "insMind Image to Video",
+    "slug": "insmind-image-to-video",
+    "shortDescription": "Animate your photos into dynamic videos from a prompt or image. Easily create content for social media, product presentations, or original clips",
+    "longDescription": "",
+    "websiteUrl": "https://www.insmind.com/image-to-video/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_image_to_video_converter_online___insmind.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5555555555556,
+    "reviewCount": 9,
+    "sourceUrl": "https://www.aixploria.com/en/insmind-image-to-video/"
+  },
+  {
+    "name": "ReelMate AI",
+    "slug": "reelmate-ai",
+    "shortDescription": "Generate 1080p HD videos from text or images using a fully automated workflow powered by AI agents. With a single tool, enjoy storyboarding, resource generation, music, editing, and AI models",
+    "longDescription": "",
+    "websiteUrl": "https://www.reelmate.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/reelmate-video-ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Social Networks",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Social Networks",
+      "#Video Generators"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/reelmate-ai/"
+  },
+  {
+    "name": "AI Image Editor",
+    "slug": "ai-image-editor",
+    "shortDescription": "Don't let a small detail ruin your perfect photo. Remove an intruder, erase the background, or instantly improve sharpness. You have a complete suite of tools to enhance your visuals without any technical skills",
+    "longDescription": "",
+    "websiteUrl": "https://aiimgeditor.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/nano_banana_pro_ai_image_editor___generator___aiimgeditor_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/ai-image-editor/"
+  },
+  {
+    "name": "Deep Swap AI",
+    "slug": "deep-swap-ai",
+    "shortDescription": "Create hyperrealistic video montages by replacing any face. This AI deals with complex angles and expressions for virtually undetectable results, both in photos and animated clips. Ideal for creating viral content",
+    "longDescription": "",
+    "websiteUrl": "https://deepswapai.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/ai_face_swap_free_online___no_watermark___deepswapai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/deep-swap-ai/"
+  },
+  {
+    "name": "Face Swap AI",
+    "slug": "face-swap-ai",
+    "shortDescription": "This tool allows you to swap faces in high definition on your photos and videos, without adding any watermarks to the final result. Quickly create memes, creative content, or realistic simulations",
+    "longDescription": "",
+    "websiteUrl": "https://faceswapai.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/faceswapai__free_ai_face_swap_tool_for_hd_photos___videos.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Face Swap & DeepFake",
+      "#Latest AI"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/face-swap-ai/"
+  },
+  {
+    "name": "Vidmage",
+    "slug": "vidmage-ai",
+    "shortDescription": "Swap faces in your photos, videos, and GIFs in seconds with AI detection. Enjoy simultaneous swapping of multiple faces, partial replacement of features, and batch processing. The app is also available on Mac",
+    "longDescription": "",
+    "websiteUrl": "https://vidmage.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_ai_face_swap_online___swap_faces_in_photos___videos_instantly.webp",
+    "categories": [
+      "#Face Swap & DeepFake",
+      "#Image editing",
+      "#Video Edition"
+    ],
+    "tags": [
+      "#Face Swap & DeepFake",
+      "#Image editing",
+      "#Video Edition"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/vidmage-ai/"
+  },
+  {
+    "name": "Kamo-1 Kinetix",
+    "slug": "kamo-1-kinetix-tech-ai",
+    "shortDescription": "Create videos with full cinematic control using a model that understands and manipulates the scene in 3D. Upload your source image and a video of the actor to manipulate character movements, camera, and perspectives",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.kinetix.tech/?id=Kamo-1Kinetix",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Kamo-1-Kinetix-ai-video-generator.webp",
+    "categories": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/kamo-1-kinetix-tech-ai/"
+  },
+  {
+    "name": "Seedream 4.5",
+    "slug": "seedream-4-5",
+    "shortDescription": "Create professional images with consistent 4K images, detailed typography, and faithful reproduction of the details in your references. Enjoy better text rendering, improved spatial reasoning, and natural object editing",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://seed.bytedance.com/en/seedream4_5?id=Seedream4.5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Seedream-4-5-bytedance-ai-image.webp",
+    "categories": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/seedream-4-5/"
+  },
+  {
+    "name": "Safenew AI",
+    "slug": "safenew-ai",
+    "shortDescription": "Turn your AI-generated texts into natural writing, just like a human would write. The AI keeps the meaning and intent of your texts. Presented as undetectable by detection software",
+    "longDescription": "",
+    "websiteUrl": "https://safenew.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/powerful_ai_humanizer_to_increase_writing_quality.webp",
+    "categories": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "tags": [
+      "#AI detection",
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Writing & Web SEO"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4545454545455,
+    "reviewCount": 11,
+    "sourceUrl": "https://www.aixploria.com/en/safenew-ai/"
+  },
+  {
+    "name": "Appark",
+    "slug": "appark-ai",
+    "shortDescription": "Quickly decipher the mobile app market with AI. Analyze trends, spy on your competitors, and discover hidden growth opportunities",
+    "longDescription": "",
+    "websiteUrl": "https://appark.ai/en",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/appark___free_app_analytics_tool.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Data & Analytics",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Data & Analytics",
+      "#Latest AI",
+      "#Marketing"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/appark-ai/"
+  },
+  {
+    "name": "TaxTools AI",
+    "slug": "taxtools-ai",
+    "shortDescription": "Don't let U.S. taxes intimidate you anymore. Access a suite of smart tools that decode the tax code, automate your calculations, and optimize your returns with expert precision",
+    "longDescription": "",
+    "websiteUrl": "https://taxtools.ai/us",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_tax_tools___calculator___taxtools_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Finance",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Finance",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/taxtools-ai/"
+  },
+  {
+    "name": "TGDesk",
+    "slug": "tgdesk-telegram-group-bot",
+    "shortDescription": "Put Telegram to work for your business. Manage multiple accounts, automate bulk messaging, and capture leads in multiple groups at the same time. A handy tool for turning your communities into a source of revenue",
+    "longDescription": "",
+    "websiteUrl": "https://tg.wadesk.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/telegram_group_bot_monitoring_1000__groups_at_once___tgdesk.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI",
+      "#Marketing",
+      "#Social Networks"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/tgdesk-telegram-group-bot/"
+  },
+  {
+    "name": "Imini AI",
+    "slug": "imini-ai",
+    "shortDescription": "Generate images and videos from a single platform, animate your images, add voiceovers and music. You can also choose presets optimized for social media and download the results in high quality. Available for use with Sora 2, Nano Banana, Veo 3.1, Kling, etc.",
+    "longDescription": "",
+    "websiteUrl": "https://imini.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/imini_ai___all_in_one_ai_image_and_video_creation_platform.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/imini-ai/"
+  },
+  {
+    "name": "Spicier: A New Era of AI Girlfriends Powered by CrakRevenue",
+    "slug": "spicier-ai",
+    "shortDescription": "A platform with lots of super sexy AI girlfriends you can chat with without censorship. Create the companion of your dreams and make your fantasies come true without limits (NSFW)",
+    "longDescription": "The AI girlfriend space is exploding with energy. Users are searching for platforms that feel intimate, creative, and bold enough to explore fantasies without limits.\nSpicier opens the door to a world where your desires set the tone and your imagination shapes everything.\n\nDeveloped by CrakRevenue, the platform invites you to create your AI girlfriend, personalize her, and slip into a private chat that reacts instantly to your mood. It feels smooth, sensual, and built for users who want a virtual companion designed exactly to their taste.\n\n",
+    "websiteUrl": "https://candy.ai/?cid=w2uarn1klv7lipmf381g24eq&gender=female&spot=&adg=",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/homepage_spicierai-.webp",
+    "categories": [
+      "#AI Girlfriend"
+    ],
+    "tags": [
+      "#AI Girlfriend"
+    ],
+    "pricingType": "Paid",
+    "sourceUrl": "https://www.aixploria.com/en/spicier-ai/"
+  },
+  {
+    "name": "Runway Gen-4.5",
+    "slug": "runway-gen-4-5",
+    "shortDescription": "Create cinematic and ultra-realistic videos with physical accuracy, temporal consistency, and total creative control. Ranked among the world's best video models with 1247 Elo points. Available for all styles: photorealism, animation, etc.",
+    "longDescription": "",
+    "websiteUrl": "https://runwayml.com/research/introducing-runway-gen-4.5?id=RunwayGen-4.5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Runway-AI-gen-4-5-video.webp",
+    "categories": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Text-to-video",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.6666666666667,
+    "reviewCount": 3,
+    "sourceUrl": "https://www.aixploria.com/en/runway-gen-4-5/"
+  },
+  {
+    "name": "DeepSeek V3.2",
+    "slug": "deepseek-v3-2",
+    "shortDescription": "Deepseek's open source LLM with 671 billion parameters specializing in mathematics and reasoning. This model is effective at processing long contexts and performs well in code, logic, and formal proofs",
+    "longDescription": "",
+    "websiteUrl": "https://www.deepseek.com/en/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/DeepSeek-V3.2-ai-llm-model.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/deepseek-v3-2/"
+  },
+  {
+    "name": "Cocoon",
+    "slug": "cocoon-ai",
+    "shortDescription": "Run your GPU workloads in a confidential environment protected by Intel TDX (with cryptographic proof of integrity). Confidently deploy certified TDX images, encrypted storage, and hardware isolation",
+    "longDescription": "",
+    "websiteUrl": "https://cocoon.org/?id=Cocoon",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/Cocoon-ai-telegram.webp",
+    "categories": [
+      "#Developer Tools",
+      "#Future Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Developer Tools",
+      "#Future Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/cocoon-ai/"
+  },
+  {
+    "name": "Nexos.ai",
+    "slug": "nexos-ai",
+    "shortDescription": "Centralize models and tools in a secure workspace, compare results side by side, apply budgets and safeguards. Deploy everything through a single API to accelerate adoption across your organization",
+    "longDescription": "",
+    "websiteUrl": "https://go.getnexos.ai/SH5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/all_in_one_ai_platform_for_business___nexos_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Developer Tools",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/nexos-ai/"
+  },
+  {
+    "name": "Semrush One Review (2026): AI Visibility Tracker for ChatGPT, Gemini & Google AI",
+    "slug": "semrush-one-seo-ai",
+    "shortDescription": "7 DAYS FREE Measure and optimize your visibility on Google and in AI responses such as ChatGPT, Perplexity, or Gemini. Compare yourself to competitors and audit your site's ability to be indexed by AI. Semrush One combines SEO and AI visibility on a single platform.",
+    "longDescription": "Semrush One may not mean anything to you yet, but it is nevertheless an indispensable tool with the rapid rise of AI search engines. Digital marketing feels different lately, doesn’t it? You probably notice how search engines change almost every day. Traditional Google rankings are not the only thing that counts anymore. People ask chatbots for answers now.\n\nSemrush helps you check your presence inside AI responses, not just search results. Consequently, you gain control over how algorithms present your brand to the public.\n\nThink of it as a specialized toolkit for the modern age. It mixes classic SEO metrics with new “Generative Engine Optimization” (GEO) data. You get a complete picture of your online standing.",
+    "websiteUrl": "https://www.semrush.com/lp/semrush-one/en/?irclickid=2mc2K-SgAxycTEIRKPS8%3A2viUkpSkT2Hf0OxR40&utm_Medium=impact&utm_terms=&irgwc=1&afsrc=1&ir_partnerid=5293708&ir_adid=995972&ir_campaignid=13053",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/semrush-one-ai-search-seo.webp",
+    "categories": [
+      "#Latest AI",
+      "#SEO",
+      "#SuperTools"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#SEO",
+      "#SuperTools"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/semrush-one-seo-ai/"
+  },
+  {
+    "name": "DeepSeek Math V2",
+    "slug": "deepseek-math-v2-ai",
+    "shortDescription": "This model with 685 billion parameters is particularly effective for formal demonstrations, theorems, and rigorous derivations. This LLM is capable of verifying the steps of reasoning on its own",
+    "longDescription": "",
+    "websiteUrl": "https://huggingface.co/deepseek-ai/DeepSeek-Math-V2?id=DeepSeekMathV2",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/deepseek-math-v2.webp",
+    "categories": [
+      "#Education / Studies",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Education / Studies",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/deepseek-math-v2-ai/"
+  },
+  {
+    "name": "Vidi2",
+    "slug": "vidi2-ai-bytedance",
+    "shortDescription": "Understand and edit your videos with precise spatio-temporal localization, object detection, and comprehensive editing instructions. The model analyzes long videos, answers your questions, and automates cropping, transitions, and narration",
+    "longDescription": "",
+    "websiteUrl": "https://bytedance.github.io/vidi-website/?id=Vidi2",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/vividi2-bytedance-ai-video-model.webp",
+    "categories": [
+      "#Future Tools",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Future Tools",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/vidi2-ai-bytedance/"
+  },
+  {
+    "name": "MusicAI",
+    "slug": "musicai",
+    "shortDescription": "Create original songs in seconds using a description, mood, or lyrics. You can also adjust vocals and stems or apply automatic mastering",
+    "longDescription": "",
+    "websiteUrl": "https://www.musicai.ai/?id=MusicAI",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/free_ai_music_generator___music_video_generator___musicai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Music"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/musicai/"
+  },
+  {
+    "name": "TripleTen Burnout Test",
+    "slug": "tripleten-burnout-test",
+    "shortDescription": "Check your mental health at work with AI. This interactive questionnaire assesses your stress levels and detects early signs of burnout to help you take action before it's too late",
+    "longDescription": "",
+    "websiteUrl": "https://tripleten.com/tools/burnout-test/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/burnout_test___tripleten.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Human Resources",
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Healthcare",
+      "#Human Resources",
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/tripleten-burnout-test/"
+  },
+  {
+    "name": "Outfica",
+    "slug": "outfica",
+    "shortDescription": "Turn a simple flat image of clothing into a professional fashion visual. Choose the model, pose, and setting for an instant catalog look",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://www.outfica.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/12/outfica___ai_photoshoot_generator_for_fashion.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Fashion",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#E-commerce",
+      "#Fashion",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/outfica/"
+  },
+  {
+    "name": "Amazon Nova Act Review: Can AWS Finally Compete with OpenAI and Google?",
+    "slug": "amazon-nova-ai-models",
+    "shortDescription": "Explore a range of height multimodal AI models created by Amazon. Generate text, images and video with high performance thanks to integration with AWS infrastructure",
+    "longDescription": "On December 1, 2025, during the AWS re:Invent conference, Amazon unveiled Nova 2. While the industry was focused on the battle between OpenAI and Google, Amazon prepared a massive response: not just a single model, but a complete family designed for the enterprise.\n\nThe main selling point of Nova Act: Amazon promises performance matching the competition at a cost 75% lower. Let’s look exactly at what Nova offers and if these promises hold up against the reality of the market.\n\nAmazon Nova is AWS’s direct answer to GPT‑5, Claude, and Gemini. Amazon’s approach differs slightly by offering a range of models integrated into Amazon Bedrock. The idea is to offer a solution for every budget and task type, all secured by the AWS infrastructure that major enterprises already use.",
+    "websiteUrl": "https://nova.amazon.com/act?id=AmazonNova",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2024/12/Amazon-Nova-act-model-llm-ai.webp",
+    "categories": [
+      "#AI Chat & Assistant",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#AI Chat & Assistant",
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/amazon-nova-ai-models/"
+  },
+  {
+    "name": "MachineTranslation.com Review (2026): AI Translation Aggregator Using SMART Scoring",
+    "slug": "machine-translation",
+    "shortDescription": "MachineTranslation.com: SMART, consensus-driven translations across 270+ languages, with engine comparison, formatting preservation, and built-in anonymization",
+    "longDescription": "MachineTranslation.com sounds like a domain name bought in the 90s, doesn’t it? You might expect a dusty, pixelated interface from the early web. But don’t let the generic name fool you. We tested this platform extensively, and the results were surprisingly robust. It’s not just another translation tool; it’s a “meta-translator” that acts like a referee between the giants of the industry.\n\nWhile everyone talks about ChatGPT or DeepL, this tool quietly sits in the background. It combines the brainpower of over 22 AI engines. It claims to solve the biggest headache in localization: knowing which engine is actually right for your specific text. Does it live up to expectations in 2026? We put it through the wringer to find out.\n\nPicture MachineTranslation.com as the travel aggregator of the language world. When you book a flight, you check a comparison site first. You want to see if Delta, United, or British Airways has the best deal. This platform does exactly that, but for words.",
+    "websiteUrl": "https://www.machinetranslation.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2023/06/machine-translation-ai-tomedes.webp",
+    "categories": [
+      "#AI Useful",
+      "#Latest AI",
+      "#Translation"
+    ],
+    "tags": [
+      "#AI Useful",
+      "#Latest AI",
+      "#Translation"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/machine-translation/"
+  },
+  {
+    "name": "Flux.2",
+    "slug": "flux-2-image-generator-black-forest-labs",
+    "shortDescription": "Generate near-photographic images with professional control, consistent multiple references, and precise placement. Enjoy readable text, exact hexadecimal colors, and resolutions up to 4 MP",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://bfl.ai/models/flux-2?id=Flux.2",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/flux-2-black-forest-labs.webp",
+    "categories": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/flux-2-image-generator-black-forest-labs/"
+  },
+  {
+    "name": "HunyuanVideo 1.5",
+    "slug": "hunyuanvideo-1-5",
+    "shortDescription": "Generate smooth 480p cinematic videos at up to 60 fps from your text prompts. Enjoy stable motion, natural lighting, and fast rendering for your concepts and storytelling",
+    "longDescription": "",
+    "websiteUrl": "https://huggingface.co/spaces/multimodalart/Hunyuan-Video-1-5?id=HunyuanVideo1.5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/HunyuanVideo-1-5-1.webp",
+    "categories": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.4,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/hunyuanvideo-1-5/"
+  },
+  {
+    "name": "Grain AI: generate lessons (very) quickly using artificial intelligence",
+    "slug": "grain-ai",
+    "shortDescription": "Create fun and interactive lessons in 60 seconds with over ten ready-to-use resources (quizzes, comics, exercises, apps, audio). Save hours of preparation time and adapt the content to your students' level",
+    "longDescription": "Grain AI is your perfect AI teaching partner that create fun, interactive lessons in just 1 minute! One click to generate 9 + teaching materials, like comics, audios, web apps, concept maps and exercises.\n\n\n\nThe fastest way from idea to ready-to-teach content. Perfect for teachers, educators, schools & more.",
+    "websiteUrl": "https://www.grain99.cc/en/home?hmsr=aIxploria",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/favicon-grain-cc-25.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Education / Studies",
+      "#Productivity"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Education / Studies",
+      "#Productivity"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/grain-ai/"
+  },
+  {
+    "name": "Career Aptitude Test",
+    "slug": "career-aptitude-test-tripleten",
+    "shortDescription": "Discover the tech career that suits you best with a structured test that assesses your skills, preferences, and strengths, then provides you with clear guidance and an action plan",
+    "longDescription": "",
+    "websiteUrl": "https://tripleten.com/tools/career-aptitude-test/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/career_aptitude_test___free_career_assessment.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Education / Studies",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Education / Studies",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/career-aptitude-test-tripleten/"
+  },
+  {
+    "name": "Claude Opus 4.5",
+    "slug": "claude-opus-4-5",
+    "shortDescription": "Anthropic's premium model for code, agents, and computer use: hybrid reasoning (instant or deep responses), advanced memory management, and execution of long workflows with fewer tokens",
+    "longDescription": "",
+    "websiteUrl": "https://www.anthropic.com/news/claude-opus-4-5?id=ClaudeOpus4.5",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/claude-opus-4.5-anthropic.webp",
+    "categories": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#LLM models"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/claude-opus-4-5/"
+  },
+  {
+    "name": "UPCV",
+    "slug": "upcv-io",
+    "shortDescription": "Get more interviews with an AI-optimized resume. This tool writes compelling resumes for you and fits your profile to job openings to bypass recruiter filters (ATS-friendly)",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://upcv.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/upcv___ai_resume_builder___free_online_ai_resume_maker.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Human Resources",
+      "#Latest AI"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/upcv-io/"
+  },
+  {
+    "name": "Codeflying",
+    "slug": "codeflying",
+    "shortDescription": "Turn your idea into a complete application by simply describing it. Get the frontend, the backend, the database, an administration panel, and a ready-to-use deployment",
+    "longDescription": "",
+    "websiteUrl": "https://www.codeflying.app/?s=aixploria",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/codeflying___vibe_coding_app_builder___create_full_stack_apps_by_chatting_with_ai.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#No Code/Low Code"
+    ],
+    "pricingType": "Free",
+    "rating": 4.4285714285714,
+    "reviewCount": 7,
+    "sourceUrl": "https://www.aixploria.com/en/codeflying/"
+  },
+  {
+    "name": "Dealism",
+    "slug": "dealism-ai",
+    "shortDescription": "Deploy a specialized WhatsApp AI sales agent that manages your multi-turn conversations and detects buying signals. Automate your follow-ups and boost your conversions through continuous learning",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://dealism.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/dealism_world_s_first_vibe_selling_ai_agent_that_sells_for_you_on_whatsapp___instagram.webp",
+    "categories": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Customer Support",
+      "#Latest AI",
+      "#Sales & Conversion",
+      "#Social Networks"
+    ],
+    "tags": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Customer Support",
+      "#Latest AI",
+      "#Sales & Conversion",
+      "#Social Networks"
+    ],
+    "pricingType": "Trial",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/dealism-ai/"
+  },
+  {
+    "name": "AI Background Remover",
+    "slug": "ai-background-remover",
+    "shortDescription": "Remove the background from your videos without a green screen or expensive equipment. Replace your background with an image, color, or video for instant professional results",
+    "longDescription": "",
+    "websiteUrl": "https://aibackgroundremover.io/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/free_background_remover_online___ai_remove_image_background.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 8,
+    "sourceUrl": "https://www.aixploria.com/en/ai-background-remover/"
+  },
+  {
+    "name": "EnhancePhoto AI",
+    "slug": "enhancephoto-ai",
+    "shortDescription": "Enhance your photos for free up to 16K resolution. AI removes blur and enhances details and sharpness. Preserve your natural colors and textures (no registration or watermark required)",
+    "longDescription": "",
+    "websiteUrl": "https://enhancephoto.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/enhance_photo_online_free___no_watermark__no_sign_up.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/enhancephoto-ai/"
+  },
+  {
+    "name": "Video Watermark Remover",
+    "slug": "video-watermark-remover",
+    "shortDescription": "Instantly remove annoying logos, text, or watermarks from your videos. This technology reconstructs the missing background to give you a clean, professional-looking final result with no visible traces",
+    "longDescription": "",
+    "websiteUrl": "https://videowatermarkremover.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/free_ai_video_watermark_remover___remove_watermark_online.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image editing",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/video-watermark-remover/"
+  },
+  {
+    "name": "Upmetrics AI",
+    "slug": "upmetrics-ai",
+    "shortDescription": "Turn your idea into a successful business. This tool writes your business plan, establishes your financial projections, and creates compelling presentations to attract banks and investors, effortlessly",
+    "longDescription": "\n\nText written by a human\n\n",
+    "websiteUrl": "https://upmetrics.co/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/upmetrics__business_plan_software_with_automated_financials.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Business",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/upmetrics-ai/"
+  },
+  {
+    "name": "vidflux",
+    "slug": "vidflux-ai",
+    "shortDescription": "Turn your text or images into HD/4K videos with built-in animations, camera movements, and voiceovers. Take advantage of batch processing, custom watermarks, and commercial rights for your marketing content",
+    "longDescription": "",
+    "websiteUrl": "https://vidflux.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/vidflux_ai__create_professional_ai_videos_in_minutes.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/vidflux-ai/"
+  },
+  {
+    "name": "ChatGPT Shopping",
+    "slug": "chatgpt-shopping-reasearch-ai",
+    "shortDescription": "Turn ChatGPT into a shopping assistant: the tool asks questions, compares products, prices, and reviews, then generates a personalized and up-to-date shopping guide. Available even for free accounts",
+    "longDescription": "",
+    "websiteUrl": "https://openai.com/index/chatgpt-shopping-research/?id=ChatGPTShopping",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/chatgpt-shopping-research-ai-1.webp",
+    "categories": [
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "tags": [
+      "#Latest AI",
+      "#Life Assistants"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6666666666667,
+    "reviewCount": 3,
+    "sourceUrl": "https://www.aixploria.com/en/chatgpt-shopping-reasearch-ai/"
+  },
+  {
+    "name": "Yume AI",
+    "slug": "yume-ai-companions-anime",
+    "shortDescription": "Chat with anime-style AI companions on Yume AI. Enjoy personalized chats, picture generation, selfies, role-playing, and complete privacy",
+    "longDescription": "",
+    "websiteUrl": "https://candy.ai/?cid=wibcjbbb63l6gpmfj2v16li4&gender=female&spot=&adg=",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/Yume-AI-AI-Companionship-anime-25.webp",
+    "categories": [
+      "#AI Girlfriend"
+    ],
+    "tags": [
+      "#AI Girlfriend"
+    ],
+    "pricingType": "Trial",
+    "sourceUrl": "https://www.aixploria.com/en/yume-ai-companions-anime/"
+  },
+  {
+    "name": "Free WhatsApp Bulk Sender",
+    "slug": "free-whatsapp-bulk-sender",
+    "shortDescription": "Send personalized WhatsApp campaigns without saving contacts, import CSV lists, schedule with anti-blocking intervals, track deliveries in real time, and resend with one click",
+    "longDescription": "",
+    "websiteUrl": "https://chromewebstore.google.com/detail/free-whatsapp-bulk-sender/amokpeafejimkmcjjhbehganpgidcbif",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/Free-WhatsApp-Bulk-Message-Sender.webp",
+    "categories": [
+      "#Extensions ChatGPT",
+      "#Latest AI",
+      "#Marketing",
+      "#Sales & Conversion"
+    ],
+    "tags": [
+      "#Extensions ChatGPT",
+      "#Latest AI",
+      "#Marketing",
+      "#Sales & Conversion"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.6,
+    "reviewCount": 5,
+    "sourceUrl": "https://www.aixploria.com/en/free-whatsapp-bulk-sender/"
+  },
+  {
+    "name": "myNeutron AI Memory",
+    "slug": "myneutron-ai-memory",
+    "shortDescription": "Keep your notes, emails, and web pages in one place that you can access with just one click. Find everything you're looking for with semantic search and get smart summaries",
+    "longDescription": "",
+    "websiteUrl": "https://myneutron.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/myneutron__ai_memory_chrome_extension_for_chatgpt.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Extensions ChatGPT",
+      "#Latest AI",
+      "#Memory"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Extensions ChatGPT",
+      "#Latest AI",
+      "#Memory"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 10,
+    "sourceUrl": "https://www.aixploria.com/en/myneutron-ai-memory/"
+  },
+  {
+    "name": "Nano Banana Pro Review: Is Google’s “Thinking” Model the Future of AI Imagery?",
+    "slug": "nano-banana-pro-google-ai",
+    "shortDescription": "Create and edit images with precise text, in multiple languages and according to real-world contexts: mockups, infographics, consistent multi-image design, 4K resolution, advanced controls (lighting, focus, colors) and creative integration",
+    "longDescription": "Most AI image generators rely on luck. Nano Banana Pro relies on logic. We tested the new “Thinking” model to see if it delivers the control that content creators, designers, and business owners are looking for in their workflow.\n\n🍌 Nano Banana Pro is Google DeepMind’s latest generative AI update. Unlike standard “slot machine” generators, it utilizes a “Thinking” model to provide 4K resolution, legitimate text rendering, and editing controls that let you edit without starting over.\n\nFor the last two years, the standard workflow for AI image generation has been inefficient:",
+    "websiteUrl": "https://gemini.google/us/overview/image-generation/?id=NanoBananaPro&hl=en-US",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/nano-banana-pro-2-google-deepmind-ai-image.webp",
+    "categories": [
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI",
+      "#SuperTools"
+    ],
+    "tags": [
+      "#Image editing",
+      "#Image Generators",
+      "#Latest AI",
+      "#SuperTools"
+    ],
+    "pricingType": "Free",
+    "rating": 4.6666666666667,
+    "reviewCount": 12,
+    "sourceUrl": "https://www.aixploria.com/en/nano-banana-pro-google-ai/"
+  },
+  {
+    "name": "Deevid AI Image",
+    "slug": "deevid-ai-image-generator",
+    "shortDescription": "Generate and edit your images (text or photos) on a single platform: various models, advanced effects, upscaling, colorization, backgrounds, and objects. All in a smooth, fast workflow, without watermarks",
+    "longDescription": "",
+    "websiteUrl": "https://deevid.ai/ai-image-generator",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/ai_image_generator_and_editor__best_all_in_one_platform_for_image_generation_edition.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/deevid-ai-image-generator/"
+  },
+  {
+    "name": "Generor",
+    "slug": "generor",
+    "shortDescription": "Access over 40 multimodal generators to create images, videos, music, and voices. You can also store and manage your creations and improve the quality of your files, all from one simple and fast space",
+    "longDescription": "",
+    "websiteUrl": "https://generor.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/ai_generators___generor.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Image Generators",
+      "#Latest AI",
+      "#Video Generators"
+    ],
+    "pricingType": "Paid",
+    "rating": 4.5,
+    "reviewCount": 6,
+    "sourceUrl": "https://www.aixploria.com/en/generor/"
+  },
+  {
+    "name": "Instories",
+    "slug": "instories",
+    "shortDescription": "Create videos, images, and stories for social media: text-to-video, Reels/TikTok templates, photo editing, logos, and automatic captions",
+    "longDescription": "",
+    "websiteUrl": "https://instories.com/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/ai_design__photo___video_tool___free_ai_content_creator___instories.webp",
+    "categories": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Social Networks",
+      "#Video Generators"
+    ],
+    "tags": [
+      "#AIxploria Selection",
+      "#Latest AI",
+      "#Social Networks",
+      "#Video Generators"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 4,
+    "sourceUrl": "https://www.aixploria.com/en/instories/"
+  },
+  {
+    "name": "Kogents AI",
+    "slug": "kogents-ai",
+    "shortDescription": "Deploy an army of intelligent agents who work for you 24/7. Give them your customer service, sales prospecting, or HR tasks, and let them work autonomously to boost your growth",
+    "longDescription": "",
+    "websiteUrl": "https://kogents.ai/",
+    "logoUrl": "https://www.aixploria.com/wp-content/uploads/2025/11/kogents_ai_agent___top_agentic_ai_automation___integration-1.webp",
+    "categories": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI"
+    ],
+    "tags": [
+      "#AI Agents",
+      "#AIxploria Selection",
+      "#Automation",
+      "#Latest AI"
+    ],
+    "pricingType": "Free",
+    "rating": 4.5,
+    "reviewCount": 2,
+    "sourceUrl": "https://www.aixploria.com/en/kogents-ai/"
+  }
+]

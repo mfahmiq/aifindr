@@ -23,9 +23,10 @@ interface ListProps {
     color: string
     showRank?: boolean
     link: string
+    totalCount: number
 }
 
-function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link }: ListProps) {
+function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link, totalCount }: ListProps) {
     return (
         <Card className="h-full bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-shadow border-0 rounded-xl overflow-hidden flex flex-col">
             {/* Header */}
@@ -97,7 +98,7 @@ function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link
             <div className="p-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800 mt-auto">
                 <Link href={link} className="block">
                     <Button variant="ghost" size="sm" className="w-full text-xs text-gray-500 hover:text-primary h-8">
-                        See all category ({tools.length > 0 ? '...' : 0}) <ArrowRight className="w-3 h-3 ml-1" />
+                        See all category ({totalCount}) <ArrowRight className="w-3 h-3 ml-1" />
                     </Button>
                 </Link>
             </div>
@@ -110,6 +111,7 @@ export function CategoryLists() {
     const [selection, setSelection] = useState<ToolWithRelations[]>([])
     const [popular, setPopular] = useState<ToolWithRelations[]>([])
     const [chat, setChat] = useState<ToolWithRelations[]>([])
+    const [counts, setCounts] = useState<{ [key: string]: number }>({})
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -124,8 +126,7 @@ export function CategoryLists() {
                 setLatest(dataLatest.tools || [])
 
                 // 2. Selection (Featured)
-                // Assuming we can filter by 'featured' or just take random/specific ones
-                const resSelection = await fetch('/api/tools?limit=10&highlight=true') // highlight param might need implementation, or fallback
+                const resSelection = await fetch('/api/tools?limit=10&highlight=true')
                 const dataSelection = await resSelection.json()
                 setSelection(dataSelection.tools || [])
 
@@ -138,6 +139,13 @@ export function CategoryLists() {
                 const resChat = await fetch('/api/tools?limit=10&category=Chat')
                 const dataChat = await resChat.json()
                 setChat(dataChat.tools || [])
+
+                setCounts({
+                    latest: dataLatest.count || 0,
+                    selection: dataSelection.count || 0,
+                    popular: dataPopular.count || 0,
+                    chat: dataChat.count || 0
+                })
 
             } catch (error) {
                 console.error("Error fetching category lists", error)
@@ -168,7 +176,8 @@ export function CategoryLists() {
                     tools={latest}
                     loading={loading}
                     color="text-blue-500"
-                    link="/latest"
+                    link="/?sortBy=newest"
+                    totalCount={counts.latest || 0}
                 />
                 <ToolListCard
                     title="IndoAI Selection"
@@ -177,7 +186,8 @@ export function CategoryLists() {
                     loading={loading}
                     color="text-amber-500"
                     showRank
-                    link="/featured"
+                    link="/?highlight=true"
+                    totalCount={counts.selection || 0}
                 />
                 <ToolListCard
                     title="SuperTools"
@@ -186,7 +196,8 @@ export function CategoryLists() {
                     loading={loading}
                     color="text-emerald-500"
                     showRank
-                    link="/popular"
+                    link="/trending"
+                    totalCount={counts.popular || 0}
                 />
                 <ToolListCard
                     title="AI Chat & Assistant"
@@ -195,7 +206,8 @@ export function CategoryLists() {
                     loading={loading}
                     color="text-rose-500"
                     showRank
-                    link="/category/chat"
+                    link="/?category=Chat"
+                    totalCount={counts.chat || 0}
                 />
             </div>
         </div>

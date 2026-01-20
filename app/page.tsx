@@ -33,14 +33,24 @@ function HomeContent() {
   useEffect(() => {
     const search = searchParams.get('search') || ''
     const category = searchParams.get('category') || 'All'
+    const sortBy = searchParams.get('sortBy') || 'popular'
+    const highlight = searchParams.get('highlight') === 'true'
 
     setFilters(prev => {
       // Only update if changed to avoid loop/render thrashing
-      if (prev.search === search && prev.category === category) return prev
+      if (
+        prev.search === search &&
+        prev.category === category &&
+        prev.sortBy === sortBy &&
+        prev.highlight === highlight
+      ) return prev
+
       return {
         ...prev,
         search,
-        category
+        category,
+        sortBy,
+        highlight
       }
     })
   }, [searchParams])
@@ -80,6 +90,8 @@ function HomeContent() {
         if (filters.features.hasAPI) params.append('hasAPI', 'true')
         if (filters.features.isOpenSource) params.append('isOpenSource', 'true')
         if (filters.features.isVerified) params.append('isVerified', 'true')
+
+        if (filters.highlight) params.append('highlight', 'true')
 
         if (filters.sortBy) params.append('sortBy', filters.sortBy)
 

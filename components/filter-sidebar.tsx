@@ -43,6 +43,7 @@ interface FilterState {
         isOpenSource: boolean
         isVerified: boolean
     }
+    highlight: boolean
 }
 
 interface FilterSidebarProps {
@@ -96,7 +97,8 @@ export function FilterSidebar({ filters, onFilterChange }: FilterSidebarProps) {
                 hasAPI: false,
                 isOpenSource: false,
                 isVerified: false,
-            }
+            },
+            highlight: false
         })
     }
 
@@ -289,5 +291,6 @@ export const defaultFilters: FilterState = {
         hasAPI: false,
         isOpenSource: false,
         isVerified: false,
-    }
+    },
+    highlight: false
 }

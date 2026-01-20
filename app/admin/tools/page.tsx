@@ -106,7 +106,7 @@ export default function AdminToolsPage() {
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(50)
     const [totalCount, setTotalCount] = useState(0)
-    const [stats, setStats] = useState({ total: 0, published: 0, pending: 0, premium: 0 })
+    const [stats, setStats] = useState({ total: 0, published: 0, pending: 0, rejected: 0, premium: 0 })
 
     // Fetch stats
     const fetchStats = async () => {
@@ -129,6 +129,7 @@ export default function AdminToolsPage() {
             let status = 'all'
             if (currentTab === 'published') status = 'approved'
             if (currentTab === 'pending') status = 'pending'
+            if (currentTab === 'rejected') status = 'rejected'
 
             const params = new URLSearchParams({
                 status,
@@ -229,7 +230,10 @@ export default function AdminToolsPage() {
                 is_verified: true,
                 status: 'approved'
             })
-            if (success) alert("Tool approved successfully! ✅")
+            if (success) {
+                alert("Tool approved successfully! ✅")
+                fetchStats()
+            }
         }
     }
 
@@ -241,6 +245,7 @@ export default function AdminToolsPage() {
         if (success) {
             alert("Tool rejected. ❌")
             setRejectReason("")
+            fetchStats()
         }
     }
 
@@ -282,6 +287,8 @@ export default function AdminToolsPage() {
 
         setBatchLoading(false)
         setSelectedToolIds(new Set())
+        fetchTools(page, activeTab)
+        fetchStats()
         alert(`Successfully approved ${successCount} of ${selectedTools.length} tools! ✅`)
     }
 
@@ -304,6 +311,8 @@ export default function AdminToolsPage() {
 
         setBatchLoading(false)
         setSelectedToolIds(new Set())
+        fetchTools(page, activeTab)
+        fetchStats()
         alert(`Rejected ${successCount} of ${selectedTools.length} tools. ❌`)
     }
 
@@ -326,7 +335,8 @@ export default function AdminToolsPage() {
 
         setBatchLoading(false)
         setSelectedToolIds(new Set())
-        fetchTools()
+        fetchTools(page, activeTab)
+        fetchStats()
         alert(`Deleted ${successCount} of ${selectedTools.length} tools. 🗑️`)
     }
 
@@ -349,6 +359,7 @@ export default function AdminToolsPage() {
         if (success) {
             alert("Benefits updated! ✨")
             setEditDialogOpen(false)
+            fetchStats()
         }
     }
 
@@ -673,12 +684,12 @@ export default function AdminToolsPage() {
                     <div className="text-2xl font-bold text-green-600">{stats.published}</div>
                 </div>
                 <div className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/20 rounded-xl p-4">
-                    <div className="text-sm text-muted-foreground">Pending</div>
+                    <div className="text-sm text-muted-foreground">Pending Review</div>
                     <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/20 rounded-xl p-4">
-                    <div className="text-sm text-muted-foreground">Premium</div>
-                    <div className="text-2xl font-bold text-purple-600">{stats.premium}</div>
+                <div className="bg-gradient-to-br from-red-500/10 to-pink-500/10 border-2 border-red-500/20 rounded-xl p-4">
+                    <div className="text-sm text-muted-foreground">Rejected</div>
+                    <div className="text-2xl font-bold text-red-600">{stats.rejected}</div>
                 </div>
             </div>
 
@@ -698,6 +709,9 @@ export default function AdminToolsPage() {
                             </span>
                         )}
                     </TabsTrigger>
+                    <TabsTrigger value="rejected" className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" onClick={() => setPage(1)}>
+                        Rejected ({stats.rejected})
+                    </TabsTrigger>
                 </TabsList>
                 <TabsContent value="all" className="mt-4">
                     <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
@@ -714,6 +728,12 @@ export default function AdminToolsPage() {
                         Review submissions from users. Approve to publish or Reject with a note.
                     </div>
                     <ToolsTable tools={tools} isReviewMode={true} />
+                </TabsContent>
+                <TabsContent value="rejected" className="mt-4">
+                    <div className="mb-4 text-sm text-muted-foreground">
+                        Tools that have been rejected. You can edit them and approve later if the issues are resolved.
+                    </div>
+                    <ToolsTable tools={tools} />
                 </TabsContent>
             </Tabs>
 

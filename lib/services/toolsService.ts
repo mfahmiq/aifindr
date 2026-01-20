@@ -32,11 +32,18 @@ export const toolsService = {
         )
       `, { count: 'exact' })
 
-        // Default to approved unless specific status requested
-        if (filters?.status && filters.status !== 'all') {
-            query = query.eq('status', filters.status)
-        } else if (filters?.status !== 'all') {
-            // Show ONLY approved AND verified tools for public listing
+        // Admin filtering logic
+        if (filters?.status === 'all') {
+            // No filter
+        } else if (filters?.status === 'pending') {
+            // Show unverified tools that are NOT rejected
+            query = query.eq('is_verified', false).neq('status', 'rejected')
+        } else if (filters?.status === 'rejected') {
+            query = query.eq('status', 'rejected')
+        } else if (filters?.status === 'approved') {
+            query = query.eq('status', 'approved').eq('is_verified', true)
+        } else {
+            // Default public listing
             query = query.eq('status', 'approved').eq('is_verified', true)
         }
 
@@ -241,11 +248,13 @@ export const toolsService = {
             { count: totalCount },
             { count: publishedCount },
             { count: pendingCount },
+            { count: rejectedCount },
             { count: premiumCount }
         ] = await Promise.all([
             supabase.from('tools').select('*', { count: 'exact', head: true }),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', true),
-            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', false),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', false).neq('status', 'rejected'),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('status', 'rejected'),
             supabase.from('tools').select('*', { count: 'exact', head: true }).neq('plan', 'Free')
         ])
 
@@ -253,6 +262,7 @@ export const toolsService = {
             total: totalCount || 0,
             published: publishedCount || 0,
             pending: pendingCount || 0,
+            rejected: rejectedCount || 0,
             premium: premiumCount || 0
         }
     },

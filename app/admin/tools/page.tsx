@@ -104,7 +104,7 @@ export default function AdminToolsPage() {
 
     // Pagination state
     const [page, setPage] = useState(1)
-    const [pageSize] = useState(50)
+    const [pageSize, setPageSize] = useState(50)
     const [totalCount, setTotalCount] = useState(0)
     const [stats, setStats] = useState({ total: 0, published: 0, pending: 0, premium: 0 })
 
@@ -158,7 +158,7 @@ export default function AdminToolsPage() {
             .then(res => res.json())
             .then(data => setCategories(data))
             .catch(err => console.error('Failed to fetch categories', err))
-    }, [page, activeTab])
+    }, [page, activeTab, pageSize])
 
     // Editable tool state for benefits
     const [editingTool, setEditingTool] = useState<{
@@ -595,9 +595,28 @@ export default function AdminToolsPage() {
                 </div>
 
                 {/* Pagination Controls */}
-                <div className="flex items-center justify-between px-2 py-4">
-                    <div className="text-sm text-muted-foreground">
-                        Showing {tools.length} of {totalCount} tools
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 py-4 border-t bg-muted/5 mt-4">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground font-medium">
+                        <span>Showing {tools.length} of {totalCount} tools</span>
+                        <div className="flex items-center gap-2">
+                            <span>Show:</span>
+                            <Select
+                                value={pageSize.toString()}
+                                onValueChange={(val) => {
+                                    setPageSize(parseInt(val))
+                                    setPage(1)
+                                }}
+                            >
+                                <SelectTrigger className="w-[80px] h-8">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {[20, 50, 100, 200, 500].map(size => (
+                                        <SelectItem key={size} value={size.toString()}>{size}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Button
@@ -605,17 +624,21 @@ export default function AdminToolsPage() {
                             size="sm"
                             onClick={() => setPage(prev => Math.max(1, prev - 1))}
                             disabled={page === 1 || loading}
+                            className="bg-background shadow-sm"
                         >
                             Previous
                         </Button>
-                        <div className="text-sm font-medium">
-                            Page {page} of {Math.ceil(totalCount / pageSize)}
+                        <div className="flex items-center gap-1.5 mx-2 text-sm font-semibold">
+                            <span className="text-primary">{page}</span>
+                            <span className="text-muted-foreground">/</span>
+                            <span>{Math.ceil(totalCount / pageSize)}</span>
                         </div>
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => setPage(prev => prev + 1)}
                             disabled={page >= Math.ceil(totalCount / pageSize) || loading}
+                            className="bg-background shadow-sm"
                         >
                             Next
                         </Button>

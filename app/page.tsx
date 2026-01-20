@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
@@ -16,7 +16,7 @@ import { ToolWithRelations } from "@/lib/types"
 
 const ITEMS_PER_PAGE = 12
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams()
   // Initialize filters from URL if possible, or use effect to update
   // Since we use useState for filters, we'll update it via effect when searchParams change
@@ -335,5 +335,17 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   )
 }

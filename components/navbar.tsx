@@ -5,6 +5,15 @@ import { ModeToggle } from "@/components/ui/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -23,6 +32,7 @@ export default function Navbar() {
     const [navbarAd, setNavbarAd] = useState<Ad | null>(null)
     const [user, setUser] = useState<SupabaseUser | null>(null)
     const [userProfile, setUserProfile] = useState<{ name: string; avatar_url: string | null } | null>(null)
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         const supabase = createBrowserClient(
@@ -90,6 +100,18 @@ export default function Navbar() {
         return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     }
 
+    // Helper for mobile links to close menu
+    const MobileLink = ({ href, children, icon: Icon, className }: any) => (
+        <Link
+            href={href}
+            onClick={() => setOpen(false)}
+            className={`flex items-center gap-3 px-4 py-3 text-lg font-medium transition-colors hover:bg-muted/50 rounded-xl ${className}`}
+        >
+            {Icon && <Icon className="w-5 h-5 text-muted-foreground" />}
+            {children}
+        </Link>
+    )
+
     return (
         <div className="sticky top-0 z-50">
             {/* Navbar Ad Strip - Maximum visibility across all pages */}
@@ -120,17 +142,52 @@ export default function Navbar() {
 
             {/* Main Navbar */}
             <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container mx-auto flex h-14 items-center">
-                    {/* Logo */}
-                    <div className="mr-4 flex">
-                        <Link href="/" className="mr-6 flex items-center space-x-2">
+                <div className="container mx-auto flex h-14 items-center justify-between px-4">
+                    {/* Logo & Mobile Menu Trigger */}
+                    <div className="flex items-center gap-4">
+                        {/* Mobile Menu */}
+                        <Sheet open={open} onOpenChange={setOpen}>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon" className="md:hidden -ml-2">
+                                    <Menu className="h-5 w-5" />
+                                    <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+                                <SheetHeader className="p-6 border-b">
+                                    <SheetTitle className="flex items-center gap-2">
+                                        <div className="bg-primary/10 p-2 rounded-lg">
+                                            <Sparkles className="w-6 h-6 text-primary" />
+                                        </div>
+                                        IndoAI
+                                    </SheetTitle>
+                                    <SheetDescription>
+                                        Directory of AI tools for Indonesian creators.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <ScrollArea className="h-[calc(100vh-8rem)]">
+                                    <div className="flex flex-col py-4 px-2 space-y-1">
+                                        <MobileLink href="/" icon={Sparkles}>Tools</MobileLink>
+                                        <MobileLink href="/categories" icon={BookOpen}>Categories</MobileLink>
+                                        <MobileLink href="/trending" icon={TrendingUp}>Trending</MobileLink>
+                                        <MobileLink href="/compare" icon={BarChart3}>Compare</MobileLink>
+                                        <MobileLink href="/deals" icon={Gift} className="text-red-500">Deals</MobileLink>
+                                        <MobileLink href="/blog" icon={BookOpen}>Blog</MobileLink>
+                                        <div className="h-px bg-border my-4" />
+                                        <MobileLink href="/pricing" icon={Zap} className="text-primary">Submit Tool</MobileLink>
+                                    </div>
+                                </ScrollArea>
+                            </SheetContent>
+                        </Sheet>
+
+                        <Link href="/" className="flex items-center space-x-2">
                             <Sparkles className="w-5 h-5 text-primary" />
                             <span className="font-bold">IndoAI</span>
                         </Link>
                     </div>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center space-x-6 text-sm font-medium flex-1">
+                    <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
                         <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
                             Tools
                         </Link>
@@ -208,39 +265,6 @@ export default function Navbar() {
                                 <Link href="/login">Login</Link>
                             </Button>
                         )}
-
-                        {/* Mobile Menu */}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild className="md:hidden">
-                                <Button variant="ghost" size="icon">
-                                    <Menu className="h-5 w-5" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuItem asChild>
-                                    <Link href="/">Tools</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/categories">Categories</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/trending">Trending</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/compare">Compare</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/deals">Deals</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/blog">Blog</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                    <Link href="/pricing">Submit Tool</Link>
-                                </DropdownMenuItem>
-
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </div>
                 </div>
             </nav>

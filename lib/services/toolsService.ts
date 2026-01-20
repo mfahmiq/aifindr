@@ -36,8 +36,8 @@ export const toolsService = {
         if (filters?.status && filters.status !== 'all') {
             query = query.eq('status', filters.status)
         } else if (filters?.status !== 'all') {
-            // Show approved OR verified tools for public listing
-            query = query.or('status.eq.approved,is_verified.eq.true')
+            // Show ONLY approved tools for public listing
+            query = query.eq('status', 'approved')
         }
 
         // Filter by subscription plan

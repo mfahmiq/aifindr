@@ -1,4 +1,5 @@
 -- Migration: Add atomic triggers for tool stats (view_count and favorite_count)
+-- Optimized to preserve historical counts (increment/decrement instead of total recalculation)
 
 -- 1. Function to increment view_count
 CREATE OR REPLACE FUNCTION increment_tool_view_count()
@@ -11,30 +12,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 2. Function to update favorite_count (sum of favorites and anonymous_favorites)
+-- 2. Function to update favorite_count (increment/decrement to preserve manual/historical counts)
 CREATE OR REPLACE FUNCTION update_tool_favorite_count()
 RETURNS TRIGGER AS $$
-DECLARE
-    target_tool_id UUID;
-    auth_count INTEGER;
-    anon_count INTEGER;
 BEGIN
-    -- Determine which tool_id to update
-    IF (TG_OP = 'DELETE') THEN
-        target_tool_id := OLD.tool_id;
-    ELSE
-        target_tool_id := NEW.tool_id;
+    IF (TG_OP = 'INSERT') THEN
+        UPDATE tools
+        SET favorite_count = COALESCE(favorite_count, 0) + 1
+        WHERE id = NEW.tool_id;
+        RETURN NEW;
+    ELSIF (TG_OP = 'DELETE') THEN
+        UPDATE tools
+        SET favorite_count = GREATEST(0, COALESCE(favorite_count, 0) - 1)
+        WHERE id = OLD.tool_id;
+        RETURN OLD;
     END IF;
-
-    -- Calculate current counts
-    SELECT COUNT(*) INTO auth_count FROM favorites WHERE tool_id = target_tool_id;
-    SELECT COUNT(*) INTO anon_count FROM anonymous_favorites WHERE tool_id = target_tool_id;
-
-    -- Update tools table
-    UPDATE tools
-    SET favorite_count = auth_count + anon_count
-    WHERE id = target_tool_id;
-
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

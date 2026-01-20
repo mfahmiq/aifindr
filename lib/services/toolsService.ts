@@ -217,9 +217,44 @@ export const toolsService = {
 
         // Sort by score descending
         scoredTools.sort((a, b) => b.score - a.score)
-
         // Return top tools
         return scoredTools.slice(0, limit).map(item => item.tool) as ToolWithRelations[]
+    },
+
+    async updateToolStatus(id: string, status: string, client?: SupabaseClient) {
+        const supabase = client || createClient()
+        const { data, error } = await supabase
+            .from('tools')
+            .update({ status })
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data
+    },
+
+    async getAdminStats(client?: SupabaseClient) {
+        const supabase = client || createClient()
+
+        const [
+            { count: totalCount },
+            { count: publishedCount },
+            { count: pendingCount },
+            { count: premiumCount }
+        ] = await Promise.all([
+            supabase.from('tools').select('*', { count: 'exact', head: true }),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', true),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', false),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).neq('plan', 'Free')
+        ])
+
+        return {
+            total: totalCount || 0,
+            published: publishedCount || 0,
+            pending: pendingCount || 0,
+            premium: premiumCount || 0
+        }
     },
 
     async updateTool(id: string, updates: Partial<Tool>, client?: SupabaseClient) {

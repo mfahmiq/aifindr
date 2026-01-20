@@ -102,15 +102,46 @@ export default function AdminToolsPage() {
     const [selectedToolIds, setSelectedToolIds] = useState<Set<string>>(new Set())
     const [batchLoading, setBatchLoading] = useState(false)
 
-    // Fetch tools on mount
-    const fetchTools = async () => {
+    // Pagination state
+    const [page, setPage] = useState(1)
+    const [pageSize] = useState(50)
+    const [totalCount, setTotalCount] = useState(0)
+    const [stats, setStats] = useState({ total: 0, published: 0, pending: 0, premium: 0 })
+
+    // Fetch stats
+    const fetchStats = async () => {
+        try {
+            const res = await fetch('/api/admin/stats')
+            if (res.ok) {
+                const data = await res.json()
+                setStats(data)
+            }
+        } catch (error) {
+            console.error('Stats fetch error:', error)
+        }
+    }
+
+    // Fetch tools with pagination and status
+    const fetchTools = async (currentPage = 1, currentTab = activeTab) => {
         setLoading(true)
         try {
-            // Fetch ALL tools (status=all)
-            const res = await fetch('/api/tools?status=all&limit=100')
+            // Map tab to status filter
+            let status = 'all'
+            if (currentTab === 'published') status = 'approved'
+            if (currentTab === 'pending') status = 'pending'
+
+            const params = new URLSearchParams({
+                status,
+                limit: pageSize.toString(),
+                page: currentPage.toString(),
+                sortBy: 'newest' // Admin usually wants newest first or by plan
+            })
+
+            const res = await fetch(`/api/tools?${params.toString()}`)
             if (!res.ok) throw new Error('Failed to fetch')
             const data = await res.json()
             setTools(data.tools)
+            setTotalCount(data.count || 0)
         } catch (error) {
             console.error('Fetch error:', error)
         } finally {
@@ -119,14 +150,15 @@ export default function AdminToolsPage() {
     }
 
     useEffect(() => {
-        fetchTools()
+        fetchTools(page, activeTab)
+        fetchStats()
 
-        // Fetch categories
+        // Fetch categories once
         fetch('/api/categories')
             .then(res => res.json())
             .then(data => setCategories(data))
             .catch(err => console.error('Failed to fetch categories', err))
-    }, [])
+    }, [page, activeTab])
 
     // Editable tool state for benefits
     const [editingTool, setEditingTool] = useState<{
@@ -157,15 +189,7 @@ export default function AdminToolsPage() {
         long_description: ''
     })
 
-    const pendingTools = tools.filter(t => !t.is_verified)
-    const publishedTools = tools.filter(t => t.is_verified)
-
-    // Sort by plan priority: Sponsor > Featured > Pro > Free
-    const planPriority = { 'Sponsor': 0, 'Featured': 1, 'Pro': 2, 'Free': 3, 'null': 4 }
-    const sortedTools = [...tools].sort((a, b) =>
-        // @ts-ignore
-        (planPriority[a.plan || 'null'] ?? 4) - (planPriority[b.plan || 'null'] ?? 4)
-    )
+    const sortedTools = tools // Let backend handle sorting for now or keep current sort if enough data
 
     const openEditDialog = (tool: ToolWithRelations) => {
         setSelectedTool(tool)
@@ -569,6 +593,34 @@ export default function AdminToolsPage() {
                         </TableBody>
                     </Table>
                 </div>
+
+                {/* Pagination Controls */}
+                <div className="flex items-center justify-between px-2 py-4">
+                    <div className="text-sm text-muted-foreground">
+                        Showing {tools.length} of {totalCount} tools
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                            disabled={page === 1 || loading}
+                        >
+                            Previous
+                        </Button>
+                        <div className="text-sm font-medium">
+                            Page {page} of {Math.ceil(totalCount / pageSize)}
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPage(prev => prev + 1)}
+                            disabled={page >= Math.ceil(totalCount / pageSize) || loading}
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -591,35 +643,35 @@ export default function AdminToolsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-2 border-blue-500/20 rounded-xl p-4">
                     <div className="text-sm text-muted-foreground">Total Tools</div>
-                    <div className="text-2xl font-bold">{sortedTools.length}</div>
+                    <div className="text-2xl font-bold">{stats.total}</div>
                 </div>
                 <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-2 border-green-500/20 rounded-xl p-4">
                     <div className="text-sm text-muted-foreground">Published</div>
-                    <div className="text-2xl font-bold text-green-600">{publishedTools.length}</div>
+                    <div className="text-2xl font-bold text-green-600">{stats.published}</div>
                 </div>
                 <div className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/20 rounded-xl p-4">
                     <div className="text-sm text-muted-foreground">Pending</div>
-                    <div className="text-2xl font-bold text-yellow-600">{pendingTools.length}</div>
+                    <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
                 </div>
                 <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/20 rounded-xl p-4">
                     <div className="text-sm text-muted-foreground">Premium</div>
-                    <div className="text-2xl font-bold text-purple-600">{sortedTools.filter(t => t.plan && t.plan !== 'Free').length}</div>
+                    <div className="text-2xl font-bold text-purple-600">{stats.premium}</div>
                 </div>
             </div>
 
             <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
                 <TabsList className="bg-muted/50 p-1">
-                    <TabsTrigger value="all" className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg">
-                        All Tools ({sortedTools.length})
+                    <TabsTrigger value="all" className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" onClick={() => setPage(1)}>
+                        All Tools ({stats.total})
                     </TabsTrigger>
-                    <TabsTrigger value="published" className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg">
-                        Published ({publishedTools.length})
+                    <TabsTrigger value="published" className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" onClick={() => setPage(1)}>
+                        Published ({stats.published})
                     </TabsTrigger>
-                    <TabsTrigger value="pending" className="relative data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg">
+                    <TabsTrigger value="pending" className="relative data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg" onClick={() => setPage(1)}>
                         Pending Review
-                        {pendingTools.length > 0 && (
+                        {stats.pending > 0 && (
                             <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-medium">
-                                {pendingTools.length}
+                                {stats.pending}
                             </span>
                         )}
                     </TabsTrigger>
@@ -627,18 +679,18 @@ export default function AdminToolsPage() {
                 <TabsContent value="all" className="mt-4">
                     <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
                         <Award className="w-3 h-3" />
-                        Sorted by Plan Priority: Sponsor → Featured → Pro → Free
+                        Sorted by Newest
                     </div>
-                    <ToolsTable tools={sortedTools} />
+                    <ToolsTable tools={tools} />
                 </TabsContent>
                 <TabsContent value="published" className="mt-4">
-                    <ToolsTable tools={publishedTools} />
+                    <ToolsTable tools={tools} />
                 </TabsContent>
                 <TabsContent value="pending" className="mt-4">
                     <div className="mb-4 text-sm text-muted-foreground">
                         Review submissions from users. Approve to publish or Reject with a note.
                     </div>
-                    <ToolsTable tools={pendingTools} isReviewMode={true} />
+                    <ToolsTable tools={tools} isReviewMode={true} />
                 </TabsContent>
             </Tabs>
 

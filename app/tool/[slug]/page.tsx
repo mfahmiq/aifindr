@@ -2,7 +2,7 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { toolsService } from "@/lib/services/toolsService"
-import { createClient } from "@supabase/supabase-js"
+import { createClient } from "@/lib/supabase/server"
 import ToolDetailPage from "./client"
 
 // Force dynamic rendering if we want to ensure latest data, 
@@ -15,10 +15,7 @@ interface PageProps {
 }
 
 async function getTool(slug: string) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabase = await createClient()
     return toolsService.getToolBySlug(slug, supabase)
 }
 

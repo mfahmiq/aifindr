@@ -71,6 +71,10 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
 
+    // Preview Banner
+    const isPreview = tool.status !== 'approved'
+
+
     const [isFavorited, setIsFavorited] = useState(false)
     const [favoriteLoading, setFavoriteLoading] = useState(false)
     const [favoriteCount, setFavoriteCount] = useState(0)
@@ -238,6 +242,12 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
 
     return (
         <div className="min-h-screen">
+            {isPreview && (
+                <div className="bg-yellow-500/10 border-b border-yellow-500/20 p-3 text-center text-sm font-medium text-yellow-600 dark:text-yellow-400 flex items-center justify-center gap-2">
+                    <ShieldCheck className="w-4 h-4" />
+                    Preview Mode: This tool is currently <Badge variant="outline" className="ml-1 border-yellow-500/50 text-yellow-600 dark:text-yellow-400 capitalize">{tool.status}</Badge> and only visible to you.
+                </div>
+            )}
             {/* Hero Banner */}
             <div
                 className={`relative ${!dynamicGradient ? `bg-gradient-to-r ${config.bgGradient}` : ''} overflow-hidden`}

@@ -119,7 +119,6 @@ export async function POST(
                     .eq('tool_id', tool.id)
                     .eq('user_id', userId)
 
-                favoriteCount = Math.max(0, favoriteCount - 1)
                 isFavorited = false
             } else {
                 // Add favorite
@@ -130,7 +129,6 @@ export async function POST(
                         user_id: userId
                     })
 
-                favoriteCount = favoriteCount + 1
                 isFavorited = true
             }
         } else {
@@ -150,7 +148,6 @@ export async function POST(
                     .eq('tool_id', tool.id)
                     .eq('anon_id', anonId)
 
-                favoriteCount = Math.max(0, favoriteCount - 1)
                 isFavorited = false
             } else {
                 // Add favorite
@@ -161,21 +158,21 @@ export async function POST(
                         anon_id: anonId
                     })
 
-                favoriteCount = favoriteCount + 1
                 isFavorited = true
             }
         }
 
-        // Update favorite count on tool
-        await supabase
+        // Fetch latest count (recalculated by trigger)
+        const { data: updatedTool } = await supabase
             .from('tools')
-            .update({ favorite_count: favoriteCount })
+            .select('favorite_count')
             .eq('id', tool.id)
+            .single()
 
         const response = NextResponse.json({
             success: true,
             isFavorited,
-            favoriteCount
+            favoriteCount: updatedTool?.favorite_count || tool.favorite_count
         })
 
         // Set anonymous ID cookie

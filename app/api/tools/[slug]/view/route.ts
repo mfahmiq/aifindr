@@ -57,7 +57,7 @@ export async function POST(
         // Only record view if no recent duplicate
         if (!existingView) {
             // Record the view
-            await supabase
+            const { error: insertError } = await supabase
                 .from('tool_views')
                 .insert({
                     tool_id: tool.id,
@@ -66,17 +66,23 @@ export async function POST(
                     referrer: request.headers.get('referer') || null
                 })
 
-            // Increment view count on tool
-            await supabase
-                .from('tools')
-                .update({ view_count: (tool.view_count || 0) + 1 })
-                .eq('id', tool.id)
+            if (insertError) {
+                console.error('Error inserting view:', insertError)
+                return NextResponse.json({ error: 'Failed to record view' }, { status: 500 })
+            }
         }
+
+        // Fetch latest count (it might have been updated by trigger)
+        const { data: updatedTool } = await supabase
+            .from('tools')
+            .select('view_count')
+            .eq('id', tool.id)
+            .single()
 
         const response = NextResponse.json({
             success: true,
             viewRecorded: !existingView,
-            viewCount: existingView ? tool.view_count : (tool.view_count || 0) + 1
+            viewCount: updatedTool?.view_count || tool.view_count
         })
 
         // Set session cookie for future requests

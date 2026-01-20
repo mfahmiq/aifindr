@@ -16,6 +16,7 @@ export const toolsService = {
         }
         status?: string // Allow filtering by status (approved, pending, etc)
         plan?: string // Filter by subscription plan (Free, Pro, Featured, Sponsor)
+        highlight?: boolean // for "IndoAI Selection" (Featured + Sponsor)
         sortBy?: 'rating' | 'newest' | 'trending' | 'popular'
         limit?: number
         page?: number
@@ -42,6 +43,12 @@ export const toolsService = {
         // Filter by subscription plan
         if (filters?.plan) {
             query = query.eq('plan', filters.plan)
+        }
+
+        // Highlight/Featured Filter (IndoAI Selection)
+        // Includes tools that are 'featured' or 'sponsor' plan, or have is_featured=true
+        if (filters?.highlight) {
+            query = query.or('plan.eq.featured,plan.eq.sponsor,is_featured.eq.true')
         }
 
         if (filters?.search) {
@@ -77,21 +84,29 @@ export const toolsService = {
         if (filters?.features?.isVerified) query = query.eq('is_verified', true)
 
         // Sorting
-        // Always prioritize Sponsor/Featured tools (is_priority)
+        // Always prioritize Sponsor/Featured tools (is_priority) unless sorting by specific metric that overrides it (optional)
+        // For now, let's keep priority as primary sort for default lists, but usually secondary for specific sorts?
+        // Actually, if sorting by 'newest', a sponsor from 2 years ago shouldn't be at top?
+        // Let's make priority secondary if a specific sort is requested, or PRIMARY if no sort.
+        // HOWEVER, based on typical business logic, Sponsors often want to be on top.
+        // The current implementation `query.order('is_priority', { ascending: false })` applies it as first order.
         query = query.order('is_priority', { ascending: false })
 
         switch (filters?.sortBy) {
             case 'rating':
-                query = query.order('rating', { ascending: false })
+                query = query.order('rating', { ascending: false, nullsFirst: false })
                 break
             case 'newest':
                 query = query.order('created_at', { ascending: false })
                 break
             case 'trending':
-                query = query.order('view_count', { ascending: false })
+                query = query.order('view_count', { ascending: false, nullsFirst: false })
                 break
             case 'popular':
+                query = query.order('favorite_count', { ascending: false, nullsFirst: false })
+                break
             default:
+                // Default sort: maybe by date or favorites if no specific sort
                 query = query.order('favorite_count', { ascending: false })
         }
 

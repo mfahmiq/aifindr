@@ -18,6 +18,7 @@ export async function GET(request: Request) {
         },
         status: searchParams.get('status') || undefined,
         plan: searchParams.get('plan') || undefined, // Filter by subscription plan
+        highlight: searchParams.get('highlight') === 'true', // Filter for featured tools
         sortBy: searchParams.get('sortBy') as any || 'popular',
         limit: parseInt(searchParams.get('limit') || '12'),
         page: parseInt(searchParams.get('page') || '1')

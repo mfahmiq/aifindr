@@ -135,13 +135,34 @@ export const toolsService = {
 
         if (error) throw error
 
+        // Helper: Get plan priority (lower = higher priority)
+        const getPlanPriority = (plan: string | null | undefined): number => {
+            const planLower = (plan || 'free').toLowerCase()
+            switch (planLower) {
+                case 'sponsor': return 0
+                case 'featured': return 1
+                case 'pro': return 2
+                case 'free': return 3
+                default: return 4
+            }
+        }
+
         // Transform data to match easier-to-use structure if needed
         // Map tool_tags -> tags array
-        const tools = data.map((t: any) => ({
+        let tools = data.map((t: any) => ({
             ...t,
             category: t.categories,
             tags: t.tool_tags?.map((tt: any) => tt.tags) || []
         })) as ToolWithRelations[]
+
+        // Client-side sort by plan priority (Sponsor > Featured > Pro > Free)
+        // This ensures plan-based ordering is respected even with pagination
+        tools = tools.sort((a, b) => {
+            const priorityDiff = getPlanPriority(a.plan) - getPlanPriority(b.plan)
+            if (priorityDiff !== 0) return priorityDiff
+            // Secondary sort by the original criteria (favorite_count, etc) is already applied by DB
+            return 0
+        })
 
         return { tools, count }
     },

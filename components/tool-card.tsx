@@ -76,31 +76,33 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 )}
 
 
-                {/* Top Row: Stats, (Optional Badge), Pricing */}
+                {/* Top Row: Header Info */}
                 <div className="w-full flex items-start justify-between mb-4 z-10 relative">
-                    {/* Left: Stats */}
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
-                            <ArrowUp className="w-4 h-4 text-gray-400" />
-                            <span>{tool.favorite_count || 0}</span>
+                    {/* Left Group: Stats + Premium Badge */}
+                    <div className="flex items-start gap-3">
+                        {/* Stats */}
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
+                                <ArrowUp className="w-4 h-4 text-gray-400" />
+                                <span>{tool.favorite_count || 0}</span>
+                            </div>
+                            {/* Views */}
+                            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                                <Eye className="w-3 h-3" />
+                                <span>{tool.view_count || 0}</span>
+                            </div>
                         </div>
-                        {/* Views */}
-                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                            <Eye className="w-3 h-3" />
-                            <span>{tool.view_count || 0}</span>
-                        </div>
-                    </div>
 
-                    {/* Center: Featured Badge (Gradient Text) */}
-                    {/* HIDE this for Sponsors to prevent overlap, as they already have the TOP ribbon */}
-                    {!isSponsor && premiumBadge && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-0 flex items-center gap-1.5 pointer-events-none">
-                            <Star className={`w-4 h-4 ${premiumBadge.iconColor} fill-current`} />
-                            <span className={`font-bold text-sm uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
-                                {premiumBadge.label}
-                            </span>
-                        </div>
-                    )}
+                        {/* Premium/Featured Badge - Moved to Left to avoid Pricing Overlap */}
+                        {premiumBadge && (
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                <Star className={`w-3.5 h-3.5 ${premiumBadge.iconColor} fill-current`} />
+                                <span className={`font-bold text-xs uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
+                                    {premiumBadge.label}
+                                </span>
+                            </div>
+                        )}
+                    </div>
 
                     {/* Right: Pricing Type */}
                     {/* Added mr-12 when isSponsor to prevent overlap with TOP ribbon */}

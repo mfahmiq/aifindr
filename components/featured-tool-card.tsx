@@ -14,6 +14,31 @@ interface FeaturedToolCardProps {
 }
 
 export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
+    // Shared Badge Logic
+    const isVerified = tool.is_verified;
+    // Featured cards are by definition at least "Featured" or "Sponsor" usually,
+    // but honestly we should rely on the plan data if available.
+    // However, since this component is explicitly "FeaturedToolCard",
+    // it's likely used in contexts where the tool IS featured.
+    // But let's be safe and check the plan if possible, or default to Gold since it's in the "Featured" section?
+    // Actually, looking at the code, it takes a `ToolWithRelations`.
+    // Let's stick to the same strict logic as ToolCard to be safe.
+    const planValue = tool.plan || 'Free';
+    const planLower = planValue.toLowerCase();
+    const isSponsor = planLower === 'sponsor'; // Handle case insensitivity if needed
+    const isFeatured = planLower === 'featured' || isSponsor;
+
+    // Logic:
+    // Gold = Sponsor or Featured plan.
+    // Blue = Verified AND NOT Gold AND NOT Free.
+    const hasGoldBadge = isFeatured; // Since this IS a featured card, maybe we just assume Gold? 
+    // Wait, if a Free tool somehow appearing here (e.g. "Editor's Choice" but not paid), 
+    // we should probably still give it a Gold check if it's in the "Featured" section?
+    // Let's stick to the PLAN based logic for consistency.
+    // Use the variable hasGoldBadge derived from plan.
+    const hasGoldBadgeStrict = isFeatured;
+    const hasBlueBadge = isVerified && !hasGoldBadgeStrict && planLower !== 'free';
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +103,16 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
                                     )}
                                 </div>
                             </div>
-                            {tool.is_verified && (
+
+                            {/* GOLD BADGE */}
+                            {hasGoldBadgeStrict && (
+                                <div className="bg-gradient-to-r from-amber-300 to-amber-500 text-white p-2 rounded-full shadow-sm" title="Premium Tool">
+                                    <Check className="w-6 h-6 stroke-[4]" />
+                                </div>
+                            )}
+
+                            {/* BLUE BADGE */}
+                            {hasBlueBadge && (
                                 <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-2 rounded-full shadow-sm" title="Verified">
                                     <Check className="w-6 h-6 stroke-[3]" />
                                 </div>

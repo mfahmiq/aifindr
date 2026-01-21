@@ -24,9 +24,16 @@ interface ToolCardProps {
 
 export function ToolCard({ tool, index = 0 }: ToolCardProps) {
     const planValue = tool.plan || PLAN_NAMES.FREE
-    const isSponsor = planValue === PLAN_NAMES.SPONSOR
-    const isFeatured = planValue === PLAN_NAMES.FEATURED || isSponsor // Sponsor is also featured
-    const isVerified = tool.is_verified
+    const planLower = planValue.toLowerCase()
+    const isSponsor = planLower === 'sponsor'
+    const isFeatured = planLower === 'featured' || isSponsor // Sponsor is also featured
+
+    // BADGE LOGIC REF REFACTOR:
+    // 1. Gold Checkmark: ONLY for Sponsor or Featured plans.
+    // 2. Blue Checkmark: ONLY for 'is_verified' tools that are NOT Gold AND NOT Free.
+    const hasGoldBadge = isSponsor || isFeatured;
+    const hasBlueBadge = tool.is_verified && !hasGoldBadge && planLower !== 'free';
+
     const isPro = planValue === PLAN_NAMES.PRO
 
     // Premium badge configurations
@@ -170,7 +177,16 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                             <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
                                 {tool.name}
                             </h3>
-                            {isVerified && (
+
+                            {/* GOLD BADGE: Sponsor/Featured */}
+                            {hasGoldBadge && (
+                                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 text-white shadow-sm shrink-0" title="Premium Tool">
+                                    <Check className="w-3.5 h-3.5 stroke-[4]" />
+                                </div>
+                            )}
+
+                            {/* BLUE BADGE: Verified but NOT Gold, and NOT Free */}
+                            {hasBlueBadge && (
                                 <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 text-white shadow-sm shrink-0" title="Verified Tool">
                                     <Check className="w-3 h-3 stroke-[3]" />
                                 </div>

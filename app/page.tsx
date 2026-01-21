@@ -153,9 +153,11 @@ function HomeContent() {
         {/* Editor's Choice / Spotlight Section - Psychological Anchor */}
         {!featuredLoading && featuredTools.length > 0 && filters.category === 'All' && !filters.search && (
           <div className="mb-16">
-            <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Editor's Choice</h2>
+            <div className="flex items-center gap-2 mb-8">
+              <Sparkles className="w-6 h-6 text-amber-500 animate-pulse" />
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                Trending / Editor's Pick
+              </h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredTools.map((tool, index) => (

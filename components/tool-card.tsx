@@ -103,18 +103,23 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                             </div>
                         )}
 
-                        {/* Pricing Badge - Stacked below Featured ONLY if Sponsor (to avoid Ribbon) */}
                         {isSponsor && tool.pricing_type && (
-                            <Badge variant="secondary" className={`
-                                flex items-center justify-center
-                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 text-center min-w-[60px]
-                                ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
-                                    tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
-                                        tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :
-                                            'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200/50'}
-                            `}>
-                                {tool.pricing_type}
-                            </Badge>
+                            <div className="flex flex-col items-center gap-1">
+                                <Badge variant="secondary" className={`
+                                    flex items-center justify-center
+                                    text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 text-center min-w-[60px]
+                                    ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
+                                        tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
+                                            tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :
+                                                'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200/50'}
+                                `}>
+                                    {tool.pricing_type}
+                                </Badge>
+                                {/* Scarcity Badge for Sponsor */}
+                                <Badge variant="secondary" className="bg-red-50 text-red-500 dark:bg-red-950/30 dark:text-red-400 border-red-100 dark:border-red-900/50 text-[9px] px-1.5 py-0 font-bold whitespace-nowrap animate-pulse">
+                                    🔥 High Demand
+                                </Badge>
+                            </div>
                         )}
                     </div>
 

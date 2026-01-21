@@ -62,8 +62,9 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 {/* Glow Effect Background */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                {/* TOP Ribbon - Clean Corner */}
-                {(isSponsor || (tool.rating && tool.rating > 4.8)) && (
+                {/* TOP Ribbon - Only for SPONSOR plan tools */}
+                {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
+                {isSponsor && (
                     <div className="absolute top-0 right-0 z-20 pointer-events-none overflow-hidden w-20 h-20 rounded-tr-2xl">
                         <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform translate-x-[30%] translate-y-[40%] rotate-45 shadow-sm uppercase tracking-widest">
                             TOP

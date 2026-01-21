@@ -67,21 +67,19 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
                 {/* TOP Ribbon - Only for SPONSOR plan tools */}
                 {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
-                {/* TOP Ribbon - Only for SPONSOR plan tools */}
-                {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
                 {isSponsor && (
-                    <div className="absolute top-0 right-0 z-50 pointer-events-none overflow-hidden w-20 h-20 rounded-tr-2xl">
-                        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform translate-x-[30%] translate-y-[40%] rotate-45 shadow-sm uppercase tracking-widest animate-shine">
+                    <div className="absolute -top-[1px] -right-[1px] z-[60] overflow-hidden w-24 h-24 rounded-tr-2xl">
+                        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1.5 w-32 text-center transform translate-x-[32%] translate-y-[45%] rotate-45 shadow-sm uppercase tracking-widest animate-shine">
                             TOP
                         </div>
                     </div>
                 )}
 
 
-                {/* Top Row: Upvotes (Views can be tooltip or combined) & Featured Badge CENTERED */}
-                <div className="w-full grid grid-cols-3 items-start mb-4 z-10 relative">
+                {/* Top Row: Stats, (Optional Badge), Pricing */}
+                <div className="w-full flex items-start justify-between mb-4 z-10 relative">
                     {/* Left: Stats */}
-                    <div className="flex flex-col gap-1 justify-self-start">
+                    <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
                             <ArrowUp className="w-4 h-4 text-gray-400" />
                             <span>{tool.favorite_count || 0}</span>
@@ -94,16 +92,15 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                     </div>
 
                     {/* Center: Featured Badge (Gradient Text) */}
-                    <div className="justify-self-center pt-0.5">
-                        {premiumBadge && (
-                            <div className="flex items-center gap-1.5 pointer-events-none">
-                                <Star className={`w-4 h-4 ${premiumBadge.iconColor} fill-current`} />
-                                <span className={`font-bold text-sm uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
-                                    {premiumBadge.label}
-                                </span>
-                            </div>
-                        )}
-                    </div>
+                    {/* HIDE this for Sponsors to prevent overlap, as they already have the TOP ribbon */}
+                    {!isSponsor && premiumBadge && (
+                        <div className="absolute left-1/2 -translate-x-1/2 top-0 flex items-center gap-1.5 pointer-events-none">
+                            <Star className={`w-4 h-4 ${premiumBadge.iconColor} fill-current`} />
+                            <span className={`font-bold text-sm uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
+                                {premiumBadge.label}
+                            </span>
+                        </div>
+                    )}
 
                     {/* Right: Pricing Type */}
                     {/* Added mr-12 when isSponsor to prevent overlap with TOP ribbon */}

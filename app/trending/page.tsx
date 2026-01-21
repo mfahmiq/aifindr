@@ -19,7 +19,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { toolsService } from "@/lib/services/toolsService"
 import { ToolWithRelations } from "@/lib/types"
 
@@ -73,10 +73,24 @@ export default function TrendingPage() {
         .sort((a, b) => (b.favorite_count || 0) - (a.favorite_count || 0))
         .slice(0, 5)
 
-    // Calculate mock momentum (in real app, this would come from backend)
+    // Generate stable momentum values based on tool ID (deterministic hash)
+    const momentumMap = useMemo(() => {
+        const map: Record<string, string> = {}
+        tools.forEach(tool => {
+            // Simple hash from tool ID to generate consistent "random" value
+            let hash = 0
+            for (let i = 0; i < tool.id.length; i++) {
+                hash = ((hash << 5) - hash) + tool.id.charCodeAt(i)
+                hash = hash & hash // Convert to 32bit integer
+            }
+            const momentum = Math.abs(hash % 30) + 5 // Range: 5-34%
+            map[tool.id] = `+${momentum}%`
+        })
+        return map
+    }, [tools])
+
     const getMomentum = (tool: ToolWithRelations) => {
-        const baseChange = Math.floor(Math.random() * 30) + 5
-        return `+${baseChange}%`
+        return momentumMap[tool.id] || '+10%'
     }
 
     const getHeatLevel = (index: number): 'fire' | 'hot' | 'warm' => {

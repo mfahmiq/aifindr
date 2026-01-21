@@ -180,7 +180,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
                             {/* GOLD BADGE: Shield with Crown for Premium/Sponsor */}
                             {hasGoldBadge && (
-                                <div className="relative shrink-0" title="Premium Tool">
+                                <div className="relative shrink-0 badge-shimmer badge-shimmer-gold" title="Premium Tool">
                                     {/* Shield shape with gradient */}
                                     <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
                                         <defs>
@@ -203,7 +203,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
                             {/* BLUE BADGE: Rounded Square with Checkmark for Verified */}
                             {hasBlueBadge && (
-                                <div className="flex items-center justify-center w-5 h-5 rounded-md bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shrink-0" title="Verified Tool">
+                                <div className="flex items-center justify-center w-5 h-5 rounded-md bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shrink-0 badge-shimmer" title="Verified Tool">
                                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                                 </div>
                             )}

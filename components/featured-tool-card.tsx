@@ -106,7 +106,7 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
 
                             {/* GOLD BADGE: Shield with Crown for Premium/Sponsor */}
                             {hasGoldBadgeStrict && (
-                                <div className="relative shrink-0" title="Premium Tool">
+                                <div className="relative shrink-0 badge-shimmer badge-shimmer-gold" title="Premium Tool">
                                     <svg width="32" height="38" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-lg">
                                         <defs>
                                             <linearGradient id="goldGradientFeatured" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -126,7 +126,7 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
 
                             {/* BLUE BADGE: Rounded Square with Checkmark for Verified */}
                             {hasBlueBadge && (
-                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg shrink-0" title="Verified Tool">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg shrink-0 badge-shimmer" title="Verified Tool">
                                     <Check className="w-5 h-5 stroke-[3]" />
                                 </div>
                             )}

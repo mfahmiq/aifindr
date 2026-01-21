@@ -69,7 +69,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
                 {isSponsor && (
                     <div className="absolute top-0 right-0 z-[60] overflow-hidden w-24 h-24 rounded-tr-2xl pointer-events-none">
-                        <div className="absolute top-3 -right-10 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform rotate-45 shadow-sm uppercase tracking-widest animate-shine">
+                        <div className="absolute top-4 -right-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform rotate-45 shadow-sm uppercase tracking-widest animate-shine">
                             TOP
                         </div>
                     </div>
@@ -106,7 +106,8 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                         {/* Pricing Badge - Stacked below Featured ONLY if Sponsor (to avoid Ribbon) */}
                         {isSponsor && tool.pricing_type && (
                             <Badge variant="secondary" className={`
-                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
+                                flex items-center justify-center
+                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 text-center min-w-[60px]
                                 ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
                                     tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
                                         tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :
@@ -121,7 +122,8 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                     <div className="justify-self-end flex flex-col items-end gap-1">
                         {!isSponsor && tool.pricing_type && (
                             <Badge variant="secondary" className={`
-                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
+                                flex items-center justify-center
+                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 text-center min-w-[60px]
                                 ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
                                     tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
                                         tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :

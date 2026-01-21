@@ -91,19 +91,20 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                         </div>
                     </div>
 
-                    {/* Center Group: Featured Badge + Pricing Stacked */}
+                    {/* Center Group: Featured Badge + Pricing Stacked (Only for Sponsors) */}
                     <div className="flex flex-col items-center justify-start gap-1 justify-self-center pt-0.5 w-full">
                         {premiumBadge && (
                             <div className="flex items-center gap-1.5">
                                 <Star className={`w-3.5 h-3.5 ${premiumBadge.iconColor} fill-current`} />
-                                <span className={`font-bold text-xs uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
+                                {/* Increased text size to text-sm (was text-xs) */}
+                                <span className={`font-bold text-sm uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
                                     {premiumBadge.label}
                                 </span>
                             </div>
                         )}
 
-                        {/* Pricing Badge - Stacked below Featured */}
-                        {tool.pricing_type && (
+                        {/* Pricing Badge - Stacked below Featured ONLY if Sponsor (to avoid Ribbon) */}
+                        {isSponsor && tool.pricing_type && (
                             <Badge variant="secondary" className={`
                                 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
                                 ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
@@ -116,8 +117,20 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                         )}
                     </div>
 
-                    {/* Right: Empty/Spacer (Ribbon is absolute) */}
-                    <div className="justify-self-end"></div>
+                    {/* Right: Pricing Type (For Non-Sponsors) */}
+                    <div className="justify-self-end flex flex-col items-end gap-1">
+                        {!isSponsor && tool.pricing_type && (
+                            <Badge variant="secondary" className={`
+                                text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
+                                ${tool.pricing_type === 'Free' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200/50' :
+                                    tool.pricing_type === 'Freemium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200/50' :
+                                        tool.pricing_type === 'Paid' ? 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 border-rose-200/50' :
+                                            'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400 border-slate-200/50'}
+                            `}>
+                                {tool.pricing_type}
+                            </Badge>
+                        )}
+                    </div>
                 </div>
 
                 {/* Main Content: Logo, Name, Description */}

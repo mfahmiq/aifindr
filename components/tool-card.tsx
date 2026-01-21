@@ -68,7 +68,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 {/* TOP Ribbon - Only for SPONSOR plan tools */}
                 {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
                 {isSponsor && (
-                    <div className="absolute -top-[1px] -right-[1px] z-[60] overflow-hidden w-24 h-24 rounded-tr-2xl">
+                    <div className="absolute top-0 right-0 z-[60] overflow-hidden w-24 h-24 rounded-tr-2xl">
                         <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1.5 w-32 text-center transform translate-x-[32%] translate-y-[45%] rotate-45 shadow-sm uppercase tracking-widest animate-shine">
                             TOP
                         </div>
@@ -76,37 +76,33 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 )}
 
 
-                {/* Top Row: Header Info */}
-                <div className="w-full flex items-start justify-between mb-4 z-10 relative">
-                    {/* Left Group: Stats + Premium Badge */}
-                    <div className="flex items-start gap-3">
-                        {/* Stats */}
-                        <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
-                                <ArrowUp className="w-4 h-4 text-gray-400" />
-                                <span>{tool.favorite_count || 0}</span>
-                            </div>
-                            {/* Views */}
-                            <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                                <Eye className="w-3 h-3" />
-                                <span>{tool.view_count || 0}</span>
-                            </div>
+                {/* Top Row: Header Info using Grid for true centering */}
+                <div className="w-full grid grid-cols-3 items-start mb-4 z-10 relative">
+                    {/* Left: Stats */}
+                    <div className="flex flex-col gap-1 justify-self-start">
+                        <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold text-sm">
+                            <ArrowUp className="w-4 h-4 text-gray-400" />
+                            <span>{tool.favorite_count || 0}</span>
                         </div>
+                        {/* Views */}
+                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                            <Eye className="w-3 h-3" />
+                            <span>{tool.view_count || 0}</span>
+                        </div>
+                    </div>
 
-                        {/* Premium/Featured Badge - Moved to Left to avoid Pricing Overlap */}
+                    {/* Center Group: Featured Badge + Pricing Stacked */}
+                    <div className="flex flex-col items-center justify-start gap-1 justify-self-center pt-0.5 w-full">
                         {premiumBadge && (
-                            <div className="flex items-center gap-1.5 mt-0.5">
+                            <div className="flex items-center gap-1.5">
                                 <Star className={`w-3.5 h-3.5 ${premiumBadge.iconColor} fill-current`} />
                                 <span className={`font-bold text-xs uppercase tracking-wide ${premiumBadge.gradient} whitespace-nowrap`}>
                                     {premiumBadge.label}
                                 </span>
                             </div>
                         )}
-                    </div>
 
-                    {/* Right: Pricing Type */}
-                    {/* Added mr-12 when isSponsor to prevent overlap with TOP ribbon */}
-                    <div className={`flex flex-col items-end gap-1 ${isSponsor ? 'mr-12' : ''}`}>
+                        {/* Pricing Badge - Stacked below Featured */}
                         {tool.pricing_type && (
                             <Badge variant="secondary" className={`
                                 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
@@ -119,6 +115,9 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                             </Badge>
                         )}
                     </div>
+
+                    {/* Right: Empty/Spacer (Ribbon is absolute) */}
+                    <div className="justify-self-end"></div>
                 </div>
 
                 {/* Main Content: Logo, Name, Description */}

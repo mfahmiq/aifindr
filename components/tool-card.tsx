@@ -137,14 +137,25 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                         )}
                     </div>
 
-                    {/* Name + Verified */}
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                        <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                            {tool.name}
-                        </h3>
-                        {isVerified && (
-                            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-yellow-400 text-white shadow-sm shrink-0">
-                                <Check className="w-3 h-3 stroke-[3]" />
+
+                    {/* Name + Badges */}
+                    <div className="flex flex-col items-center gap-2 mb-3">
+                        <div className="flex items-center justify-center gap-2">
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                                {tool.name}
+                            </h3>
+                            {isVerified && (
+                                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 text-white shadow-sm shrink-0" title="Verified Tool">
+                                    <Check className="w-3 h-3 stroke-[3]" />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Recommended Badge for High Rated Tools */}
+                        {tool.rating && tool.rating > 4.8 && (
+                            <div className="flex items-center gap-1.5 bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full text-[10px] font-bold border border-orange-200 dark:border-orange-500/20">
+                                <Sparkles className="w-3 h-3 fill-orange-500" />
+                                <span>RECOMMENDED</span>
                             </div>
                         )}
                     </div>

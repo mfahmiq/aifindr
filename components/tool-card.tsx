@@ -161,11 +161,37 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-6 leading-relaxed px-2">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-4 leading-relaxed px-2">
                         &laquo; {tool.short_description} &raquo;
                     </p>
-                </div>
 
+                    {/* Social Proof: Best Review Snippet */}
+                    {tool.reviews && tool.reviews.length > 0 && (
+                        <div className="w-full px-2 mb-4">
+                            {(() => {
+                                // Find best review (5 stars, longest comment?) or just first 5 star
+                                const bestReview = tool.reviews.filter(r => r.rating === 5 && r.comment && r.comment.length > 10).sort((a, b) => b.comment.length - a.comment.length)[0] || tool.reviews[0];
+
+                                if (bestReview && bestReview.comment) {
+                                    return (
+                                        <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-lg p-2.5 relative">
+                                            <div className="absolute -top-2 left-4 text-blue-300 dark:text-blue-800">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 16.6569 20.6739 18 19.017 18H16.017C15.4647 18 15.017 18.4477 15.017 19V21L14.017 21ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 16.6569 11.6735 18 10.0166 18H7.0166C6.46432 18 6.0166 18.4477 6.0166 19V21L5.0166 21Z" />
+                                                </svg>
+                                            </div>
+                                            <p className="text-xs text-blue-800 dark:text-blue-300 italic line-clamp-2 leading-tight pt-1">
+                                                "{bestReview.comment}"
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                                return null;
+                            })()}
+                        </div>
+                    )}
+
+                </div>
                 {/* Footer: Visit Button */}
                 <div className="w-full z-10 mt-auto">
                     <Link href={`/tool/${tool.slug}`} className="w-full block">

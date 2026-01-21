@@ -862,6 +862,7 @@ export interface ToolWithRelations extends Tool {
     tags?: Tag[]
     features?: ToolFeature[]
     owner?: User | null
+    reviews?: Review[]
 }
 
 export interface ReviewWithUser extends Review {

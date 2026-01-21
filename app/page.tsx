@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
+import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 
 import { HeroSection } from "@/components/hero-section"
 import { ToolCard } from "@/components/tool-card"
@@ -16,13 +16,17 @@ import { ToolWithRelations } from "@/lib/types"
 
 const ITEMS_PER_PAGE = 12
 
+import { FeaturedToolCard } from "@/components/featured-tool-card"
+
+// ... imports
+
 function HomeContent() {
   const searchParams = useSearchParams()
-  // Initialize filters from URL if possible, or use effect to update
-  // Since we use useState for filters, we'll update it via effect when searchParams change
   const [filters, setFilters] = useState(defaultFilters)
   const [tools, setTools] = useState<ToolWithRelations[]>([])
+  const [featuredTools, setFeaturedTools] = useState<ToolWithRelations[]>([])
   const [loading, setLoading] = useState(true)
+  const [featuredLoading, setFeaturedLoading] = useState(true)
   const [inlineAds, setInlineAds] = useState<any[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
@@ -54,6 +58,24 @@ function HomeContent() {
       }
     })
   }, [searchParams])
+
+  // Fetch featured tools (Spotlight)
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch('/api/tools?highlight=true&limit=2')
+        if (res.ok) {
+          const data = await res.json()
+          setFeaturedTools(data.tools || [])
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setFeaturedLoading(false)
+      }
+    }
+    fetchFeatured()
+  }, [])
 
   // Fetch inline ads
   useEffect(() => {
@@ -125,10 +147,27 @@ function HomeContent() {
       {/* Top Banner Ad */}
       <TopBannerAd />
 
-      {/* Sponsor Tools Banner */}
       <SponsorToolBanner />
 
       <div className="container mx-auto px-4 py-12">
+        {/* Editor's Choice / Spotlight Section - Psychological Anchor */}
+        {!featuredLoading && featuredTools.length > 0 && filters.category === 'All' && !filters.search && (
+          <div className="mb-16">
+            <div className="flex items-center gap-2 mb-6">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Editor's Choice</h2>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {featuredTools.map((tool, index) => (
+                <div key={tool.id} className="h-[320px]">
+                  {/* @ts-ignore */}
+                  <FeaturedToolCard tool={tool} index={index} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="flex gap-8">
           {/* Sidebar */}
           <div className="hidden lg:block w-64 space-y-6">

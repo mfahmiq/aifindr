@@ -29,6 +29,12 @@ export const toolsService = {
         categories (name, slug, icon),
         tool_tags (
           tags (name, slug)
+        ),
+        reviews (
+            rating,
+            comment,
+            guest_name,
+            created_at
         )
       `, { count: 'exact' })
 

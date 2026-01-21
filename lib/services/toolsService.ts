@@ -61,7 +61,8 @@ export const toolsService = {
         // Highlight/Featured Filter (IndoAI Selection)
         // Includes tools that are 'featured' or 'sponsor' plan, or have is_featured=true
         if (filters?.highlight) {
-            query = query.or('plan.eq.featured,plan.eq.sponsor,is_featured.eq.true')
+            // Check for both Title Case (as in constants.ts) and lowercase (as in types.ts) to be safe
+            query = query.or('plan.eq.Featured,plan.eq.Sponsor,plan.eq.featured,plan.eq.sponsor,is_featured.eq.true')
         }
 
         if (filters?.search) {

@@ -27,6 +27,7 @@ import {
     ArrowRight
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import {
     Accordion,
@@ -36,8 +37,22 @@ import {
 } from "@/components/ui/accordion"
 import { PaymentButton } from "@/components/payment-button"
 import { PLAN_PRICING } from "@/lib/services/subscriptionService"
+import { useLoginPopup } from "@/components/login-popup"
 
 export default function PricingPage() {
+    const { user, showLoginPopup, isLoading } = useLoginPopup()
+    const router = useRouter()
+
+    const handlePlanClick = (href: string, planName: string) => {
+        if (!user) {
+            showLoginPopup({
+                message: `Login untuk submit tool dengan paket ${planName}`,
+                returnUrl: href
+            })
+            return
+        }
+        router.push(href)
+    }
     const stats = [
         { label: "Monthly views", value: "10k+", icon: Eye, color: "from-blue-500 to-cyan-500" },
         { label: "Newsletter subs", value: "500+", icon: Users, color: "from-purple-500 to-pink-500" },
@@ -272,20 +287,18 @@ export default function PricingPage() {
                                                     : ''
                                             }`}
                                         variant={plan.name.includes("Free") ? "outline" : "default"}
-                                        asChild
+                                        onClick={() => handlePlanClick(plan.href, plan.name)}
                                     >
-                                        <Link href={plan.href}>
-                                            {plan.name.includes("Sponsor") ? (
-                                                <span className="flex items-center gap-2">
-                                                    <CalendarDays className="w-4 h-4" /> Select Dates
-                                                </span>
-                                            ) : (
-                                                <span className="flex items-center gap-2">
-                                                    {plan.cta}
-                                                    <ArrowRight className="w-4 h-4" />
-                                                </span>
-                                            )}
-                                        </Link>
+                                        {plan.name.includes("Sponsor") ? (
+                                            <span className="flex items-center gap-2">
+                                                <CalendarDays className="w-4 h-4" /> Select Dates
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center gap-2">
+                                                {plan.cta}
+                                                <ArrowRight className="w-4 h-4" />
+                                            </span>
+                                        )}
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -360,11 +373,13 @@ export default function PricingPage() {
                                 Join hundreds of AI tools already listed on our platform.
                             </p>
                             <div className="flex flex-wrap justify-center gap-4">
-                                <Button size="lg" className="bg-gradient-to-r from-primary to-purple-500" asChild>
-                                    <Link href="/submit">
-                                        <Zap className="w-5 h-5 mr-2" />
-                                        Submit Your Tool
-                                    </Link>
+                                <Button
+                                    size="lg"
+                                    className="bg-gradient-to-r from-primary to-purple-500"
+                                    onClick={() => handlePlanClick('/submit', 'Free')}
+                                >
+                                    <Zap className="w-5 h-5 mr-2" />
+                                    Submit Your Tool
                                 </Button>
                                 <Button size="lg" variant="outline" asChild>
                                     <Link href="/contact">

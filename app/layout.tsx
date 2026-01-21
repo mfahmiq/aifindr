@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from "@/components/navbar"
 import { GoogleAnalytics } from "@/components/google-analytics"
+import { LoginPopupProvider, NavbarLoginPrompt } from "@/components/login-popup"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,15 +40,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
+          <LoginPopupProvider>
+            <div className="relative flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex-1">
+                {children}
+              </main>
+            </div>
+            <NavbarLoginPrompt />
+          </LoginPopupProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-

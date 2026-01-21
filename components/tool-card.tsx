@@ -69,7 +69,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
                 {isSponsor && (
                     <div className="absolute top-0 right-0 z-[60] overflow-hidden w-24 h-24 rounded-tr-2xl pointer-events-none">
-                        <div className="absolute top-4 -right-8 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform rotate-45 shadow-sm uppercase tracking-widest animate-shine">
+                        <div className="absolute top-5 -right-5 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform rotate-45 shadow-sm uppercase tracking-widest animate-shine">
                             TOP
                         </div>
                     </div>

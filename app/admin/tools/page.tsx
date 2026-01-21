@@ -125,7 +125,7 @@ export default function AdminToolsPage() {
 
         if (hasGoldBadge) {
             return (
-                <div className="relative shrink-0" title="Premium Tool">
+                <div className="relative shrink-0 badge-shimmer badge-shimmer-gold" title="Premium Tool">
                     <svg width="16" height="19" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
                         <defs>
                             <linearGradient id="goldGradientAdmin" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -145,7 +145,7 @@ export default function AdminToolsPage() {
         }
         if (hasBlueBadge) {
             return (
-                <div className="flex items-center justify-center w-4 h-4 rounded bg-gradient-to-br from-blue-400 to-blue-600 text-white shrink-0" title="Verified Tool">
+                <div className="flex items-center justify-center w-4 h-4 rounded bg-gradient-to-br from-blue-400 to-blue-600 text-white shrink-0 badge-shimmer" title="Verified Tool">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </div>
             )

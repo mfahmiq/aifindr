@@ -45,7 +45,9 @@ import {
     Loader2,
     Pencil,
     Crown,
-    Zap
+    Zap,
+    Check,
+    Filter
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
@@ -107,6 +109,36 @@ export default function AdminToolsPage() {
     const [pageSize, setPageSize] = useState(50)
     const [totalCount, setTotalCount] = useState(0)
     const [stats, setStats] = useState({ total: 0, published: 0, pending: 0, rejected: 0, premium: 0 })
+
+    // Column Filter state
+    const [filterName, setFilterName] = useState('')
+    const [filterCategory, setFilterCategory] = useState('')
+    const [filterPlan, setFilterPlan] = useState('all')
+
+    // Helper: Get verification badge (Gold/Blue/None) based on plan
+    const getVerificationBadge = (tool: ToolWithRelations) => {
+        const planLower = (tool.plan || 'free').toLowerCase()
+        const isSponsor = planLower === 'sponsor'
+        const isFeatured = planLower === 'featured' || isSponsor
+        const hasGoldBadge = isSponsor || isFeatured
+        const hasBlueBadge = tool.is_verified && !hasGoldBadge && planLower !== 'free'
+
+        if (hasGoldBadge) {
+            return (
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 text-white shrink-0" title="Premium Tool">
+                    <Check className="w-2.5 h-2.5 stroke-[4]" />
+                </div>
+            )
+        }
+        if (hasBlueBadge) {
+            return (
+                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-blue-500 text-white shrink-0" title="Verified Tool">
+                    <Check className="w-2.5 h-2.5 stroke-[3]" />
+                </div>
+            )
+        }
+        return null
+    }
 
     // Fetch stats
     const fetchStats = async () => {
@@ -190,7 +222,13 @@ export default function AdminToolsPage() {
         long_description: ''
     })
 
-    const sortedTools = tools // Let backend handle sorting for now or keep current sort if enough data
+    // Client-side filtering
+    const filteredTools = tools.filter(tool => {
+        const nameMatch = filterName === '' || tool.name.toLowerCase().includes(filterName.toLowerCase())
+        const categoryMatch = filterCategory === '' || (tool.category?.name || '').toLowerCase().includes(filterCategory.toLowerCase())
+        const planMatch = filterPlan === 'all' || (tool.plan || 'Free') === filterPlan
+        return nameMatch && categoryMatch && planMatch
+    })
 
     const openEditDialog = (tool: ToolWithRelations) => {
         setSelectedTool(tool)
@@ -481,6 +519,45 @@ export default function AdminToolsPage() {
                                 <TableHead className="font-semibold">Status</TableHead>
                                 <TableHead className="text-right font-semibold">Actions</TableHead>
                             </TableRow>
+                            {/* Filter Row */}
+                            <TableRow className="bg-muted/20">
+                                <TableHead></TableHead>
+                                <TableHead></TableHead>
+                                <TableHead>
+                                    <Input
+                                        placeholder="Filter name..."
+                                        value={filterName}
+                                        onChange={(e) => setFilterName(e.target.value)}
+                                        className="h-7 text-xs"
+                                    />
+                                </TableHead>
+                                <TableHead className="hidden md:table-cell">
+                                    <Input
+                                        placeholder="Filter category..."
+                                        value={filterCategory}
+                                        onChange={(e) => setFilterCategory(e.target.value)}
+                                        className="h-7 text-xs"
+                                    />
+                                </TableHead>
+                                <TableHead></TableHead>
+                                <TableHead>
+                                    <Select value={filterPlan} onValueChange={setFilterPlan}>
+                                        <SelectTrigger className="h-7 text-xs">
+                                            <SelectValue placeholder="All Plans" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All Plans</SelectItem>
+                                            <SelectItem value="Free">Free</SelectItem>
+                                            <SelectItem value="Pro">Pro</SelectItem>
+                                            <SelectItem value="Featured">Featured</SelectItem>
+                                            <SelectItem value="Sponsor">Sponsor</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </TableHead>
+                                <TableHead className="hidden lg:table-cell"></TableHead>
+                                <TableHead></TableHead>
+                                <TableHead></TableHead>
+                            </TableRow>
                         </TableHeader>
                         <TableBody>
                             {loading ? (
@@ -489,14 +566,14 @@ export default function AdminToolsPage() {
                                         <span className="flex items-center justify-center gap-2"><Loader2 className="animate-spin w-4 h-4" /> Loading tools...</span>
                                     </TableCell>
                                 </TableRow>
-                            ) : tools.length === 0 ? (
+                            ) : filteredTools.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
                                         No tools found.
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                tools.map((tool) => (
+                                filteredTools.map((tool) => (
                                     <TableRow key={tool.id} className={`hover:bg-muted/30 transition-colors ${selectedToolIds.has(tool.id) ? 'bg-primary/5' : ''}`}>
                                         <TableCell>
                                             <Checkbox
@@ -518,7 +595,7 @@ export default function AdminToolsPage() {
                                             <div className="flex flex-col">
                                                 <span className="flex items-center gap-1.5">
                                                     {tool.name}
-                                                    {tool.is_verified && <ShieldCheck className="w-4 h-4 text-blue-500" />}
+                                                    {getVerificationBadge(tool)}
                                                 </span>
                                                 <span className="text-xs text-muted-foreground md:hidden">
                                                     {tool.category?.name || 'Uncategorized'}

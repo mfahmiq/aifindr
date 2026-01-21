@@ -125,14 +125,27 @@ export default function AdminToolsPage() {
 
         if (hasGoldBadge) {
             return (
-                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 text-white shrink-0" title="Premium Tool">
-                    <Check className="w-2.5 h-2.5 stroke-[4]" />
+                <div className="relative shrink-0" title="Premium Tool">
+                    <svg width="16" height="19" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-sm">
+                        <defs>
+                            <linearGradient id="goldGradientAdmin" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#FFD700" />
+                                <stop offset="50%" stopColor="#FFA500" />
+                                <stop offset="100%" stopColor="#FF8C00" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldGradientAdmin)" stroke="#B8860B" strokeWidth="0.5" />
+                        <path d="M6 15L8 10L11 13L14 10L16 15H6Z" fill="#FFF8DC" stroke="#B8860B" strokeWidth="0.3" />
+                        <circle cx="8" cy="10" r="1" fill="#FFF8DC" />
+                        <circle cx="11" cy="8" r="1.2" fill="#FFF8DC" />
+                        <circle cx="14" cy="10" r="1" fill="#FFF8DC" />
+                    </svg>
                 </div>
             )
         }
         if (hasBlueBadge) {
             return (
-                <div className="flex items-center justify-center w-4 h-4 rounded-full bg-blue-500 text-white shrink-0" title="Verified Tool">
+                <div className="flex items-center justify-center w-4 h-4 rounded bg-gradient-to-br from-blue-400 to-blue-600 text-white shrink-0" title="Verified Tool">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </div>
             )

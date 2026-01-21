@@ -178,17 +178,33 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                                 {tool.name}
                             </h3>
 
-                            {/* GOLD BADGE: Sponsor/Featured */}
+                            {/* GOLD BADGE: Shield with Crown for Premium/Sponsor */}
                             {hasGoldBadge && (
-                                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-r from-amber-300 to-amber-500 text-white shadow-sm shrink-0" title="Premium Tool">
-                                    <Check className="w-3.5 h-3.5 stroke-[4]" />
+                                <div className="relative shrink-0" title="Premium Tool">
+                                    {/* Shield shape with gradient */}
+                                    <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
+                                        <defs>
+                                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor="#FFD700" />
+                                                <stop offset="50%" stopColor="#FFA500" />
+                                                <stop offset="100%" stopColor="#FF8C00" />
+                                            </linearGradient>
+                                        </defs>
+                                        {/* Shield path */}
+                                        <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="0.5" />
+                                        {/* Crown icon inside */}
+                                        <path d="M6 15L8 10L11 13L14 10L16 15H6Z" fill="#FFF8DC" stroke="#B8860B" strokeWidth="0.3" />
+                                        <circle cx="8" cy="10" r="1" fill="#FFF8DC" />
+                                        <circle cx="11" cy="8" r="1.2" fill="#FFF8DC" />
+                                        <circle cx="14" cy="10" r="1" fill="#FFF8DC" />
+                                    </svg>
                                 </div>
                             )}
 
-                            {/* BLUE BADGE: Verified but NOT Gold, and NOT Free */}
+                            {/* BLUE BADGE: Rounded Square with Checkmark for Verified */}
                             {hasBlueBadge && (
-                                <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-500 text-white shadow-sm shrink-0" title="Verified Tool">
-                                    <Check className="w-3 h-3 stroke-[3]" />
+                                <div className="flex items-center justify-center w-5 h-5 rounded-md bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-md shrink-0" title="Verified Tool">
+                                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                                 </div>
                             )}
                         </div>

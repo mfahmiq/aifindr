@@ -340,6 +340,25 @@ export default function AdminToolsPage() {
         alert(`Deleted ${successCount} of ${selectedTools.length} tools. 🗑️`)
     }
 
+    const handleDeleteTool = async (tool: ToolWithRelations) => {
+        if (!confirm(`Are you sure you want to delete "${tool.name}"? This cannot be undone!`)) return
+
+        try {
+            const res = await fetch(`/api/tools/${tool.slug}`, { method: 'DELETE' })
+            if (res.ok) {
+                alert('Tool deleted successfully! 🗑️')
+                fetchTools(page, activeTab)
+                fetchStats()
+            } else {
+                const data = await res.json()
+                alert(`Failed to delete tool: ${data.error || 'Unknown error'}`)
+            }
+        } catch (e) {
+            console.error('Delete error:', e)
+            alert('Failed to delete tool. Please try again.')
+        }
+    }
+
     const handleSaveBenefits = async () => {
         if (!selectedTool) return
 
@@ -594,7 +613,7 @@ export default function AdminToolsPage() {
                                                             Manage Benefits
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="text-destructive">Delete Tool</DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-destructive" onClick={() => handleDeleteTool(tool)}>Delete Tool</DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             )}

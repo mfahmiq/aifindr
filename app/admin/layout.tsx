@@ -258,8 +258,12 @@ export default function AdminLayout({
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/admin/settings">Settings</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <a href="mailto:support@indoai.com">Support</a>
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild className="text-red-500 focus:text-red-500">
                                 <Link href="/">Logout</Link>

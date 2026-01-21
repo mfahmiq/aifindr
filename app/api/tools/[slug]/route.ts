@@ -46,3 +46,36 @@ export async function PATCH(
         return NextResponse.json({ error: 'Failed to update tool' }, { status: 500 })
     }
 }
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: Promise<{ slug: string }> }
+) {
+    try {
+        const supabase = await createClient()
+        const slug = (await params).slug
+
+        // First get the tool to ensure it exists and get its ID
+        const tool = await toolsService.getToolBySlug(slug, supabase)
+
+        if (!tool) {
+            return NextResponse.json({ error: 'Tool not found' }, { status: 404 })
+        }
+
+        // Delete the tool
+        const { error } = await supabase
+            .from('tools')
+            .delete()
+            .eq('id', tool.id)
+
+        if (error) {
+            console.error('Delete error:', error)
+            return NextResponse.json({ error: 'Failed to delete tool' }, { status: 500 })
+        }
+
+        return NextResponse.json({ success: true, message: 'Tool deleted successfully' })
+    } catch (error) {
+        console.error('Delete error:', error)
+        return NextResponse.json({ error: 'Failed to delete tool' }, { status: 500 })
+    }
+}

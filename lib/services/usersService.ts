@@ -80,5 +80,19 @@ export const usersService = {
 
         if (error) return 0
         return count || 0
+    },
+
+    /**
+     * Delete user (revoke access)
+     */
+    async deleteUser(userId: string) {
+        const supabase = createClient()
+        const { error } = await supabase
+            .from('users')
+            .delete()
+            .eq('id', userId)
+
+        if (error) throw error
+        return true
     }
 }

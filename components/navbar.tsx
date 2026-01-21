@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -29,6 +30,12 @@ import { createBrowserClient } from "@supabase/ssr"
 import { User as SupabaseUser } from "@supabase/supabase-js"
 
 export default function Navbar() {
+    const pathname = usePathname()
+
+    // Hide navbar on admin routes (admin has its own layout)
+    if (pathname?.startsWith('/admin')) {
+        return null
+    }
     const [navbarAd, setNavbarAd] = useState<Ad | null>(null)
     const [user, setUser] = useState<SupabaseUser | null>(null)
     const [userProfile, setUserProfile] = useState<{ name: string; avatar_url: string | null } | null>(null)

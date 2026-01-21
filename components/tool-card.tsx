@@ -49,24 +49,27 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
         >
             <Card className={`
                 relative h-full flex flex-col items-center p-5
-                bg-white dark:bg-gray-900
-                border dark:border-gray-800
                 rounded-2xl
                 transition-all duration-300
                 group overflow-hidden
-                ${isFeatured ? 'shadow-[0_4px_20px_-2px_rgba(255,100,200,0.15)] border-rose-100 dark:border-rose-900/30' : 'shadow-md border-gray-100 dark:border-gray-800'}
-                hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.3)]
-                ${isFeatured ? 'hover:shadow-[0_8px_30px_-5px_rgba(255,100,200,0.25)]' : ''}
+                ${isSponsor
+                    ? 'rgb-border bg-transparent border-0 hover:shadow-lg'
+                    : isFeatured
+                        ? 'bg-white dark:bg-gray-900 border border-rose-100 dark:border-rose-900/30 shadow-[0_4px_20px_-2px_rgba(255,100,200,0.15)] hover:shadow-[0_8px_30px_-5px_rgba(255,100,200,0.25)]'
+                        : 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-md hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.3)]'
+                }
             `}
             >
-                {/* Glow Effect Background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                {/* Glow Effect Background (Only if not sponsor, as sponsor has its own effect) */}
+                {!isSponsor && (
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                )}
 
                 {/* TOP Ribbon - Only for SPONSOR plan tools */}
                 {/* This badge indicates premium Sponsor tier placement - highest visibility tier */}
                 {isSponsor && (
                     <div className="absolute top-0 right-0 z-20 pointer-events-none overflow-hidden w-20 h-20 rounded-tr-2xl">
-                        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform translate-x-[30%] translate-y-[40%] rotate-45 shadow-sm uppercase tracking-widest">
+                        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-[10px] font-bold py-1 w-32 text-center transform translate-x-[30%] translate-y-[40%] rotate-45 shadow-sm uppercase tracking-widest animate-shine">
                             TOP
                         </div>
                     </div>
@@ -99,7 +102,8 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                     )}
 
                     {/* Right: Pricing Type */}
-                    <div className="flex flex-col items-end gap-1">
+                    {/* Added mr-12 when isSponsor to prevent overlap with TOP ribbon */}
+                    <div className={`flex flex-col items-end gap-1 ${isSponsor ? 'mr-12' : ''}`}>
                         {tool.pricing_type && (
                             <Badge variant="secondary" className={`
                                 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 h-auto text-center min-w-[60px]
@@ -153,7 +157,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
                         {/* Recommended Badge for High Rated Tools */}
                         {tool.rating && tool.rating > 4.8 && (
-                            <div className="flex items-center gap-1.5 bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full text-[10px] font-bold border border-orange-200 dark:border-orange-500/20">
+                            <div className="flex items-center gap-1.5 bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full text-[10px] font-bold border border-orange-200 dark:border-orange-500/20 animate-shine">
                                 <Sparkles className="w-3 h-3 fill-orange-500" />
                                 <span>RECOMMENDED</span>
                             </div>

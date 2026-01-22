@@ -101,13 +101,12 @@ export async function GET(request: NextRequest) {
 
             // Redirect based on role
             const redirectPath = userProfile?.role === 'admin' ? '/admin' : '/dashboard'
-            response = NextResponse.redirect(new URL(redirectPath, origin))
 
-            // Re-set cookies on the new response
-            const cookieStore = request.cookies.getAll()
-            cookieStore.forEach(cookie => {
-                response.cookies.set(cookie.name, cookie.value)
-            })
+            // Update the redirect location of the EXISTING response to preserve cookies set by Supabase
+            response.headers.set('Location', new URL(redirectPath, origin).toString())
+
+            // No need to manually copy cookies from request, as we are reusing the response object 
+            // where Supabase has already successfully set the session cookies.
         }
 
         return response

@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
                 .from('users')
                 .select('role')
                 .eq('id', user.id)
-                .single()
+                .maybeSingle()
 
             // If user doesn't exist in users table, create them with default 'user' role
             if (!userProfile) {

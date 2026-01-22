@@ -27,6 +27,9 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { createClient } from "@/lib/supabase/client"
+import { useState, useEffect } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const navItems = [
     { href: '/dashboard', label: 'Overview', icon: Home },
@@ -40,6 +43,33 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
+    const [userProfile, setUserProfile] = useState<{ name: string; avatar_url: string | null; email?: string } | null>(null)
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('name, avatar_url')
+                    .eq('id', user.id)
+                    .single()
+
+                setUserProfile({
+                    name: profile?.name ?? 'User',
+                    avatar_url: profile?.avatar_url ?? null,
+                    email: user.email
+                })
+            }
+        }
+        fetchUser()
+    }, [])
+
+    const getInitials = (name: string | undefined) => {
+        if (!name) return 'U'
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    }
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[260px_1fr]">
             {/* Sidebar */}
@@ -147,16 +177,19 @@ export default function DashboardLayout({
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="rounded-full">
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold">
-                                    U
-                                </div>
+                                <Avatar className="h-9 w-9">
+                                    <AvatarImage src={userProfile?.avatar_url || ''} alt={userProfile?.name || 'User'} />
+                                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+                                        {getInitials(userProfile?.name || userProfile?.email)}
+                                    </AvatarFallback>
+                                </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
                             <DropdownMenuLabel>
                                 <div className="flex flex-col">
-                                    <span>Tool Owner</span>
-                                    <span className="text-xs font-normal text-muted-foreground">owner@example.com</span>
+                                    <span>{userProfile?.name || 'My Account'}</span>
+                                    <span className="text-xs font-normal text-muted-foreground">{userProfile?.email}</span>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />

@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
                         id: user.id,
                         email: user.email,
                         name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
-                        avatar_url: user.user_metadata?.avatar_url || null,
+                        avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
                         role: 'user'
                     })
                     .select('role')
@@ -83,6 +83,20 @@ export async function GET(request: NextRequest) {
                     console.error('Error creating user profile:', insertError)
                 }
                 userProfile = newUser
+            } else {
+                // For existing users, sync their avatar and name from the provider
+                // We DO NOT update the role here to prevent overwriting admin status
+                const { error: updateError } = await supabase
+                    .from('users')
+                    .update({
+                        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                        avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+                    })
+                    .eq('id', user.id)
+
+                if (updateError) {
+                    console.error('Error updating user profile:', updateError)
+                }
             }
 
             // Redirect based on role

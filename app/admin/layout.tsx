@@ -37,6 +37,7 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const navItems = [
     { href: '/admin', label: 'Dashboard', icon: Home, badge: null },
@@ -65,6 +66,7 @@ export default function AdminLayout({
 }) {
     const [pendingCount, setPendingCount] = useState(0)
     const [pendingClaimsCount, setPendingClaimsCount] = useState(0)
+    const [userProfile, setUserProfile] = useState<{ name: string; avatar_url: string | null; email?: string } | null>(null)
 
     useEffect(() => {
         const fetchCounts = async () => {
@@ -83,6 +85,22 @@ export default function AdminLayout({
                 .select('*', { count: 'exact', head: true })
                 .eq('status', 'pending')
             if (claimsCount) setPendingClaimsCount(claimsCount)
+
+            // User Profile
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('name, avatar_url')
+                    .eq('id', user.id)
+                    .single()
+
+                setUserProfile({
+                    name: profile?.name ?? 'Admin',
+                    avatar_url: profile?.avatar_url ?? null,
+                    email: user.email
+                })
+            }
         }
         fetchCounts()
     }, [])
@@ -245,16 +263,19 @@ export default function AdminLayout({
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="rounded-full">
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-semibold">
-                                    A
-                                </div>
+                                <Avatar className="h-9 w-9">
+                                    <AvatarImage src={userProfile?.avatar_url || ''} alt={userProfile?.name || 'Admin'} />
+                                    <AvatarFallback className="bg-gradient-to-br from-primary to-purple-500 text-white">
+                                        {(userProfile?.name || 'A')[0].toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
                             <DropdownMenuLabel>
                                 <div className="flex flex-col">
-                                    <span>Admin User</span>
-                                    <span className="text-xs font-normal text-muted-foreground">admin@indoai.com</span>
+                                    <span>{userProfile?.name || 'Admin User'}</span>
+                                    <span className="text-xs font-normal text-muted-foreground">{userProfile?.email || 'admin@indoai.com'}</span>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />

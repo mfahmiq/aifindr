@@ -58,9 +58,19 @@ export default function TrendingPage() {
         return () => window.removeEventListener('mousemove', handleMouseMove)
     }, [])
 
-    // Sort by views for trending
+    // Calculate Velocity Score (Views / Days active)
+    // Adding 2 days buffer to prevent massive skew for brand new tools
+    const getVelocityScore = (tool: ToolWithRelations) => {
+        const created = new Date(tool.created_at || Date.now())
+        const now = new Date()
+        const daysActive = Math.max(1, (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24))
+        const views = tool.view_count || 0
+        return views / (daysActive + 2)
+    }
+
+    // Sort by Velocity (Growth) for trending
     const trendingTools = [...tools]
-        .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
+        .sort((a, b) => getVelocityScore(b) - getVelocityScore(a))
         .slice(0, 10)
 
     // Sort by rating for top rated
@@ -73,25 +83,16 @@ export default function TrendingPage() {
         .sort((a, b) => (b.favorite_count || 0) - (a.favorite_count || 0))
         .slice(0, 5)
 
-    // Generate stable momentum values based on tool ID (deterministic hash)
-    const momentumMap = useMemo(() => {
-        const map: Record<string, string> = {}
-        tools.forEach(tool => {
-            // Simple hash from tool ID to generate consistent "random" value
-            let hash = 0
-            for (let i = 0; i < tool.id.length; i++) {
-                hash = ((hash << 5) - hash) + tool.id.charCodeAt(i)
-                hash = hash & hash // Convert to 32bit integer
-            }
-            const momentum = Math.abs(hash % 30) + 5 // Range: 5-34%
-            map[tool.id] = `+${momentum}%`
-        })
-        return map
-    }, [tools])
-
-    const getMomentum = (tool: ToolWithRelations) => {
-        return momentumMap[tool.id] || '+10%'
+    // Calculate dynamic growth percentage for UI display
+    const getGrowthPercentage = (tool: ToolWithRelations) => {
+        const score = getVelocityScore(tool)
+        // Normalize score to a percentage-like number for display (5% - 95%)
+        // Cap at 95% for UI niceness
+        const percentage = Math.min(95, Math.max(5, Math.round(score * 10)))
+        return `+${percentage}%`
     }
+
+
 
     const getHeatLevel = (index: number): 'fire' | 'hot' | 'warm' => {
         if (index === 0) return 'fire'
@@ -278,7 +279,7 @@ export default function TrendingPage() {
                                                     </div>
                                                     <div className="flex items-center gap-2 bg-green-500/20 rounded-full px-4 py-2">
                                                         <RisingIcon className="w-4 h-4 text-green-400" />
-                                                        <span className="font-bold text-green-400">{getMomentum(top3[0])}</span>
+                                                        <span className="font-bold text-green-400">{getGrowthPercentage(top3[0])}</span>
                                                     </div>
                                                 </div>
 
@@ -348,7 +349,7 @@ export default function TrendingPage() {
                                                             </div>
                                                             <div className="flex items-center gap-1 text-sm text-green-400">
                                                                 <RisingIcon className="w-3.5 h-3.5" />
-                                                                <span className="font-medium">{getMomentum(tool)}</span>
+                                                                <span className="font-medium">{getGrowthPercentage(tool)}</span>
                                                             </div>
                                                             <StarRating rating={tool.rating || 0} size="sm" />
                                                         </div>
@@ -423,7 +424,7 @@ export default function TrendingPage() {
                                                         </div>
                                                         <div className="flex items-center gap-1 text-green-500 text-sm font-medium">
                                                             <RisingIcon className="w-3.5 h-3.5" />
-                                                            {getMomentum(tool)}
+                                                            {getGrowthPercentage(tool)}
                                                         </div>
                                                         <StarRating rating={tool.rating || 0} size="sm" />
                                                     </div>

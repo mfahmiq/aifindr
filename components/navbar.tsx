@@ -160,19 +160,8 @@ export default function Navbar() {
                                     <span className="sr-only">Toggle menu</span>
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
-                                <SheetHeader className="p-6 border-b">
-                                    <SheetTitle className="flex items-center gap-2">
-                                        <div className="bg-primary/10 p-2 rounded-lg">
-                                            <Sparkles className="w-6 h-6 text-primary" />
-                                        </div>
-                                        IndoAI
-                                    </SheetTitle>
-                                    <SheetDescription>
-                                        Directory of AI tools for Indonesian creators.
-                                    </SheetDescription>
-                                </SheetHeader>
-                                <ScrollArea className="h-[calc(100vh-8rem)]">
+                            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0 z-[100]">
+                                <ScrollArea className="h-[calc(100vh)] pt-12">
                                     <div className="flex flex-col py-4 px-2 space-y-1">
                                         <MobileLink href="/" icon={Sparkles}>Tools</MobileLink>
                                         <MobileLink href="/categories" icon={BookOpen}>Categories</MobileLink>
@@ -183,99 +172,100 @@ export default function Navbar() {
                                         <div className="h-px bg-border my-4" />
                                         <MobileLink href="/pricing" icon={Zap} className="text-primary">Submit Tool</MobileLink>
                                     </div>
-                                </ScrollArea>
-                            </SheetContent>
-                        </Sheet>
+                                </div>
+                            </ScrollArea>
+                        </SheetContent>
+                    </Sheet>
 
-                        <Link href="/" className="flex items-center space-x-2">
-                            <Sparkles className="w-5 h-5 text-primary" />
-                            <span className="font-bold">IndoAI</span>
-                        </Link>
-                    </div>
-
-                    {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-                        <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                            Tools
-                        </Link>
-                        <Link href="/categories" className="transition-colors hover:text-foreground/80 text-foreground/60">
-                            Categories
-                        </Link>
-                        <Link href="/trending" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />
-                            Trending
-                        </Link>
-                        <Link href="/compare" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
-                            <BarChart3 className="w-3 h-3" />
-                            Compare
-                        </Link>
-                        <Link href="/deals" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1 text-red-500">
-                            <Gift className="w-3 h-3" />
-                            Deals
-                        </Link>
-                        <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
-                            <BookOpen className="w-3 h-3" />
-                            Blog
-                        </Link>
-                    </nav>
-
-                    {/* Right Side */}
-                    <div className="flex items-center gap-2">
-                        <Button variant="default" size="sm" asChild className="hidden sm:flex">
-                            <Link href="/pricing">Submit Tool</Link>
-                        </Button>
-
-                        <ModeToggle />
-
-                        {/* User Avatar / Login */}
-                        {user ? (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="rounded-full">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage src={userProfile?.avatar_url || user.user_metadata?.avatar_url} alt={userProfile?.name || 'User'} />
-                                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                                                {getInitials(userProfile?.name || user.user_metadata?.name || user.email)}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56">
-                                    <DropdownMenuLabel>
-                                        <div className="flex flex-col space-y-1">
-                                            <p className="text-sm font-medium">{userProfile?.name || user.user_metadata?.name || 'User'}</p>
-                                            <p className="text-xs text-muted-foreground">{user.email}</p>
-                                        </div>
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/settings" className="flex items-center">
-                                            <Settings className="mr-2 h-4 w-4" />
-                                            Settings
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/dashboard" className="flex items-center">
-                                            <User className="mr-2 h-4 w-4" />
-                                            Dashboard
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        Logout
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        ) : (
-                            <Button variant="ghost" size="sm" asChild>
-                                <Link href="/login">Login</Link>
-                            </Button>
-                        )}
-                    </div>
+                    <Link href="/" className="flex items-center space-x-2">
+                        <Sparkles className="w-5 h-5 text-primary" />
+                        <span className="font-bold">IndoAI</span>
+                    </Link>
                 </div>
-            </nav>
+
+                {/* Desktop Nav */}
+                <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                        Tools
+                    </Link>
+                    <Link href="/categories" className="transition-colors hover:text-foreground/80 text-foreground/60">
+                        Categories
+                    </Link>
+                    <Link href="/trending" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3" />
+                        Trending
+                    </Link>
+                    <Link href="/compare" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
+                        <BarChart3 className="w-3 h-3" />
+                        Compare
+                    </Link>
+                    <Link href="/deals" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1 text-red-500">
+                        <Gift className="w-3 h-3" />
+                        Deals
+                    </Link>
+                    <Link href="/blog" className="transition-colors hover:text-foreground/80 text-foreground/60 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" />
+                        Blog
+                    </Link>
+                </nav>
+
+                {/* Right Side */}
+                <div className="flex items-center gap-2">
+                    <Button variant="default" size="sm" asChild className="hidden sm:flex">
+                        <Link href="/pricing">Submit Tool</Link>
+                    </Button>
+
+                    <ModeToggle />
+
+                    {/* User Avatar / Login */}
+                    {user ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="rounded-full">
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarImage src={userProfile?.avatar_url || user.user_metadata?.avatar_url} alt={userProfile?.name || 'User'} />
+                                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                                            {getInitials(userProfile?.name || user.user_metadata?.name || user.email)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel>
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium">{userProfile?.name || user.user_metadata?.name || 'User'}</p>
+                                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem asChild>
+                                    <Link href="/settings" className="flex items-center">
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        Settings
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Link href="/dashboard" className="flex items-center">
+                                        <User className="mr-2 h-4 w-4" />
+                                        Dashboard
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:text-red-500">
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Logout
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button variant="ghost" size="sm" asChild>
+                            <Link href="/login">Login</Link>
+                        </Button>
+                    )}
+                </div>
         </div>
+            </nav >
+        </div >
     )
 }
 

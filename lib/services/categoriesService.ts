@@ -34,7 +34,8 @@ export const categoriesService = {
         const { data: toolCounts, error: countError } = await supabase
             .from('tools')
             .select('category_id')
-            .or('status.eq.approved,is_verified.eq.true')
+            .eq('status', 'approved')
+            .eq('is_verified', true)
 
         if (countError) throw countError
 

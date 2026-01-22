@@ -132,7 +132,7 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
                     </DialogHeader>
 
                     <div className="px-4 pb-6 space-y-2">
-                        {/* Google Item */}
+                        {/* Google Item - Main Action */}
                         <button
                             onClick={handleGoogleLogin}
                             className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
@@ -141,8 +141,8 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
                                 <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">Continue with Google</div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">user@example.com</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">Sign in with Google</div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">Fast & Secure</div>
                             </div>
                         </button>
 

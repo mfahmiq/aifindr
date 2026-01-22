@@ -5,17 +5,78 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react"
-import { Sparkles, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { Sparkles, Loader2 } from "lucide-react"
 import { createBrowserClient } from "@supabase/ssr"
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 export default function LoginPage() {
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(true)
     const supabase = createBrowserClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession()
+                if (session) {
+                    await handleRedirect(session.user.id)
+                } else {
+                    setIsLoading(false)
+                }
+            } catch (error) {
+                console.error("Error checking session:", error)
+                setIsLoading(false)
+            }
+        }
+
+        checkSession()
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                setIsLoading(true)
+                await handleRedirect(session.user.id)
+            }
+        })
+
+        return () => subscription.unsubscribe()
+    }, [])
+
+    const handleRedirect = async (userId: string) => {
+        try {
+            // Fetch user role
+            const { data: userProfile } = await supabase
+                .from('users')
+                .select('role')
+                .eq('id', userId)
+                .single()
+
+            if (userProfile?.role === 'admin') {
+                router.replace('/admin')
+            } else {
+                router.replace('/dashboard')
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error)
+            router.replace('/dashboard') // Fallback
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen w-full items-center justify-center p-4 bg-gray-50/50 dark:bg-black">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                    <p className="text-sm text-slate-500">Checking authentication...</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex min-h-screen w-full items-center justify-center p-4 bg-gray-50/50 dark:bg-black">
@@ -50,10 +111,7 @@ export default function LoginPage() {
                         redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`}
                         onlyThirdPartyProviders={false}
                         view="sign_in"
-                        theme="dark" // or "default" depending on system, but let's try to detect or force dark if parent is dark? Auth UI handles theme prop.
-                    // Ideally we pass standard 'dark' or 'light' string. 
-                    // For now we can force 'default' which usually adapts or 'dark' if the app is dark mode.
-                    // Let's assume standard behavior first.
+                        theme="default"
                     />
                 </CardContent>
             </Card>

@@ -220,6 +220,7 @@ export const toolsService = {
                 tool_tags (tag_id)
             `)
             .eq('status', 'approved')
+            .eq('is_verified', true)
             .eq('category_id', categoryId)
             .neq('id', currentToolId)
             .order('view_count', { ascending: false }) // Initial ordering by popularity

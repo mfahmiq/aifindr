@@ -115,18 +115,18 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
             {children}
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="sm:max-w-[400px] p-0 border-none shadow-2xl overflow-hidden gap-0">
+                <DialogContent className="sm:max-w-[400px] p-0 border-none shadow-2xl overflow-hidden gap-0 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
                     <DialogHeader className="px-6 pt-8 pb-4 text-center">
-                        <div className="mx-auto w-10 h-10 mb-3 flex items-center justify-center">
-                            <svg viewBox="0 0 24 24" className="w-8 h-8" aria-hidden="true">
+                        <div className="mx-auto w-10 h-10 mb-3 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm">
+                            <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" />
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
                         </div>
-                        <DialogTitle className="text-xl font-medium text-slate-900">Sign in to IndoAI</DialogTitle>
-                        <DialogDescription className="text-sm text-slate-500 mt-1">
+                        <DialogTitle className="text-xl font-medium text-slate-900 dark:text-slate-100">Sign in to IndoAI</DialogTitle>
+                        <DialogDescription className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                             {message || "Choose an account to continue"}
                         </DialogDescription>
                     </DialogHeader>
@@ -135,35 +135,35 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
                         {/* Google Item */}
                         <button
                             onClick={handleGoogleLogin}
-                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group border border-transparent hover:border-slate-100"
+                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
                         >
-                            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                                <Sparkles className="w-5 h-5 text-blue-600" />
+                            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+                                <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors truncate">Continue with Google</div>
-                                <div className="text-xs text-slate-500 truncate">user@example.com</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">Continue with Google</div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">user@example.com</div>
                             </div>
                         </button>
 
-                        <div className="h-px bg-slate-100 mx-4" />
+                        <div className="h-px bg-slate-100 dark:bg-slate-800 mx-4" />
 
                         {/* Other Account Item */}
                         <a
                             href="/login"
-                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors group border border-transparent hover:border-slate-100"
+                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
                         >
-                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                                <UserPlus className="w-5 h-5 text-slate-500" />
+                            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                                <UserPlus className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-medium text-slate-900">Use another account</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100">Use another account</div>
                             </div>
                         </a>
                     </div>
 
-                    <div className="bg-slate-50 px-6 py-4 text-center">
-                        <p className="text-xs text-slate-400">
+                    <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
                             By continuing, Google will share your name, email address, and profile picture with IndoAI.
                         </p>
                     </div>
@@ -230,39 +230,68 @@ export function NavbarLoginPrompt() {
         }
     }
 
-    const handleDismiss = () => {
+    const handleDismiss = (e: React.MouseEvent) => {
+        e.stopPropagation()
         setDismissed(true)
         setIsVisible(false)
     }
 
     if (!isVisible || user) return null
 
+    // Exact Google One Tap Style
     return (
-        <div className="fixed top-20 right-4 z-50 animate-in slide-in-from-right-5 fade-in duration-300">
-            <div className="bg-background border-2 border-primary/20 shadow-xl rounded-xl p-4 max-w-xs">
+        <div className="fixed top-[80px] right-4 z-[60] animate-in slide-in-from-right-10 fade-in duration-500">
+            <div
+                onClick={handleGoogleLogin}
+                className="cursor-pointer group relative flex flex-col items-center bg-[#202124] text-white rounded-lg shadow-2xl border border-[#5f6368] overflow-hidden w-[360px] font-sans"
+                style={{ fontFamily: '"Google Sans", Roboto, Arial, sans-serif' }}
+            >
+                {/* Close Button */}
                 <button
                     onClick={handleDismiss}
-                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
+                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors z-10"
                 >
                     <X className="w-4 h-4" />
                 </button>
-                <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center shrink-0">
-                        <Sparkles className="w-5 h-5 text-white" />
+
+                {/* Header Section */}
+                <div className="w-full p-4 flex items-start gap-4 border-b border-[#5f6368]/50 bg-[#202124]">
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+                        {/* Placeholder generic user logo or IndoAI logo if generic */}
+                        <div className="bg-purple-600 w-full h-full flex items-center justify-center text-white font-bold text-lg">I</div>
                     </div>
-                    <div className="flex-1">
-                        <p className="text-sm font-medium mb-2">Login cepat dengan Google</p>
-                        <Button
-                            size="sm"
-                            className="w-full bg-gradient-to-r from-primary to-purple-500"
-                            onClick={handleGoogleLogin}
-                        >
-                            <svg className="mr-2 h-4 w-4" viewBox="0 0 488 512">
-                                <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                            </svg>
-                            Login
-                        </Button>
+                    <div className="flex-1 pt-0.5">
+                        <div className="text-[14px] font-medium leading-tight">Sign in with Google</div>
+                        <div className="text-[12px] text-gray-400 mt-0.5">IndoAI</div>
                     </div>
+                    <div className="w-5 h-5 bg-white rounded-full p-0.5 shrink-0">
+                        <svg viewBox="0 0 24 24" className="w-full h-full" aria-hidden="true">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" />
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                    </div>
+                </div>
+
+                {/* Body Section - Account Selector imitation */}
+                <div className="w-full p-0 bg-[#2d2e31] hover:bg-[#343538] transition-colors">
+                    <div className="flex items-center gap-3 px-4 py-3">
+                        <div className="w-8 h-8 rounded-full bg-orange-700 flex items-center justify-center text-white text-xs font-medium shrink-0">
+                            A
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="text-[13px] font-medium text-white truncate">Sign in to IndoAI</div>
+                            <div className="text-[11px] text-gray-400 truncate">Choose an account</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer/Button */}
+                <div className="w-full px-4 py-3 bg-[#202124] flex justify-end border-t border-[#5f6368]/30">
+                    <button className="bg-[#8ab4f8] text-[#202124] text-[13px] font-medium px-6 py-1.5 rounded-full hover:bg-[#aecbfa] transition-colors">
+                        Continue
+                    </button>
                 </div>
             </div>
         </div>

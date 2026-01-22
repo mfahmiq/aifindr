@@ -11,7 +11,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Sparkles, X, UserPlus } from "lucide-react"
+import { Sparkles, X, UserPlus, Mail } from "lucide-react"
 
 // Context for login popup
 interface LoginPopupContextType {
@@ -115,56 +115,45 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
             {children}
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="sm:max-w-[400px] p-0 border-none shadow-2xl overflow-hidden gap-0 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
-                    <DialogHeader className="px-6 pt-8 pb-4 text-center">
-                        <div className="mx-auto w-10 h-10 mb-3 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm">
-                            <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
+                <DialogContent className="sm:max-w-[380px] p-0 border-none shadow-2xl overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+                    <DialogHeader className="pt-10 pb-6 px-6 text-center select-none">
+                        <div className="mx-auto w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                            <Sparkles className="w-8 h-8 text-white fill-white/20" />
+                        </div>
+                        <DialogTitle className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white">
+                            Unlock Full Access
+                        </DialogTitle>
+                        <DialogDescription className="text-base text-slate-500 dark:text-slate-400 mt-2 max-w-[280px] mx-auto leading-relaxed">
+                            Sign in to bookmark tools, track trends, and access premium features.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="px-6 pb-8 space-y-3">
+                        {/* Google Login Button - Eye Catching */}
+                        <button
+                            onClick={handleGoogleLogin}
+                            className="w-full relative group flex items-center justify-center gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 transform hover:-translate-y-0.5"
+                        >
+                            <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" aria-hidden="true">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" />
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
-                        </div>
-                        <DialogTitle className="text-xl font-medium text-slate-900 dark:text-slate-100">Sign in to IndoAI</DialogTitle>
-                        <DialogDescription className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                            {message || "Choose an account to continue"}
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="px-4 pb-6 space-y-2">
-                        {/* Google Item - Main Action */}
-                        <button
-                            onClick={handleGoogleLogin}
-                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
-                        >
-                            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
-                                <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">Sign in with Google</div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">Fast & Secure</div>
-                            </div>
+                            <span className="font-semibold text-slate-700 dark:text-slate-200">Sign in with Google</span>
                         </button>
 
-                        <div className="h-px bg-slate-100 dark:bg-slate-800 mx-4" />
-
-                        {/* Other Account Item */}
+                        {/* Email Login Button - Simple */}
                         <a
                             href="/login"
-                            className="w-full text-left flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group border border-transparent hover:border-slate-100 dark:hover:border-slate-800"
+                            className="w-full flex items-center justify-center gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium transition-colors text-sm"
                         >
-                            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                                <UserPlus className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="font-medium text-slate-900 dark:text-slate-100">Use another account</div>
-                            </div>
+                            <Mail className="w-4 h-4" />
+                            <span>Continue with Email</span>
                         </a>
-                    </div>
 
-                    <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 text-center">
-                        <p className="text-xs text-slate-400 dark:text-slate-500">
-                            By continuing, Google will share your name, email address, and profile picture with IndoAI.
+                        <p className="text-xs text-center text-slate-400 dark:text-slate-500 mt-4 px-4 leading-normal">
+                            By continuing, you agree to our Terms of Service and Privacy Policy.
                         </p>
                     </div>
                 </DialogContent>
@@ -238,60 +227,47 @@ export function NavbarLoginPrompt() {
 
     if (!isVisible || user) return null
 
-    // Exact Google One Tap Style
+    // Simplified, Eye-Catching Navbar Prompt
     return (
         <div className="fixed top-[80px] right-4 z-[60] animate-in slide-in-from-right-10 fade-in duration-500">
-            <div
-                onClick={handleGoogleLogin}
-                className="cursor-pointer group relative flex flex-col items-center bg-[#202124] text-white rounded-lg shadow-2xl border border-[#5f6368] overflow-hidden w-[360px] font-sans"
-                style={{ fontFamily: '"Google Sans", Roboto, Arial, sans-serif' }}
-            >
-                {/* Close Button */}
+            <div className="relative overflow-hidden bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 w-[300px]">
+                {/* Decorative Background Blur */}
+                <div className="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/20 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 blur-3xl rounded-full pointer-events-none" />
+
                 <button
                     onClick={handleDismiss}
-                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors z-10"
+                    className="absolute top-2 right-2 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors z-10"
                 >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5" />
                 </button>
 
-                {/* Header Section */}
-                <div className="w-full p-4 flex items-start gap-4 border-b border-[#5f6368]/50 bg-[#202124]">
-                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
-                        {/* Placeholder generic user logo or IndoAI logo if generic */}
-                        <div className="bg-purple-600 w-full h-full flex items-center justify-center text-white font-bold text-lg">I</div>
+                <div className="p-5 flex flex-col items-center text-center">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
+                        <Sparkles className="w-6 h-6 text-white" />
                     </div>
-                    <div className="flex-1 pt-0.5">
-                        <div className="text-[14px] font-medium leading-tight">Sign in with Google</div>
-                        <div className="text-[12px] text-gray-400 mt-0.5">IndoAI</div>
-                    </div>
-                    <div className="w-5 h-5 bg-white rounded-full p-0.5 shrink-0">
-                        <svg viewBox="0 0 24 24" className="w-full h-full" aria-hidden="true">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.84z" />
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                        </svg>
-                    </div>
-                </div>
 
-                {/* Body Section - Account Selector imitation */}
-                <div className="w-full p-0 bg-[#2d2e31] hover:bg-[#343538] transition-colors">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                        <div className="w-8 h-8 rounded-full bg-orange-700 flex items-center justify-center text-white text-xs font-medium shrink-0">
-                            A
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="text-[13px] font-medium text-white truncate">Sign in to IndoAI</div>
-                            <div className="text-[11px] text-gray-400 truncate">Choose an account</div>
-                        </div>
-                    </div>
-                </div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+                        Unlock Full Access
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed px-2">
+                        Join 10,000+ users exploring the best AI tools daily.
+                    </p>
 
-                {/* Footer/Button */}
-                <div className="w-full px-4 py-3 bg-[#202124] flex justify-end border-t border-[#5f6368]/30">
-                    <button className="bg-[#8ab4f8] text-[#202124] text-[13px] font-medium px-6 py-1.5 rounded-full hover:bg-[#aecbfa] transition-colors">
-                        Continue
-                    </button>
+                    <div className="w-full grid grid-cols-2 gap-2">
+                        <button
+                            onClick={handleDismiss}
+                            className="px-4 py-2 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        >
+                            Later
+                        </button>
+                        <button
+                            onClick={handleGoogleLogin}
+                            className="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 transition-opacity shadow-md"
+                        >
+                            Sign In
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

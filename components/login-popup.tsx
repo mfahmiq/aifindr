@@ -104,6 +104,10 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
             provider: 'google',
             options: {
                 redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectUrl)}`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
             },
         })
 
@@ -226,6 +230,10 @@ export function NavbarLoginPrompt() {
             provider: 'google',
             options: {
                 redirectTo: `${window.location.origin}/auth/callback`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
             },
         })
 

@@ -59,7 +59,10 @@ export default function Navbar() {
                     .select('name, avatar_url')
                     .eq('id', user.id)
                     .single()
-                setUserProfile(profile)
+                setUserProfile({
+                    name: profile?.name || user.user_metadata?.full_name || user.user_metadata?.name || 'User',
+                    avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+                })
             }
         }
         checkAuth()
@@ -73,7 +76,10 @@ export default function Navbar() {
                     .select('name, avatar_url')
                     .eq('id', session.user.id)
                     .single()
-                    .then(({ data }) => setUserProfile(data))
+                    .then(({ data }) => setUserProfile({
+                        name: data?.name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'User',
+                        avatar_url: data?.avatar_url || session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture || null
+                    }))
             } else {
                 setUserProfile(null)
             }

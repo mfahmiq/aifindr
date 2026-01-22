@@ -96,8 +96,8 @@ export default function AdminLayout({
                     .single()
 
                 setUserProfile({
-                    name: profile?.name ?? 'Admin',
-                    avatar_url: profile?.avatar_url ?? null,
+                    name: profile?.name || user.user_metadata?.full_name || user.user_metadata?.name || 'Admin',
+                    avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
                     email: user.email
                 })
             }

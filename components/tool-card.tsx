@@ -180,7 +180,7 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
 
                             {/* GOLD BADGE: Shield with Crown for Premium/Sponsor */}
                             {hasGoldBadge && (
-                                <div className="relative shrink-0 badge-shimmer badge-shimmer-gold" title="Premium Tool">
+                                <div className="relative shrink-0" title="Premium Tool">
                                     {/* Shield shape with gradient */}
                                     <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
                                         <defs>
@@ -189,9 +189,20 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                                                 <stop offset="50%" stopColor="#FFA500" />
                                                 <stop offset="100%" stopColor="#FF8C00" />
                                             </linearGradient>
+                                            {/* Internal Shimmer Gradient */}
+                                            <linearGradient id="goldShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="white" stopOpacity="0" />
+                                                <stop offset="50%" stopColor="white" stopOpacity="0.7" />
+                                                <stop offset="100%" stopColor="white" stopOpacity="0" />
+                                                <animate attributeName="x1" values="-100%; 200%" dur="2.5s" repeatCount="indefinite" />
+                                                <animate attributeName="x2" values="0%; 300%" dur="2.5s" repeatCount="indefinite" />
+                                            </linearGradient>
                                         </defs>
-                                        {/* Shield path */}
+                                        {/* Shield Base */}
                                         <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="0.5" />
+                                        {/* Shimmer Overlay - follows exact shape */}
+                                        <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldShimmer)" style={{ mixBlendMode: 'overlay' }} />
+
                                         {/* Crown icon inside */}
                                         <path d="M6 15L8 10L11 13L14 10L16 15H6Z" fill="#FFF8DC" stroke="#B8860B" strokeWidth="0.3" />
                                         <circle cx="8" cy="10" r="1" fill="#FFF8DC" />

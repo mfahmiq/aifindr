@@ -104,7 +104,7 @@ export default function LoginPage() {
                             className: {
                                 container: 'w-full',
                                 button: 'w-full px-4 py-2 rounded-lg font-medium',
-                                input: 'w-full px-4 py-2 rounded-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400',
+                                input: 'w-full px-4 py-2 rounded-lg border-slate-200 dark:border-slate-800 !bg-white dark:!bg-slate-950 !text-slate-900 dark:!text-white placeholder:text-slate-400',
                                 label: 'text-slate-600 dark:text-slate-400 font-medium',
                             }
                         }}

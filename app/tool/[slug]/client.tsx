@@ -261,7 +261,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
 
     // Compute gradient style for hero
     const heroGradientStyle = activeGradient
-        ? { background: `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})` }
+        ? { background: `linear-gradient(135deg, ${activeGradient.from}, ${activeGradient.to})` }
         : undefined
 
     return (
@@ -281,6 +281,8 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:40px_40px]" />
                 </div>
+                {/* Bottom Fade Mask */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
                 <motion.div
                     animate={{
                         scale: [1, 1.1, 1],
@@ -408,9 +410,9 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                         >
                             <Card className="overflow-hidden border-2 border-muted/50 shadow-lg">
                                 <CardHeader
-                                    className="bg-gradient-to-r from-muted/50 to-muted/30 transition-colors duration-500"
+                                    className="bg-transparent transition-colors duration-500 relative"
                                     style={activeGradient ? {
-                                        background: `linear-gradient(to right, ${activeGradient.from}15, ${activeGradient.to}15)`
+                                        background: `linear-gradient(to right, ${activeGradient.from}10, ${activeGradient.to}10)`
                                     } : undefined}
                                 >
                                     <CardTitle className="flex items-center gap-2">
@@ -445,9 +447,9 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             >
                                 <Card className="overflow-hidden border-2 border-muted/50 shadow-lg">
                                     <CardHeader
-                                        className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 transition-colors duration-500"
+                                        className="bg-transparent transition-colors duration-500"
                                         style={activeGradient ? {
-                                            background: `linear-gradient(to right, ${activeGradient.from}15, ${activeGradient.to}15)`
+                                            background: `linear-gradient(to right, ${activeGradient.from}10, ${activeGradient.to}10)`
                                         } : undefined}
                                     >
                                         <CardTitle className="flex items-center gap-2">
@@ -580,7 +582,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Card className="sticky top-20 overflow-hidden border-2 shadow-xl">
+                            <Card className="overflow-hidden border-2 shadow-xl">
                                 <div
                                     className={`h-2 transition-colors duration-500`}
                                     style={{

@@ -69,10 +69,13 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                 }
             `}
             >
-                {/* Glow Effect Background (Only if not sponsor, as sponsor has its own effect) */}
-                {!isSponsor && (
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                )}
+                {/* Glow Effect Background */}
+                <div
+                    className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                        backgroundImage: `linear-gradient(to top, ${tool.dominant_color || '#3b82f6'}15, transparent)`
+                    }}
+                />
 
                 {/* RANKING BADGE: Only if rank is provided (Category pages) */}
                 {rank && (
@@ -183,7 +186,7 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                     {/* Name + Badges */}
                     <div className="flex flex-col items-center gap-2 mb-3">
                         <div className="flex items-center justify-center gap-2">
-                            <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors text-center line-clamp-2">
                                 {tool.name}
                             </h3>
 

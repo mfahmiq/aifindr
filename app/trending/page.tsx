@@ -18,6 +18,7 @@ import {
     TrendingUp as RisingIcon
 } from "lucide-react"
 import Link from "next/link"
+import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, useRef, useMemo } from "react"
 import { toolsService } from "@/lib/services/toolsService"
@@ -193,7 +194,7 @@ export default function TrendingPage() {
                                 <span className="text-orange-600 dark:text-orange-400 font-semibold">Updated in Real-time</span>
                             </Badge>
                         </motion.div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6">
+                        <h1 className="text-4xl md:text-7xl font-black tracking-tight mb-6">
                             <motion.span
                                 className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent inline-block"
                                 animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
@@ -238,7 +239,7 @@ export default function TrendingPage() {
                                         {/* Glow effect */}
                                         <div className="absolute -top-20 -right-20 w-40 h-40 bg-yellow-500/30 rounded-full blur-3xl group-hover:bg-yellow-500/50 transition-colors" />
 
-                                        <CardContent className="p-8 h-full flex flex-col relative z-10">
+                                        <CardContent className="p-6 md:p-8 h-full flex flex-col relative z-10">
                                             {/* Crown Badge */}
                                             <motion.div
                                                 animate={{ y: [0, -5, 0], rotate: [-5, 5, -5] }}
@@ -251,10 +252,16 @@ export default function TrendingPage() {
                                             </motion.div>
 
                                             {/* Logo */}
-                                            <div className="w-24 h-24 rounded-3xl bg-white dark:bg-gray-800 shadow-2xl overflow-hidden mb-6 ring-4 ring-yellow-500/30">
+                                            <div className="w-24 h-24 rounded-3xl bg-white dark:bg-gray-800 shadow-2xl overflow-hidden mb-6 ring-4 ring-yellow-500/30 relative">
                                                 {top3[0].logo_url ? (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={top3[0].logo_url} alt={top3[0].name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                    <NextImage
+                                                        src={top3[0].logo_url}
+                                                        alt={top3[0].name}
+                                                        width={96}
+                                                        height={96}
+                                                        className="w-full h-full object-cover"
+                                                        unoptimized={true}
+                                                    />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-yellow-500">
                                                         {top3[0].name.substring(0, 2)}
@@ -264,7 +271,7 @@ export default function TrendingPage() {
 
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-2">
-                                                    <h3 className="text-3xl font-black">{top3[0].name}</h3>
+                                                    <h3 className="text-3xl font-black line-clamp-2">{top3[0].name}</h3>
                                                     {top3[0].is_verified && (
                                                         <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Verified</Badge>
                                                     )}
@@ -323,10 +330,16 @@ export default function TrendingPage() {
                                                     </motion.div>
 
                                                     {/* Logo */}
-                                                    <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-800 shadow-xl overflow-hidden ring-2 ring-white/20">
+                                                    <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-800 shadow-xl overflow-hidden ring-2 ring-white/20 relative">
                                                         {tool.logo_url ? (
-                                                            // eslint-disable-next-line @next/next/no-img-element
-                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                            <NextImage
+                                                                src={tool.logo_url}
+                                                                alt={tool.name}
+                                                                width={64}
+                                                                height={64}
+                                                                className="w-full h-full object-cover"
+                                                                unoptimized={true}
+                                                            />
                                                         ) : (
                                                             <div className="w-full h-full flex items-center justify-center text-lg font-bold text-gray-500">
                                                                 {tool.name.substring(0, 2)}
@@ -387,17 +400,23 @@ export default function TrendingPage() {
                                     <Link href={`/tool/${tool.slug}`}>
                                         <Card className="hover:shadow-lg transition-all border border-muted/50 hover:border-orange-500/30 backdrop-blur-sm bg-card/80 group">
                                             <CardContent className="p-4">
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 md:gap-4">
                                                     {/* Rank */}
                                                     <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center font-bold text-muted-foreground shrink-0">
                                                         {index + 4}
                                                     </div>
 
                                                     {/* Logo */}
-                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-sm shrink-0 overflow-hidden">
+                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-sm shrink-0 overflow-hidden relative">
                                                         {tool.logo_url ? (
-                                                            // eslint-disable-next-line @next/next/no-img-element
-                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                            <NextImage
+                                                                src={tool.logo_url}
+                                                                alt={tool.name}
+                                                                width={48}
+                                                                height={48}
+                                                                className="w-full h-full object-cover"
+                                                                unoptimized={true}
+                                                            />
                                                         ) : (
                                                             tool.name.substring(0, 2)
                                                         )}
@@ -468,10 +487,16 @@ export default function TrendingPage() {
                                                     >
                                                         {index + 1}
                                                     </motion.span>
-                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-amber-500/10 flex items-center justify-center font-bold text-yellow-600 text-sm overflow-hidden">
+                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-amber-500/10 flex items-center justify-center font-bold text-yellow-600 text-sm overflow-hidden relative">
                                                         {tool.logo_url ? (
-                                                            // eslint-disable-next-line @next/next/no-img-element
-                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                            <NextImage
+                                                                src={tool.logo_url}
+                                                                alt={tool.name}
+                                                                width={40}
+                                                                height={40}
+                                                                className="w-full h-full object-cover"
+                                                                unoptimized={true}
+                                                            />
                                                         ) : (
                                                             tool.name.substring(0, 2)
                                                         )}
@@ -514,10 +539,16 @@ export default function TrendingPage() {
                                                     >
                                                         {index + 1}
                                                     </motion.span>
-                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/10 flex items-center justify-center font-bold text-red-600 text-sm overflow-hidden">
+                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500/20 to-pink-500/10 flex items-center justify-center font-bold text-red-600 text-sm overflow-hidden relative">
                                                         {tool.logo_url ? (
-                                                            // eslint-disable-next-line @next/next/no-img-element
-                                                            <img src={tool.logo_url} alt={tool.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                                            <NextImage
+                                                                src={tool.logo_url}
+                                                                alt={tool.name}
+                                                                width={40}
+                                                                height={40}
+                                                                className="w-full h-full object-cover"
+                                                                unoptimized={true}
+                                                            />
                                                         ) : (
                                                             tool.name.substring(0, 2)
                                                         )}

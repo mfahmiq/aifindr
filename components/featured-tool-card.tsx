@@ -7,6 +7,7 @@ import { ToolWithRelations } from "@/lib/types"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ExternalLink, Star, Check, Zap, Eye, Sparkles } from "lucide-react"
+import { getGradientPair } from "@/lib/colorUtils"
 
 interface FeaturedToolCardProps {
     tool: ToolWithRelations
@@ -39,6 +40,9 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
     const hasGoldBadgeStrict = isFeatured;
     const hasBlueBadge = isVerified && !hasGoldBadgeStrict && planLower !== 'free';
 
+    const dynamicColor = tool.dominant_color || '#8b5cf6' // Indigo as default for featured
+    const gradient = getGradientPair(dynamicColor)
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -46,12 +50,25 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="h-full"
         >
-            <Card className="h-full bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-gray-800/50 border-2 border-purple-100 dark:border-purple-900/30 overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 transform hover:-translate-y-1">
+            <Card
+                className="h-full bg-white dark:bg-gray-900 border-2 overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                style={{
+                    borderColor: `${dynamicColor}20`,
+                    boxShadow: `0 20px 25px -5px ${dynamicColor}10, 0 8px 10px -6px ${dynamicColor}10`
+                }}
+            >
+                <div
+                    className="absolute inset-0 opacity-5 pointer-events-none"
+                    style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }}
+                />
                 <div className="flex flex-col md:flex-row h-full">
                     {/* Left: Image/Logo Area */}
                     <div className="w-full md:w-2/5 bg-gray-100 dark:bg-gray-800 relative min-h-[200px] md:min-h-full flex items-center justify-center p-6 overflow-hidden">
                         {/* Background Pattern */}
-                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-600 via-gray-900 to-gray-900"></div>
+                        <div
+                            className="absolute inset-0 opacity-10"
+                            style={{ background: `radial-gradient(circle at center, ${dynamicColor}, transparent)` }}
+                        ></div>
 
                         {/* Logo */}
                         <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-3xl overflow-hidden shadow-2xl z-10 group-hover:scale-105 transition-transform duration-500 ring-4 ring-white/20 dark:ring-black/20">
@@ -86,7 +103,7 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
                     <div className="w-full md:w-3/5 p-6 md:p-8 flex flex-col">
                         <div className="flex items-start justify-between mb-2">
                             <div>
-                                <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-2 leading-tight">
+                                <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-2 leading-tight line-clamp-2">
                                     {tool.name}
                                 </h3>
                                 <div className="flex items-center gap-3 mb-4">
@@ -148,12 +165,18 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
 
                         {/* Review Snippet (if available) */}
                         {tool.reviews && tool.reviews.length > 0 && (
-                            <div className="mt-auto mb-6 bg-white/50 dark:bg-white/5 p-4 rounded-xl border border-purple-100 dark:border-purple-900/20 shadow-sm backdrop-blur-sm">
+                            <div
+                                className="mt-auto mb-6 p-4 rounded-xl border shadow-sm backdrop-blur-sm"
+                                style={{
+                                    backgroundColor: `${dynamicColor}10`,
+                                    borderColor: `${dynamicColor}20`
+                                }}
+                            >
                                 <div className="flex items-start gap-3">
                                     <div className="mt-1 min-w-[20px]">
-                                        <Sparkles className="w-4 h-4 text-purple-500" />
+                                        <Sparkles className="w-4 h-4" style={{ color: dynamicColor }} />
                                     </div>
-                                    <p className="text-sm text-purple-900 dark:text-purple-200 italic font-medium">
+                                    <p className="text-sm italic font-medium" style={{ color: dynamicColor }}>
                                         "{tool.reviews[0].comment?.substring(0, 90)}..."
                                     </p>
                                 </div>

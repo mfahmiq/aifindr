@@ -111,11 +111,22 @@ export function getGradientPair(hexColor: string): { from: string; to: string } 
 
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
 
-    // Create a secondary color by adjusting hue and lightness
+    // Create a secondary color that is more vibrant and premium
+    // Logic: 
+    // - If it's a cold color (Blue, Green, Purple), shift hue towards a warmer side slightly
+    // - If it's a warm color (Red, Orange, Yellow), shift hue towards a cooler side slightly
+    // - Increase saturation slightly for vibrancy
+    // - Adjust lightness to create depth
+
+    let hueShift = 20
+    if (hsl.h > 180 && hsl.h < 300) { // Purposefully shift cold colors
+        hueShift = 40
+    }
+
     const secondaryHsl = {
-        h: (hsl.h + 30) % 360, // Shift hue by 30 degrees
-        s: Math.min(hsl.s + 10, 100),
-        l: Math.max(hsl.l - 10, 20)
+        h: (hsl.h + hueShift) % 360,
+        s: Math.min(hsl.s + 15, 100),
+        l: hsl.l > 50 ? Math.max(hsl.l - 15, 30) : Math.min(hsl.l + 15, 70)
     }
 
     const secondaryRgb = hslToRgb(secondaryHsl.h, secondaryHsl.s, secondaryHsl.l)

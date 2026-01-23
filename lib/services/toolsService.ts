@@ -283,13 +283,19 @@ export const toolsService = {
             { count: publishedCount },
             { count: pendingCount },
             { count: rejectedCount },
-            { count: premiumCount }
+            { count: premiumCount },
+            { count: proCount },
+            { count: featuredCount },
+            { count: sponsorCount }
         ] = await Promise.all([
             supabase.from('tools').select('*', { count: 'exact', head: true }),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', true),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', false).neq('status', 'rejected'),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('status', 'rejected'),
-            supabase.from('tools').select('*', { count: 'exact', head: true }).neq('plan', 'Free')
+            supabase.from('tools').select('*', { count: 'exact', head: true }).neq('plan', 'Free'),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Pro'),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Featured'),
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Sponsor')
         ])
 
         return {
@@ -297,7 +303,10 @@ export const toolsService = {
             published: publishedCount || 0,
             pending: pendingCount || 0,
             rejected: rejectedCount || 0,
-            premium: premiumCount || 0
+            premium: premiumCount || 0,
+            pro: proCount || 0,
+            featured: featuredCount || 0,
+            sponsor: sponsorCount || 0
         }
     },
 

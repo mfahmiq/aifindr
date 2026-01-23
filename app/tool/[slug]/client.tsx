@@ -47,7 +47,7 @@ import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, use } from "react"
 import { appendUTMParams, getUTMConfig, UTMConfig } from "@/lib/utm"
-import { getGradientPair, hexToRgb, extractDominantColor } from "@/lib/colorUtils"
+import { getGradientPair, hexToRgb, extractDominantColor, isLightColor } from "@/lib/colorUtils"
 
 interface PageProps {
     tool: ToolWithRelations
@@ -607,7 +607,8 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                         style={{
                                             background: activeGradient
                                                 ? `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})`
-                                                : undefined
+                                                : undefined,
+                                            color: activeGradient && isLightColor(activeGradient.from) ? '#000000' : '#ffffff'
                                         }}
                                         // Fallback class if no gradient
                                         {...(!activeGradient && { className: `w-full bg-gradient-to-r ${config.bgGradient} hover:opacity-90 shadow-lg` })}
@@ -759,7 +760,10 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                 </div>
                                 {tool.category_id && (
                                     <div className="pt-3 text-center">
-                                        <Link href={`/category/${tool.category_id}`} className="text-xs text-primary hover:underline">
+                                        <Link
+                                            href={`/?category=${encodeURIComponent(tool.category && typeof tool.category === 'object' ? tool.category.slug : '')}`}
+                                            className="text-xs text-primary hover:underline"
+                                        >
                                             View all {categoryName} tools &rarr;
                                         </Link>
                                     </div>

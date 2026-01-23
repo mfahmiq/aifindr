@@ -114,6 +114,7 @@ export default function AdminToolsPage() {
     const [filterName, setFilterName] = useState('')
     const [filterCategory, setFilterCategory] = useState('')
     const [filterPlan, setFilterPlan] = useState('all')
+    const [filterHealth, setFilterHealth] = useState('all')
 
     // Helper: Get verification badge (Gold/Blue/None) based on plan
     const getVerificationBadge = (tool: ToolWithRelations) => {
@@ -249,7 +250,9 @@ export default function AdminToolsPage() {
         const nameMatch = filterName === '' || tool.name.toLowerCase().includes(filterName.toLowerCase())
         const categoryMatch = filterCategory === '' || (tool.category?.name || '').toLowerCase().includes(filterCategory.toLowerCase())
         const planMatch = filterPlan === 'all' || (tool.plan || 'Free') === filterPlan
-        return nameMatch && categoryMatch && planMatch
+        // @ts-ignore
+        const healthMatch = filterHealth === 'all' || (filterHealth === 'active' ? tool.is_active !== false : tool.is_active === false)
+        return nameMatch && categoryMatch && planMatch && healthMatch
     })
 
     const openEditDialog = (tool: ToolWithRelations) => {
@@ -469,6 +472,38 @@ export default function AdminToolsPage() {
         }
     }
 
+    const handleRunHealthCheck = async (toolIds?: string[]) => {
+        const isBatch = toolIds && toolIds.length > 0
+        const message = isBatch
+            ? `Run health check on ${toolIds.length} selected tools?`
+            : "Run health check on 20 outdated/unchecked tools?"
+
+        if (!confirm(message)) return
+
+        setBatchLoading(true)
+        try {
+            const res = await fetch('/api/admin/check-health', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ toolIds, limit: 20 })
+            })
+
+            if (res.ok) {
+                const data = await res.json()
+                alert(`Health Check Complete!\nSelect 'Active' or 'Dead' filter to see results.\nProcessed: ${data.processed}\nDead Links: ${data.dead}`)
+                fetchTools(page, activeTab)
+            } else {
+                throw new Error('Health check failed')
+            }
+        } catch (error) {
+            console.error('Health check error:', error)
+            alert("Failed to run health check.")
+        } finally {
+            setBatchLoading(false)
+            if (isBatch) setSelectedToolIds(new Set())
+        }
+    }
+
     const ToolsTable = ({ tools, isReviewMode = false }: { tools: ToolWithRelations[], isReviewMode?: boolean }) => {
         const allSelected = tools.length > 0 && tools.every(t => selectedToolIds.has(t.id))
         const someSelected = selectedToolIds.size > 0
@@ -513,7 +548,17 @@ export default function AdminToolsPage() {
                             </Button>
                             <Button
                                 size="sm"
-                                variant="ghost"
+                                variant="outline"
+                                onClick={() => handleRunHealthCheck(Array.from(selectedToolIds))}
+                                disabled={batchLoading}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            >
+                                <Zap className="w-4 h-4 mr-1" />
+                                Check Health
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
                                 onClick={() => setSelectedToolIds(new Set())}
                             >
                                 Clear
@@ -538,6 +583,7 @@ export default function AdminToolsPage() {
                                 <TableHead className="font-semibold text-right">Views</TableHead>
                                 <TableHead className="font-semibold">Plan</TableHead>
                                 <TableHead className="hidden lg:table-cell font-semibold">Subscription</TableHead>
+                                <TableHead className="font-semibold">Link Health</TableHead>
                                 <TableHead className="font-semibold">Status</TableHead>
                                 <TableHead className="text-right font-semibold">Actions</TableHead>
                             </TableRow>
@@ -577,6 +623,18 @@ export default function AdminToolsPage() {
                                     </Select>
                                 </TableHead>
                                 <TableHead className="hidden lg:table-cell"></TableHead>
+                                <TableHead>
+                                    <Select value={filterHealth} onValueChange={setFilterHealth}>
+                                        <SelectTrigger className="h-7 text-xs">
+                                            <SelectValue placeholder="All Status" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All Health</SelectItem>
+                                            <SelectItem value="active">Active</SelectItem>
+                                            <SelectItem value="dead">Dead / Inactive</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </TableHead>
                                 <TableHead></TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
@@ -641,6 +699,20 @@ export default function AdminToolsPage() {
                                                 if (days <= 7) return <Badge variant="outline" className="text-orange-500 border-orange-500">{days}d left</Badge>
                                                 return <Badge variant="outline" className="text-green-500 border-green-500">{days}d left</Badge>
                                             })()}
+                                        </TableCell>
+                                        <TableCell>
+                                            {/* @ts-ignore */}
+                                            {tool.is_active === false ? (
+                                                <Badge variant="destructive" className="gap-1">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                                                    Dead
+                                                </Badge>
+                                            ) : (
+                                                <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 gap-1">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-green-50" />
+                                                    Active
+                                                </Badge>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant={tool.is_verified ? "default" : "secondary"}>
@@ -785,10 +857,20 @@ export default function AdminToolsPage() {
                     <h1 className="text-3xl font-bold tracking-tight">Manage Tools</h1>
                     <p className="text-muted-foreground">Add, edit, and review AI tools in your directory.</p>
                 </div>
-                <Button className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add New Tool
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => handleRunHealthCheck()}
+                        disabled={batchLoading}
+                    >
+                        {batchLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
+                        Check Links
+                    </Button>
+                    <Button className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Add New Tool
+                    </Button>
+                </div>
             </div>
 
             {/* Stats Cards */}

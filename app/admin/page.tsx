@@ -44,19 +44,23 @@ export default function AdminDashboardPage() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const { tools: allTools, count } = await toolsService.getTools({ limit: 100 })
-                setTools(allTools)
+                // 1. Fetch real stats from API (sourced from toolsService.getAdminStats)
+                const res = await fetch('/api/admin/stats')
+                const realStats = await res.json()
 
-                const verified = allTools.filter((t: ToolWithRelations) => t.is_verified).length
-                const featured = allTools.filter((t: ToolWithRelations) => t.is_priority).length
+                // 2. Fetch aggregate views/favorites (still need getTools for this or a new API)
+                // Since getAdminStats doesn't sum views/favorites yet, we might still need a separate call or update API.
+                // For now, let's keep the getTools for views/favorites sum but use realStats for counts.
+                const { tools: allTools } = await toolsService.getTools({ limit: 1000 }) // Increase limit for better aggregate accuracy or move to aggregation API
+
                 const views = allTools.reduce((acc: number, t: ToolWithRelations) => acc + (t.view_count || 0), 0)
                 const favorites = allTools.reduce((acc: number, t: ToolWithRelations) => acc + (t.favorite_count || 0), 0)
 
                 setStats({
-                    totalTools: count || allTools.length,
-                    verifiedTools: verified,
-                    proTools: Math.floor(allTools.length * 0.2), // Estimate
-                    sponsorTools: featured,
+                    totalTools: realStats.total,
+                    verifiedTools: realStats.published, // 'published' key from API
+                    proTools: realStats.pro,
+                    sponsorTools: realStats.sponsor + realStats.featured, // Group featured + sponsor? Or just use specific keys if UI separates them
                     totalViews: views,
                     totalFavorites: favorites
                 })

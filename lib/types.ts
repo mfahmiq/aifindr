@@ -667,6 +667,8 @@ export type Database = {
                     video_url?: string | null
                     view_count?: number | null
                     website_url?: string
+                    is_active?: boolean | null
+                    last_checked_at?: string | null
                 }
                 Relationships: []
             }

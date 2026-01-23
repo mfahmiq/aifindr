@@ -1,27 +1,34 @@
 
-const { createClient } = require('@supabase/supabase-js')
-const dotenv = require('dotenv')
-const path = require('path')
+import { createClient } from '@supabase/supabase-js'
+import dotenv from 'dotenv'
+import path from 'path'
+import getColors from 'get-image-colors'
+import fetch from 'node-fetch'
+import fs from 'fs'
 
 // Load environment variables
-dotenv.config({ path: path.join(__dirname, '../.env') })
+const envPath = path.join(process.cwd(), '.env.local')
+dotenv.config({ path: envPath })
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl || !supabaseKey) {
+    console.error("Missing Supabase credentials")
+    process.exit(1)
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function runEfficientUpdate() {
-    console.log('🚀 Starting Robust Bulk Color Update...')
-    const { default: getColors } = await import('get-image-colors')
+    console.log('🚀 Starting Robust Bulk Color Update (TSX)...')
 
     // 1. Fetch ALL IDs with null color
-    let allIds = []
+    let allIds: any[] = []
     let hasMore = true
     let page = 0
     const pageSize = 1000
 
-    // Process in chunks of 1000 to get all IDs
     while (hasMore) {
         console.log(`Fetching page ${page} of tools without dominant color...`)
         const { data, error } = await supabase
@@ -55,7 +62,7 @@ async function runEfficientUpdate() {
     let failed = 0
     let skipped = 0
 
-    // Process sequentially to be nice to API
+    // Process sequentially
     for (let i = 0; i < allIds.length; i++) {
         const tool = allIds[i]
 
@@ -66,10 +73,9 @@ async function runEfficientUpdate() {
         }
 
         try {
-            // 500ms delay to avoid rate limiting
-            await new Promise(r => setTimeout(r, 500))
+            await new Promise(r => setTimeout(r, 200)) // 200ms delay
 
-            // Setup timeout for fetch
+            // Setup timeout
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 10000)
 
@@ -83,8 +89,10 @@ async function runEfficientUpdate() {
 
             if (buffer.length < 100) throw new Error('Buffer too small')
 
+            // get-image-colors requires a buffer and mime type
             const colors = await getColors(buffer, 'image/png')
-            if (!colors[0]) throw new Error('No color extracted')
+
+            if (!colors || colors.length === 0) throw new Error('No color extracted')
 
             const hex = colors[0].hex()
 
@@ -98,16 +106,11 @@ async function runEfficientUpdate() {
 
             process.stdout.write('.')
             updated++
-        } catch (e) {
+        } catch (e: any) {
             process.stdout.write('x')
             failed++
-            // Log first few errors to see what's wrong
-            if (failed <= 5) {
-                // console.log(`\nFailed ${tool.name}: ${e.message}`)
-            }
         }
 
-        // Progress update every 50 items
         if (i > 0 && i % 50 === 0) {
             const percent = Math.round((i / allIds.length) * 100)
             console.log(`\n[${percent}%] Processed: ${i + 1}/${allIds.length} | Updated: ${updated} | Failed: ${failed}`)
@@ -115,10 +118,10 @@ async function runEfficientUpdate() {
     }
 
     console.log('\n✅ Batch Process Complete!')
-    console.log(`Total: ${allIds.length}`)
+    // Summary
     console.log(`Updated: ${updated}`)
     console.log(`Failed: ${failed}`)
-    console.log(`Skipped (No Logo): ${skipped}`)
+    console.log(`Skipped: ${skipped}`)
 }
 
 runEfficientUpdate()

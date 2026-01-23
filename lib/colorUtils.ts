@@ -34,6 +34,17 @@ export function adjustColor(hexColor: string, amount: number): string {
     )
 }
 
+// Check if a color is light
+export function isLightColor(hexColor: string): boolean {
+    const rgb = hexToRgb(hexColor)
+    if (!rgb) return false
+
+    // Setup contrast checking using standard brightness formula
+    // (r * 299 + g * 587 + b * 114) / 1000
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
+    return brightness > 128
+}
+
 // Convert RGB to HSL
 export function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
     r /= 255

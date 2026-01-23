@@ -343,21 +343,21 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                 )}
                             </div>
                             <h1 className="text-4xl md:text-5xl font-extrabold mb-3">{tool.name}</h1>
-                            <p className="text-lg text-white/90 mb-4 max-w-2xl">{tool.short_description}</p>
+                            <p className="text-lg text-white font-medium mb-4 max-w-2xl drop-shadow-md">{tool.short_description}</p>
 
                             {/* Rating & Stats */}
                             <div className="flex flex-wrap items-center gap-4 text-sm">
-                                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
                                     <Sparkles className="w-4 h-4 text-yellow-300" />
                                     <span className="font-bold">{tool.rating?.toFixed(1) || '0.0'}</span>
-                                    <span className="text-white/70">({tool.review_count || 0} reviews)</span>
+                                    <span className="text-white/90">({tool.review_count || 0} reviews)</span>
                                 </div>
-                                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                                    <Eye className="w-4 h-4" />
+                                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
+                                    <Eye className="w-4 h-4 text-cyan-300" />
                                     <span>{(tool.view_count || 0).toLocaleString()} views</span>
                                 </div>
-                                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                                    <Heart className="w-4 h-4" />
+                                <div className="flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-sm">
+                                    <Heart className="w-4 h-4 text-pink-300" />
                                     <span>{(tool.favorite_count || 0).toLocaleString()} favorites</span>
                                 </div>
                             </div>
@@ -528,7 +528,8 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                             style={{
                                                 background: activeGradient
                                                     ? `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})`
-                                                    : undefined
+                                                    : undefined,
+                                                color: activeGradient && isLightColor(activeGradient.from) ? '#000000' : '#ffffff'
                                             }}
                                         >
                                             <MessageSquare className="w-4 h-4 mr-2" />

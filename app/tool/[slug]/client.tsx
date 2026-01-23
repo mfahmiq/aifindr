@@ -143,7 +143,9 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                 if (!immediateGradient && tool.logo_url && !extractedGradient) {
                     // Extract color from logo in background only if not available
                     extractDominantColor(tool.logo_url).then(color => {
-                        setExtractedGradient(getGradientPair(color))
+                        if (color) {
+                            setExtractedGradient(getGradientPair(color))
+                        }
                     })
                 }
             } catch (err) {

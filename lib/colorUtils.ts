@@ -141,11 +141,13 @@ export function getGradientPair(hexColor: string): { from: string; to: string } 
  * Extract dominant color from an image URL (client-side only)
  * Uses canvas to sample colors from the image
  */
-export async function extractDominantColor(imageUrl: string): Promise<string> {
+// Extract dominant color from an image URL (client-side only)
+// Uses canvas to sample colors from the image
+export async function extractDominantColor(imageUrl: string): Promise<string | null> {
     return new Promise((resolve, reject) => {
         // Only works in browser environment
         if (typeof window === 'undefined') {
-            resolve('#3b82f6') // Default blue
+            resolve(null)
             return
         }
 
@@ -157,7 +159,7 @@ export async function extractDominantColor(imageUrl: string): Promise<string> {
                 const canvas = document.createElement('canvas')
                 const ctx = canvas.getContext('2d')
                 if (!ctx) {
-                    resolve('#3b82f6')
+                    resolve(null)
                     return
                 }
 
@@ -197,7 +199,7 @@ export async function extractDominantColor(imageUrl: string): Promise<string> {
 
                 // Find the most common color
                 let maxCount = 0
-                let dominantColor = '#3b82f6'
+                let dominantColor: string | null = null
 
                 for (const [key, count] of Object.entries(colorCounts)) {
                     if (count > maxCount) {
@@ -209,12 +211,12 @@ export async function extractDominantColor(imageUrl: string): Promise<string> {
 
                 resolve(dominantColor)
             } catch (e) {
-                resolve('#3b82f6')
+                resolve(null)
             }
         }
 
         img.onerror = () => {
-            resolve('#3b82f6')
+            resolve(null)
         }
 
         img.src = imageUrl

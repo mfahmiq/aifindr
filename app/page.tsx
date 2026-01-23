@@ -212,7 +212,11 @@ function HomeContent() {
                 {tools.map((tool, index) => (
                   <React.Fragment key={tool.id}>
                     {/* @ts-ignore */}
-                    <ToolCard tool={tool} index={index} />
+                    <ToolCard
+                      tool={tool}
+                      index={index}
+                      rank={filters.category !== 'All' ? ((currentPage - 1) * ITEMS_PER_PAGE) + index + 1 : undefined}
+                    />
 
                     {/* Inject Ad after 3rd item (index 2) using first ad */}
                     {index === 2 && inlineAds.length > 0 && (
@@ -383,7 +387,7 @@ function HomeContent() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2026 IndoAI. All rights reserved.
+            © 2026 The AI Select. All rights reserved.
           </div>
         </div>
       </footer>

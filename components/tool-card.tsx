@@ -20,9 +20,10 @@ import { PLAN_NAMES } from "@/lib/constants"
 interface ToolCardProps {
     tool: ToolWithRelations
     index?: number
+    rank?: number
 }
 
-export function ToolCard({ tool, index = 0 }: ToolCardProps) {
+export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
     const planValue = tool.plan || PLAN_NAMES.FREE
     const planLower = planValue.toLowerCase()
     const isSponsor = planLower === 'sponsor'
@@ -70,6 +71,15 @@ export function ToolCard({ tool, index = 0 }: ToolCardProps) {
                 {/* Glow Effect Background (Only if not sponsor, as sponsor has its own effect) */}
                 {!isSponsor && (
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                )}
+
+                {/* RANKING BADGE: Only if rank is provided (Category pages) */}
+                {rank && (
+                    <div className="absolute top-0 left-0 z-[60] overflow-hidden w-16 h-16 pointer-events-none">
+                        <div className="absolute top-0 left-0 w-10 h-10 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-br-xl shadow-md flex items-center justify-center font-bold text-sm">
+                            #{rank}
+                        </div>
+                    </div>
                 )}
 
                 {/* TOP Ribbon - Only for SPONSOR plan tools */}

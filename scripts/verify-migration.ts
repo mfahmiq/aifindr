@@ -10,23 +10,33 @@ const supabase = createClient(
 )
 
 async function verifyMigration() {
-    // Check for any remaining tools with aixploria logos
-    const { count, error } = await supabase
+    // Check for any remaining tools with aixploria logos OR images
+    const { count: logoCount } = await supabase
         .from('tools')
         .select('*', { count: 'exact', head: true })
         .ilike('logo_url', '%aixploria%')
 
-    console.log(`Remaining tools with aixploria logos: ${count}`)
+    const { count: imageCount } = await supabase
+        .from('tools')
+        .select('*', { count: 'exact', head: true })
+        .ilike('image_url', '%aixploria%')
 
-    // Check for tools with new supabase logos
+    console.log(`Remaining tools with aixploria logos: ${logoCount}`)
+    console.log(`Remaining tools with aixploria images: ${imageCount}`)
+
+    // Check for tools with new supabase assets
     const { data: migratedTools } = await supabase
         .from('tools')
-        .select('slug, logo_url')
-        .ilike('logo_url', '%supabase%')
+        .select('slug, logo_url, image_url')
+        .ilike('image_url', '%supabase%')
         .limit(5)
 
-    console.log('Sample migrated tools:')
-    migratedTools?.forEach(t => console.log(`- ${t.slug}: ${t.logo_url}`))
+    console.log('Sample migrated tools (with images):')
+    migratedTools?.forEach(t => {
+        console.log(`- ${t.slug}`)
+        console.log(`  Logo: ${t.logo_url?.substring(0, 50)}...`)
+        console.log(`  Image: ${t.image_url?.substring(0, 50)}...`)
+    })
 }
 
 verifyMigration().catch(console.error)

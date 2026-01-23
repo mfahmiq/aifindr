@@ -37,7 +37,7 @@ function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link
                 </div>
                 {/* Colored Line */}
                 <div className={`h-0.5 w-full bg-gradient-to-r ${title.includes('Latest') ? 'from-blue-400 to-purple-400' :
-                    title.includes('Selection') ? 'from-amber-400 to-orange-400' :
+                    title.includes('Select') ? 'from-amber-400 to-orange-400' :
                         title.includes('Super') ? 'from-emerald-400 to-teal-400' :
                             'from-rose-400 to-pink-400'
                     } opacity-80`} />
@@ -180,7 +180,7 @@ export function CategoryLists() {
                     totalCount={counts.latest || 0}
                 />
                 <ToolListCard
-                    title="IndoAI Selection"
+                    title="The AI Select Picks"
                     icon={Trophy}
                     tools={selection}
                     loading={loading}

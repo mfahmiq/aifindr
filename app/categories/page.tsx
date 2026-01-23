@@ -221,7 +221,7 @@ export default function CategoriesPage() {
                                     transition={{ duration: 0.4, delay: index * 0.08 }}
                                     whileHover={{ y: -5 }}
                                 >
-                                    <Link href={`/?category=${category.slug}`}>
+                                    <Link href={`/?category=${encodeURIComponent(category.slug)}`}>
                                         <Card className={`group h-full overflow-hidden cursor-pointer border-2 border-muted/50 hover:border-primary/30 bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-2xl ${config.bgGlow} transition-all duration-300`}>
                                             {/* Gradient top bar */}
                                             <div className={`h-1.5 bg-gradient-to-r ${config.gradient}`} />

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import {
     Bell,
     CircleUser,
@@ -113,11 +114,17 @@ export default function AdminLayout({
                     {/* Logo */}
                     <div className="flex h-16 items-center border-b px-4 lg:px-6 bg-gradient-to-r from-primary/5 to-primary/10">
                         <Link href="/" className="flex items-center gap-2 font-bold">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center">
-                                <Sparkles className="h-4 w-4 text-white" />
+                            <div className="w-8 h-8 flex items-center justify-center">
+                                <Image
+                                    src="/logo.png"
+                                    alt="The AI Select Logo"
+                                    width={32}
+                                    height={32}
+                                    className="w-full h-full object-contain drop-shadow-md"
+                                />
                             </div>
                             <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent text-lg">
-                                IndoAI Admin
+                                The AI Select Admin
                             </span>
                         </Link>
                         <Button variant="ghost" size="icon" className="ml-auto h-8 w-8 relative">
@@ -217,10 +224,16 @@ export default function AdminLayout({
                         <SheetContent side="left" className="flex flex-col p-0">
                             <div className="p-4 border-b bg-gradient-to-r from-primary/5 to-primary/10">
                                 <Link href="/" className="flex items-center gap-2 font-bold">
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center">
-                                        <Sparkles className="h-4 w-4 text-white" />
+                                    <div className="w-8 h-8 flex items-center justify-center">
+                                        <Image
+                                            src="/logo.png"
+                                            alt="The AI Select Logo"
+                                            width={32}
+                                            height={32}
+                                            className="w-full h-full object-contain drop-shadow-md"
+                                        />
                                     </div>
-                                    <span>IndoAI Admin</span>
+                                    <span>The AI Select Admin</span>
                                 </Link>
                             </div>
                             <nav className="grid gap-1 text-sm font-medium p-4">
@@ -275,7 +288,7 @@ export default function AdminLayout({
                             <DropdownMenuLabel>
                                 <div className="flex flex-col">
                                     <span>{userProfile?.name || 'Admin User'}</span>
-                                    <span className="text-xs font-normal text-muted-foreground">{userProfile?.email || 'admin@indoai.com'}</span>
+                                    <span className="text-xs font-normal text-muted-foreground">{userProfile?.email || 'admin@theaiselect.com'}</span>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
@@ -283,7 +296,7 @@ export default function AdminLayout({
                                 <Link href="/admin/settings">Settings</Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                                <a href="mailto:support@indoai.com">Support</a>
+                                <a href="mailto:support@theaiselect.com">Support</a>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild className="text-red-500 focus:text-red-500">

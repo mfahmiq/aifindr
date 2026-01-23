@@ -10,6 +10,8 @@ import { CompactSidebarAd } from "@/components/ad-sections"
 import { ClaimToolDialog } from "@/components/claim-tool-dialog"
 import { ToolWithRelations, ReviewWithUser } from "@/lib/types"
 import { ToolCard } from "@/components/tool-card"
+import { SidebarToolCard } from "@/components/sidebar-tool-card"
+import { ProsConsSection } from "@/components/pros-cons-section"
 import {
     ArrowLeft,
     ExternalLink,
@@ -83,7 +85,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
     const [reviewText, setReviewText] = useState("")
     const [copied, setCopied] = useState(false)
     const [utmConfig, setUtmConfig] = useState<UTMConfig | null>(null)
-    const [dynamicGradient, setDynamicGradient] = useState<{ from: string; to: string } | null>(null)
+    // State for asynchronously extracted color (fallback if no dominant_color in DB)
+    const [extractedGradient, setExtractedGradient] = useState<{ from: string; to: string } | null>(null)
+
+    // Derived immediately from props - NO FLASH
+    const immediateGradient = tool.dominant_color ? getGradientPair(tool.dominant_color) : null
+
+    // Final active gradient: Prefer DB color (instant), allow fallback to extracted color
+    const activeGradient = immediateGradient || extractedGradient
 
     // Load UTM config
     useEffect(() => {
@@ -128,13 +137,11 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                     // Ignore view errors
                 }
 
-                // Set dynamic gradient based on dominant_color or extract from logo
-                if (tool.dominant_color) {
-                    setDynamicGradient(getGradientPair(tool.dominant_color))
-                } else if (tool.logo_url) {
-                    // Extract color from logo in background
+                // Extract color from logo if not available in DB
+                if (!immediateGradient && tool.logo_url && !extractedGradient) {
+                    // Extract color from logo in background only if not available
                     extractDominantColor(tool.logo_url).then(color => {
-                        setDynamicGradient(getGradientPair(color))
+                        setExtractedGradient(getGradientPair(color))
                     })
                 }
             } catch (err) {
@@ -235,9 +242,24 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
         }
     }
 
+    // Mock Pros/Cons data (until DB migration)
+    const { pros, cons } = {
+        pros: [
+            `High quality ${categoryName} features`,
+            "Intuitive user interface for beginners",
+            "Fast processing speed",
+            "Regular updates and community support"
+        ],
+        cons: [
+            "Advanced features require learning curve",
+            tool.pricing_type === 'Paid' ? "Higher price point than competitors" : "Limited features in free tier",
+            "Requires stable internet connection"
+        ]
+    }
+
     // Compute gradient style for hero
-    const heroGradientStyle = dynamicGradient
-        ? { background: `linear-gradient(to right, ${dynamicGradient.from}, ${dynamicGradient.to})` }
+    const heroGradientStyle = activeGradient
+        ? { background: `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})` }
         : undefined
 
     return (
@@ -250,7 +272,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
             )}
             {/* Hero Banner */}
             <div
-                className={`relative ${!dynamicGradient ? `bg-gradient-to-r ${config.bgGradient}` : ''} overflow-hidden`}
+                className={`relative ${!activeGradient ? 'bg-muted/10' : ''} overflow-hidden`}
                 style={heroGradientStyle}
             >
                 {/* Animated background pattern */}
@@ -381,9 +403,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             transition={{ delay: 0.2 }}
                         >
                             <Card className="overflow-hidden border-2 border-muted/50 shadow-lg">
-                                <CardHeader className="bg-gradient-to-r from-muted/50 to-muted/30">
+                                <CardHeader
+                                    className="bg-gradient-to-r from-muted/50 to-muted/30 transition-colors duration-500"
+                                    style={activeGradient ? {
+                                        background: `linear-gradient(to right, ${activeGradient.from}15, ${activeGradient.to}15)`
+                                    } : undefined}
+                                >
                                     <CardTitle className="flex items-center gap-2">
-                                        <Globe className="w-5 h-5 text-primary" />
+                                        <Globe className="w-5 h-5" style={{ color: activeGradient?.from || undefined }} />
                                         About {tool.name}
                                     </CardTitle>
                                 </CardHeader>
@@ -395,6 +422,16 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             </Card>
                         </motion.div>
 
+                        {/* Pros & Cons Section - [HIDDEN as per request]
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25 }}
+                        >
+                            <ProsConsSection pros={pros} cons={cons} />
+                        </motion.div>
+                         */}
+
                         {/* Features Card */}
                         {tool.features && tool.features.length > 0 && (
                             <motion.div
@@ -403,9 +440,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                 transition={{ delay: 0.3 }}
                             >
                                 <Card className="overflow-hidden border-2 border-muted/50 shadow-lg">
-                                    <CardHeader className="bg-gradient-to-r from-green-500/10 to-emerald-500/10">
+                                    <CardHeader
+                                        className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 transition-colors duration-500"
+                                        style={activeGradient ? {
+                                            background: `linear-gradient(to right, ${activeGradient.from}15, ${activeGradient.to}15)`
+                                        } : undefined}
+                                    >
                                         <CardTitle className="flex items-center gap-2">
-                                            <Zap className="w-5 h-5 text-green-500" />
+                                            <Zap className="w-5 h-5" style={{ color: activeGradient?.from || 'rgb(34 197 94)' }} />
                                             Key Features
                                         </CardTitle>
                                     </CardHeader>
@@ -438,9 +480,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             transition={{ delay: 0.4 }}
                         >
                             <Card className="overflow-hidden border-2 border-muted/50 shadow-lg">
-                                <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10">
+                                <CardHeader
+                                    className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 transition-colors duration-500"
+                                    style={activeGradient ? {
+                                        background: `linear-gradient(to right, ${activeGradient.from}15, ${activeGradient.to}15)`
+                                    } : undefined}
+                                >
                                     <CardTitle className="flex items-center gap-2">
-                                        <MessageSquare className="w-5 h-5 text-purple-500" />
+                                        <MessageSquare className="w-5 h-5" style={{ color: activeGradient?.from || 'rgb(168 85 247)' }} />
                                         Reviews ({reviews.length})
                                     </CardTitle>
                                 </CardHeader>
@@ -469,7 +516,12 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                         <Button
                                             onClick={handleSubmitReview}
                                             disabled={userRating === 0}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                                            className="transition-all duration-300 shadow-md hover:shadow-lg"
+                                            style={{
+                                                background: activeGradient
+                                                    ? `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})`
+                                                    : undefined
+                                            }}
                                         >
                                             <MessageSquare className="w-4 h-4 mr-2" />
                                             Submit Review
@@ -517,7 +569,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                     </div>
 
                     {/* Sidebar */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 lg:sticky lg:top-24 h-fit">
                         {/* Action Card */}
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
@@ -525,7 +577,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             transition={{ delay: 0.2 }}
                         >
                             <Card className="sticky top-20 overflow-hidden border-2 shadow-xl">
-                                <div className={`h-2 bg-gradient-to-r ${config.bgGradient}`} />
+                                <div
+                                    className={`h-2 transition-colors duration-500`}
+                                    style={{
+                                        background: activeGradient
+                                            ? `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})`
+                                            : `linear-gradient(to right, hsl(var(--primary)), #a855f7)` // default gradient if none
+                                    }}
+                                />
                                 <CardContent className="p-6 space-y-4">
                                     <div className="flex items-center justify-between">
                                         <Badge className={`${config.color} bg-transparent border`}>
@@ -536,7 +595,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                     </div>
 
                                     <Button
-                                        className={`w-full bg-gradient-to-r ${config.bgGradient} hover:opacity-90 shadow-lg`}
+                                        className={`w-full hover:opacity-90 shadow-lg transition-all duration-500`}
+                                        style={{
+                                            background: activeGradient
+                                                ? `linear-gradient(to right, ${activeGradient.from}, ${activeGradient.to})`
+                                                : undefined
+                                        }}
+                                        // Fallback class if no gradient
+                                        {...(!activeGradient && { className: `w-full bg-gradient-to-r ${config.bgGradient} hover:opacity-90 shadow-lg` })}
                                         size="lg"
                                         asChild
                                     >
@@ -611,72 +677,92 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                         </motion.div>
 
                         {/* Quick Info Card */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            <Card className="border-2">
-                                <CardHeader className="pb-3">
-                                    <CardTitle className="text-sm flex items-center gap-2">
-                                        <Zap className="w-4 h-4 text-yellow-500" />
-                                        Quick Info
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    {tool.has_free_trial && (
-                                        <div className="flex items-center gap-3 p-2 rounded-lg bg-green-500/10">
-                                            <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                                                <Check className="w-3 h-3 text-white" />
+                        {(tool.has_free_trial || tool.has_api || tool.is_open_source) && (
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3 }}
+                            >
+                                <Card className="border-2">
+                                    <CardHeader className="pb-3">
+                                        <CardTitle className="text-sm flex items-center gap-2">
+                                            <Zap className="w-4 h-4 text-yellow-500" />
+                                            Quick Info
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-3">
+                                        {tool.has_free_trial && (
+                                            <div className="flex items-center gap-3 p-2 rounded-lg bg-green-500/10">
+                                                <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                                                    <Check className="w-3 h-3 text-white" />
+                                                </div>
+                                                <span className="text-sm font-medium">Free Trial Available</span>
                                             </div>
-                                            <span className="text-sm font-medium">Free Trial Available</span>
-                                        </div>
-                                    )}
-                                    {tool.has_api && (
-                                        <div className="flex items-center gap-3 p-2 rounded-lg bg-blue-500/10">
-                                            <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
-                                                <Code className="w-3 h-3 text-white" />
+                                        )}
+                                        {tool.has_api && (
+                                            <div className="flex items-center gap-3 p-2 rounded-lg bg-blue-500/10">
+                                                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                                                    <Code className="w-3 h-3 text-white" />
+                                                </div>
+                                                <span className="text-sm font-medium">API Available</span>
                                             </div>
-                                            <span className="text-sm font-medium">API Available</span>
-                                        </div>
-                                    )}
-                                    {tool.is_open_source && (
-                                        <div className="flex items-center gap-3 p-2 rounded-lg bg-purple-500/10">
-                                            <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
-                                                <Globe className="w-3 h-3 text-white" />
+                                        )}
+                                        {tool.is_open_source && (
+                                            <div className="flex items-center gap-3 p-2 rounded-lg bg-purple-500/10">
+                                                <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                                                    <Globe className="w-3 h-3 text-white" />
+                                                </div>
+                                                <span className="text-sm font-medium">Open Source</span>
                                             </div>
-                                            <span className="text-sm font-medium">Open Source</span>
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        </motion.div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        )}
 
                         {/* Sponsored Ad - Hide for Sponsor/Featured plans */}
                         {!['Sponsor', 'Featured'].includes(tool.plan || '') && (
                             <>
                                 <CompactSidebarAd />
-                                <CompactSidebarAd />
                             </>
+                        )}
+
+                        {/* [NEW] Featured/Sponsor Slot (Mocked for now or reuse related) */}
+                        <div className="pt-4">
+                            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <Crown className="w-3.5 h-3.5 text-amber-500" />
+                                Featured Tool
+                            </h3>
+                            {relatedTools && relatedTools.length > 0 && (
+                                <SidebarToolCard tool={relatedTools[0]} isFeatured={true} />
+                            )}
+                        </div>
+
+                        {/* [MOVED] Related Tools / Alternatives */}
+                        {relatedTools && relatedTools.length > 1 && (
+                            <div className="pt-4 border-t">
+                                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">
+                                    Top Alternatives
+                                </h3>
+                                <div className="space-y-3">
+                                    {relatedTools.slice(1, 6).map((t, i) => (
+                                        <SidebarToolCard key={t.id} tool={t} index={i} />
+                                    ))}
+                                </div>
+                                {tool.category_id && (
+                                    <div className="pt-3 text-center">
+                                        <Link href={`/category/${tool.category_id}`} className="text-xs text-primary hover:underline">
+                                            View all {categoryName} tools &rarr;
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {/* Related Tools Section */}
-                {relatedTools && relatedTools.length > 0 && (
-                    <div className="mt-16 border-t pt-10">
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                            <Sparkles className="w-5 h-5 text-primary" />
-                            You Might Also Like
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {relatedTools.map(tool => (
-                                <ToolCard key={tool.id} tool={tool} />
-                            ))}
-                        </div>
-                    </div>
-                )}
+
             </div>
-        </div>
+        </div >
     )
 }

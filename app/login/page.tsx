@@ -7,10 +7,11 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { Sparkles, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { createBrowserClient } from "@supabase/ssr"
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import Image from "next/image"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -101,11 +102,17 @@ export default function LoginPage() {
         <div className="flex min-h-screen w-full items-center justify-center p-4 bg-gray-50/50 dark:bg-black">
             <Card className="w-full max-w-[400px] shadow-xl border-none dark:bg-slate-950 dark:border dark:border-slate-800">
                 <CardHeader className="text-center pt-8 pb-2">
-                    <div className="mx-auto w-12 h-12 mb-4 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm">
-                        <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    <div className="mx-auto w-20 h-20 mb-4 flex items-center justify-center p-2">
+                        <Image
+                            src="/logo.png"
+                            alt="The AI Select Logo"
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-contain drop-shadow-lg"
+                        />
                     </div>
                     <h1 className="text-2xl font-medium text-slate-900 dark:text-white">Welcome back</h1>
-                    <p className="text-base text-slate-600 dark:text-slate-400 mt-1">Sign in to IndoAI</p>
+                    <p className="text-base text-slate-600 dark:text-slate-400 mt-1">Sign in to The AI Select</p>
                 </CardHeader>
                 <CardContent className="px-8 pb-8">
                     <div className="flex flex-col gap-4">

@@ -1,4 +1,4 @@
-// Centralized constants for the IndoAI application
+// Centralized constants for the The AI Select application
 // All status values, plan features, and shared configurations
 
 // ===============================

@@ -44,6 +44,7 @@ interface Category {
 }
 
 import { Suspense } from 'react'
+import { extractDominantColor } from "@/lib/colorUtils"
 
 const SubmitToolContent = () => {
     const searchParams = useSearchParams()
@@ -56,6 +57,7 @@ const SubmitToolContent = () => {
     const [logoFile, setLogoFile] = useState<File | null>(null)
     const [videoFile, setVideoFile] = useState<File | null>(null)
     const [logoPreview, setLogoPreview] = useState<string | null>(null)
+    const [dominantColor, setDominantColor] = useState<string | null>(null)
     const [categories, setCategories] = useState<Category[]>([])
     const [adPlacement, setAdPlacement] = useState("sidebar")
     const [date, setDate] = useState<DateRange | undefined>({
@@ -143,8 +145,15 @@ const SubmitToolContent = () => {
             }
             setLogoFile(file)
             const reader = new FileReader()
-            reader.onloadend = () => {
-                setLogoPreview(reader.result as string)
+            reader.onloadend = async () => {
+                const result = reader.result as string
+                setLogoPreview(result)
+                try {
+                    const color = await extractDominantColor(result)
+                    setDominantColor(color)
+                } catch (e) {
+                    console.error("Failed to extract color", e)
+                }
             }
             reader.readAsDataURL(file)
         }
@@ -225,6 +234,7 @@ const SubmitToolContent = () => {
                     pricing_type: pricingModel,
                     plan: selectedPlan === 'free' ? null : selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1),
                     logo_url: logoUrl,
+                    dominant_color: dominantColor, // Save extracted color
                     video_url: videoUrl,
                     submitted_by: userId,
                     owner_id: userId,

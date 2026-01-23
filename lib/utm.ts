@@ -13,13 +13,13 @@ export interface UTMConfig {
 // Default UTM configuration
 export const DEFAULT_UTM_CONFIG: UTMConfig = {
     enabled: true,
-    source: 'indoai',
+    source: 'theaiselect',
     medium: 'directory',
     campaign: 'tool_listing'
 }
 
 // LocalStorage key for UTM settings
-export const UTM_STORAGE_KEY = 'indoai_utm_config'
+export const UTM_STORAGE_KEY = 'theaiselect_utm_config'
 
 /**
  * Get UTM configuration from localStorage

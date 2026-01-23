@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IndoAI - AI Tools Directory",
+  title: "The AI Select - AI Tools Directory",
   description: "Curated directory of AI tools for Indonesian creators and developers.",
 };
 

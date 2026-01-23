@@ -306,7 +306,7 @@ export default function ComparePage() {
                                                 {selectedTools.map(tool => (
                                                     <td key={tool.id} className="text-center py-6 px-6">
                                                         <Button asChild className="bg-gradient-to-r from-primary to-purple-500">
-                                                            <a href={appendUTMParams(tool.website_url || '', { enabled: true, source: 'indoai', medium: 'compare', campaign: tool.name.toLowerCase().replace(/\s+/g, '-') })} target="_blank" rel="noopener noreferrer">
+                                                            <a href={appendUTMParams(tool.website_url || '', { enabled: true, source: 'theaiselect', medium: 'compare', campaign: tool.name.toLowerCase().replace(/\s+/g, '-') })} target="_blank" rel="noopener noreferrer">
                                                                 <ExternalLink className="w-4 h-4 mr-2" />
                                                                 Visit
                                                             </a>

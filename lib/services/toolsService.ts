@@ -209,9 +209,10 @@ export const toolsService = {
         return data as ToolWithRelations[]
     },
 
-    async getRelatedTools(categoryId: string, currentToolId: string, currentToolTagIds: string[] = [], limit = 3) {
+    async getRelatedTools(categoryId: string, currentToolId: string, currentToolTagIds: string[] = [], limit = 6) {
         const supabase = createClient()
-        // Fetch candidates from same category, fetch tool_tags to compare
+        // Fetch candidates from same category
+        // Prioritize "is_priority" (Sponsor/Featured) tools first
         const { data, error } = await supabase
             .from('tools')
             .select(`
@@ -223,37 +224,41 @@ export const toolsService = {
             .eq('is_verified', true)
             .eq('category_id', categoryId)
             .neq('id', currentToolId)
-            .order('view_count', { ascending: false }) // Initial ordering by popularity
-            .limit(20) // Get pool of candidates
+            // .order('is_priority', { ascending: false }) // Assuming this column exists based on getTools usage
+            // Fallback: If is_priority doesn't exist, we rely on post-fetch sorting, but let's try to order by view_count for quality candidates
+            .order('view_count', { ascending: false })
+            .limit(50) // Get larger pool to find sponsors
 
         if (error) throw error
 
         if (!data || data.length === 0) return []
 
-        // If no tags to compare, just return top by popularity (limit)
-        if (currentToolTagIds.length === 0) {
-            return data.slice(0, limit) as ToolWithRelations[]
-        }
-
-        // Calculate relevance score
+        // Calculate relevance score + Plan Priority
         const scoredTools = data.map((tool: any) => {
             let score = 0
-            // Base score for same category (already filtered)
 
-            // Tag overlap score
-            const toolTagIds = tool.tool_tags?.map((t: any) => t.tag_id) || []
-            const intersection = toolTagIds.filter((id: string) => currentToolTagIds.includes(id))
-            score += intersection.length * 5 // Weight for each matching tag
+            // 1. Plan Priority Bonus (Huge impact)
+            const plan = (tool.plan || '').toLowerCase()
+            if (plan === 'sponsor') score += 1000
+            else if (plan === 'featured') score += 500
+            else if (plan === 'pro') score += 100
 
-            // Add popularity weight (logarithmic to prevent view count dominance)
-            score += Math.log10(tool.view_count || 1)
+            // 2. Tag overlap score (Relevance)
+            if (currentToolTagIds.length > 0) {
+                const toolTagIds = tool.tool_tags?.map((t: any) => t.tag_id) || []
+                const intersection = toolTagIds.filter((id: string) => currentToolTagIds.includes(id))
+                score += intersection.length * 10 // Increased weight for tag relevance
+            }
+
+            // 3. Popularity weight (Logarithmic)
+            score += Math.log10(tool.view_count || 1) * 5
 
             return { tool, score }
         })
 
         // Sort by score descending
         scoredTools.sort((a, b) => b.score - a.score)
-        // Return top tools
+
         return scoredTools.slice(0, limit).map(item => item.tool) as ToolWithRelations[]
     },
 

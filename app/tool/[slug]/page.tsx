@@ -70,7 +70,7 @@ export default async function Page({ params }: PageProps) {
                 tool.category_id,
                 tool.id,
                 tagIds,
-                3
+                6
             )
         } catch (e) {
             console.error('Failed to fetch related tools:', e)

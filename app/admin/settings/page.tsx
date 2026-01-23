@@ -58,7 +58,7 @@ export default function AdminSettingsPage() {
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="site-name">Site Name</Label>
-                        <Input id="site-name" defaultValue="IndoAI" />
+                        <Input id="site-name" defaultValue="The AI Select" />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="site-description">Site Description</Label>
@@ -107,7 +107,7 @@ export default function AdminSettingsPage() {
                                 </Label>
                                 <Input
                                     id="utm-source"
-                                    placeholder="e.g., indoai"
+                                    placeholder="e.g., theaiselect"
                                     value={utmConfig.source}
                                     onChange={(e) => setUtmConfig({ ...utmConfig, source: e.target.value })}
                                 />

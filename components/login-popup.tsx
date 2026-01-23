@@ -11,9 +11,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Sparkles, X, UserPlus, Mail } from "lucide-react"
+import { X, UserPlus, Mail } from "lucide-react"
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
+import Image from "next/image"
 
 // Context for login popup
 interface LoginPopupContextType {
@@ -123,8 +124,14 @@ export function LoginPopupProvider({ children }: LoginPopupProviderProps) {
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="sm:max-w-[380px] p-0 border-none shadow-2xl overflow-hidden bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
                     <DialogHeader className="pt-10 pb-6 px-6 text-center select-none">
-                        <div className="mx-auto w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-blue-600 via-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                            <Sparkles className="w-8 h-8 text-white fill-white/20" />
+                        <div className="mx-auto w-24 h-24 mb-4 flex items-center justify-center p-2">
+                            <Image
+                                src="/logo.png"
+                                alt="The AI Select Logo"
+                                width={80}
+                                height={80}
+                                className="w-full h-full object-contain drop-shadow-xl"
+                            />
                         </div>
                         <DialogTitle className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white">
                             Unlock Full Access
@@ -266,8 +273,14 @@ export function NavbarLoginPrompt() {
                 </button>
 
                 <div className="p-5 flex flex-col items-center text-center">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
-                        <Sparkles className="w-6 h-6 text-white" />
+                    <div className="w-16 h-16 flex items-center justify-center mb-2 p-1">
+                        <Image
+                            src="/logo.png"
+                            alt="The AI Select Logo"
+                            width={56}
+                            height={56}
+                            className="w-full h-full object-contain drop-shadow-lg"
+                        />
                     </div>
 
                     <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">

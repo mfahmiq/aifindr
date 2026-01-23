@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import {
     Bell,
     Home,
@@ -78,8 +79,14 @@ export default function DashboardLayout({
                     {/* Logo */}
                     <div className="flex h-16 items-center border-b px-4 lg:px-6 bg-gradient-to-r from-purple-500/5 to-pink-500/10">
                         <Link href="/" className="flex items-center gap-2 font-bold">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                <Crown className="h-4 w-4 text-white" />
+                            <div className="w-8 h-8 flex items-center justify-center">
+                                <Image
+                                    src="/logo.png"
+                                    alt="The AI Select Logo"
+                                    width={32}
+                                    height={32}
+                                    className="w-full h-full object-contain drop-shadow-md"
+                                />
                             </div>
                             <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent text-lg">
                                 My Dashboard
@@ -141,8 +148,14 @@ export default function DashboardLayout({
                         <SheetContent side="left" className="flex flex-col p-0">
                             <div className="p-4 border-b bg-gradient-to-r from-purple-500/5 to-pink-500/10">
                                 <Link href="/" className="flex items-center gap-2 font-bold">
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                        <Crown className="h-4 w-4 text-white" />
+                                    <div className="w-8 h-8 flex items-center justify-center">
+                                        <Image
+                                            src="/logo.png"
+                                            alt="The AI Select Logo"
+                                            width={32}
+                                            height={32}
+                                            className="w-full h-full object-contain drop-shadow-md"
+                                        />
                                     </div>
                                     <span>My Dashboard</span>
                                 </Link>
@@ -164,7 +177,7 @@ export default function DashboardLayout({
 
                     <div className="flex-1">
                         <Link href="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                            ← Back to IndoAI
+                            ← Back to The AI Select
                         </Link>
                     </div>
 

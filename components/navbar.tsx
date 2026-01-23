@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import NextImage from "next/image"
 import { usePathname } from "next/navigation"
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { Button } from "@/components/ui/button"
@@ -182,9 +183,18 @@ export default function Navbar() {
                             </SheetContent>
                         </Sheet>
 
+
+
                         <Link href="/" className="flex items-center space-x-2">
-                            <Sparkles className="w-5 h-5 text-primary" />
-                            <span className="font-bold">IndoAI</span>
+                            <div className="relative w-8 h-8">
+                                <NextImage
+                                    src="/logo.png"
+                                    alt="The AI Select Logo"
+                                    fill
+                                    className="object-contain drop-shadow-sm"
+                                />
+                            </div>
+                            <span className="font-bold text-lg tracking-tight">The AI Select</span>
                         </Link>
                     </div>
 

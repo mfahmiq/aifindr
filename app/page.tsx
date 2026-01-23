@@ -156,7 +156,7 @@ function HomeContent() {
             <div className="flex items-center gap-2 mb-8">
               <Sparkles className="w-6 h-6 text-amber-500 animate-pulse" />
               <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                Trending / Editor's Pick
+                Top Rated AI Tools & Editors' Choice
               </h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -183,7 +183,7 @@ function HomeContent() {
             {/* Results Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">
-                {filters.category === 'All' ? 'All Tools' : filters.category}
+                {filters.category === 'All' ? 'Browse AI Software by Category' : filters.category}
                 <span className="text-muted-foreground font-normal ml-2">
                   ({loading ? '...' : totalCount})
                 </span>
@@ -387,7 +387,7 @@ function HomeContent() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2026 The AI Select. All rights reserved.
+            © 2026 The AI Select. All rights reserved. The premier AI tool directory for finding the best artificial intelligence software.
           </div>
         </div>
       </footer>

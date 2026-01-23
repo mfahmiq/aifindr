@@ -95,7 +95,7 @@ export function HeroSection() {
                         <br />
                         <span className="relative">
                             <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-                                Best AI Tools
+                                Best AI Tools Directory
                             </span>
                             {/* Underline decoration */}
                             <motion.svg

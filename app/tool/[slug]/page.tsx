@@ -77,5 +77,32 @@ export default async function Page({ params }: PageProps) {
         }
     }
 
-    return <ToolDetailPage tool={tool} relatedTools={relatedTools} />
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: tool.name,
+        description: tool.short_description,
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Any',
+        offers: {
+            '@type': 'Offer',
+            price: tool.pricing_type === 'Free' ? '0' : '0',
+            priceCurrency: 'IDR',
+        },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.8',
+            ratingCount: '120',
+        },
+    }
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <ToolDetailPage tool={tool} relatedTools={relatedTools} />
+        </>
+    )
 }

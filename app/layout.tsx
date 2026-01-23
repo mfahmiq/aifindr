@@ -17,8 +17,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The AI Select - AI Tools Directory",
-  description: "Curated directory of AI tools for Indonesian creators and developers.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://theaiselect.com'),
+  title: {
+    default: "The AI Select - Best AI Tools Directory & Software Reviews",
+    template: "%s | The AI Select"
+  },
+  description: "Discover and compare the best AI tools, software, and apps for your workflow. The #1 curated AI tool directory for 2026.",
+  keywords: ["AI Tools", "Directory", "Artificial Intelligence", "Indonesian AI Community", "The AI Select"],
+  authors: [{ name: "The AI Select" }],
+  creator: "The AI Select",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    title: "The AI Select - Best AI Tools Directory & Software Reviews",
+    description: "Discover and compare the best AI tools, software, and apps for your workflow. The #1 curated AI tool directory for 2026.",
+    siteName: "The AI Select",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The AI Select - Best AI Tools Directory & Software Reviews",
+    description: "Discover and compare the best AI tools, software, and apps for your workflow. The #1 curated AI tool directory for 2026.",
+    creator: "@theaiselect",
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png", // We should probably generate a proper apple-touch-icon later, but strict mapping for now
+  },
 };
 
 export default function RootLayout({

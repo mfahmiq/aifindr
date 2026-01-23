@@ -62,8 +62,9 @@ export function HeroSection() {
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-violet-400 to-indigo-500 rounded-full blur-3xl opacity-20"
                 />
 
-                {/* Grid pattern overlay */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:24px_24px]" />
+                {/* Grid pattern overlay with noise */}
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
                 {/* Bottom fade gradient for smooth transition */}
                 <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background via-background/80 to-transparent" />
@@ -94,7 +95,7 @@ export function HeroSection() {
                         <span className="text-foreground">Discover the</span>
                         <br />
                         <span className="relative">
-                            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+                            <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
                                 Best AI Tools Directory
                             </span>
                             {/* Underline decoration */}

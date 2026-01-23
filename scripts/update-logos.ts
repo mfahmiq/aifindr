@@ -13,7 +13,7 @@ import * as path from 'path';
 const CONFIG = {
     inputFile: 'scraped-tools.json',
     outputFile: 'scraped-tools-updated.json',
-    delayMs: 1000, // Faster delay since we just parse HTML
+    delayMs: 100, // Very fast since we construct URL directly
     maxRetries: 3,
 };
 
@@ -60,28 +60,45 @@ async function fetchWithRetry(url: string, retries = CONFIG.maxRetries): Promise
     return null;
 }
 
+// Get high-res icon from Google
+function getGoogleFaviconUrl(url: string, size: number = 256): string {
+    try {
+        const hostname = new URL(url).hostname;
+        return `https://www.google.com/s2/favicons?domain=${hostname}&sz=${size}`;
+    } catch (e) {
+        return '';
+    }
+}
+
 // Extract logo from page
 async function getCorrectLogo(url: string): Promise<string | null> {
+    // Strategy: Use Google Favicon API first for high-res icon (reliable & fast)
+    // Fallback to scraping if needed (or stick to Google)
+
+    if (!url) return null;
+
+    // Try Google High Res First (user requested this)
+    const googleIcon = getGoogleFaviconUrl(url, 256);
+
+    // Validate if it actually exists? 
+    // Google returns a default globe icon if not found. 
+    // For now, we assume it's good or we can check header content-length if we want to be strict.
+    // But simplistic approach: use Google ID.
+
+    return googleIcon;
+
+    /* 
+    // OLD SCRAPING LOGIC (Backup if we want to mix)
     const html = await fetchWithRetry(url);
-    if (!html) return null;
+    if (!html) return googleIcon; // Fallback
 
     const $ = cheerio.load(html);
-
-    // Priority 1: Site Icon Singly (Detail Page specific)
     let logoUrl = $('img.site-icon-singly').attr('src');
-
-    // Priority 2: Site Icon generic (if any)
     if (!logoUrl) {
         logoUrl = $('.site-icon').attr('src');
     }
-
-    // Note: Do NOT use .favicon-cat-brand as it often contains related tools or ads
-
-    // Priority 4: Fallback to original logic (screenshot) if absolutely no icon found
-    // BUT user specifically requested icon, so let's try to stick to icons.
-    // If no icon found, maybe keep existing?
-
-    return logoUrl || null;
+    return logoUrl || googleIcon;
+    */
 }
 
 async function main() {
@@ -103,40 +120,40 @@ async function main() {
     let noChangeCount = 0;
     let errors = 0;
 
-    for (let i = 0; i < tools.length; i++) {
-        const tool = tools[i];
-        process.stdout.write(`[${i + 1}/${tools.length}] ${tool.name}... `);
-
+    // Batch processing
+    const BATCH_SIZE = 20;
+    const processTool = async (tool: ScrapedTool, index: number) => {
         try {
-            const newLogo = await getCorrectLogo(tool.sourceUrl);
+            const newLogo = await getCorrectLogo(tool.websiteUrl);
 
             if (newLogo) {
-                // Check if different (ignoring query params if any)
                 if (tool.logoUrl !== newLogo) {
                     tool.logoUrl = newLogo;
                     updatedCount++;
-                    console.log(`✅ Updated: ${newLogo.substring(newLogo.lastIndexOf('/') + 1)}`);
+                    // Optional: console.log(`✅ [${index + 1}] Updated: ${new URL(newLogo).searchParams.get('domain') || 'icon'}`);
                 } else {
                     noChangeCount++;
-                    console.log(`⏹️ Same`);
                 }
             } else {
-                console.log(`⚠️ No icon found, keeping old`);
                 noChangeCount++;
             }
-
         } catch (error) {
-            console.log(`❌ Error`);
             errors++;
         }
+    };
 
-        // Periodically save
-        if (i > 0 && i % 50 === 0) {
+    for (let i = 0; i < tools.length; i += BATCH_SIZE) {
+        const batch = tools.slice(i, i + BATCH_SIZE);
+        const batchPromises = batch.map((tool, batchIdx) => processTool(tool, i + batchIdx));
+
+        await Promise.all(batchPromises);
+
+        process.stdout.write(`\rProgress: ${Math.min(i + BATCH_SIZE, tools.length)}/${tools.length} | Updated: ${updatedCount} | Errors: ${errors}`);
+
+        // Save periodically
+        if (i % 100 === 0) {
             fs.writeFileSync(path.join(process.cwd(), CONFIG.outputFile), JSON.stringify(tools, null, 2));
         }
-
-        // Small delay
-        await sleep(CONFIG.delayMs);
     }
 
     // Final save

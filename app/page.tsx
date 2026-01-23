@@ -13,7 +13,7 @@ import { TopBannerAd, SidebarAd, InlineToolAd, FooterCtaAd, SponsorToolBanner } 
 import { CategoryLists } from "@/components/category-lists"
 import { Button } from "@/components/ui/button"
 import { ToolWithRelations } from "@/lib/types"
-
+import { Footer } from "@/components/footer"
 const ITEMS_PER_PAGE = 12
 
 import { FeaturedToolCard } from "@/components/featured-tool-card"
@@ -351,46 +351,7 @@ function HomeContent() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t mt-8">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold mb-4">Explore</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/" className="hover:text-foreground">All Tools</Link></li>
-                <li><Link href="/categories" className="hover:text-foreground">Categories</Link></li>
-                <li><Link href="/trending" className="hover:text-foreground">Trending</Link></li>
-                <li><Link href="/compare" className="hover:text-foreground">Compare</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/blog" className="hover:text-foreground">Blog</Link></li>
-                <li><Link href="/deals" className="hover:text-foreground">Deals</Link></li>
-                <li><a href="#" className="hover:text-foreground">Newsletter</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Creators</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/pricing" className="hover:text-foreground">Submit Tool</Link></li>
-                <li><Link href="/pricing" className="hover:text-foreground">Advertise</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground">Privacy</a></li>
-                <li><a href="#" className="hover:text-foreground">Terms</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2026 The AI Select. All rights reserved. The premier AI tool directory for finding the best artificial intelligence software.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

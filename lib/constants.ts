@@ -133,27 +133,27 @@ export type ReviewStatus = typeof REVIEW_STATUS[keyof typeof REVIEW_STATUS]
 // ===============================
 export const PLAN_COLORS = {
     [PLAN_NAMES.FREE]: {
-        border: 'border-gray-200',
-        bg: 'bg-gray-50',
-        text: 'text-gray-600',
-        gradient: 'from-gray-400 to-gray-500',
+        border: 'border-slate-200 dark:border-slate-800',
+        bg: 'bg-slate-50 dark:bg-slate-900',
+        text: 'text-slate-600 dark:text-slate-400',
+        gradient: 'from-slate-500 to-slate-600',
     },
     [PLAN_NAMES.PRO]: {
-        border: 'border-blue-500',
-        bg: 'bg-blue-50',
-        text: 'text-blue-600',
-        gradient: 'from-blue-500 to-cyan-500',
+        border: 'border-indigo-500/20',
+        bg: 'bg-indigo-50/50 dark:bg-indigo-950/20',
+        text: 'text-indigo-600 dark:text-indigo-400',
+        gradient: 'from-indigo-600 to-violet-600',
     },
     [PLAN_NAMES.FEATURED]: {
-        border: 'border-purple-500',
-        bg: 'bg-purple-50',
-        text: 'text-purple-600',
-        gradient: 'from-purple-500 to-pink-500',
+        border: 'border-violet-500/20',
+        bg: 'bg-violet-50/50 dark:bg-violet-950/20',
+        text: 'text-violet-600 dark:text-violet-400',
+        gradient: 'from-violet-600 to-fuchsia-600',
     },
     [PLAN_NAMES.SPONSOR]: {
-        border: 'border-amber-500',
-        bg: 'bg-amber-50',
-        text: 'text-amber-600',
+        border: 'border-amber-500/20',
+        bg: 'bg-amber-50/50 dark:bg-amber-950/20',
+        text: 'text-amber-600 dark:text-amber-400',
         gradient: 'from-amber-500 to-orange-500',
     },
 }

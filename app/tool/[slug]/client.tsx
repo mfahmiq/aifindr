@@ -43,6 +43,7 @@ import {
     Loader2
 } from "lucide-react"
 import Link from "next/link"
+import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, use } from "react"
 import { appendUTMParams, getUTMConfig, UTMConfig } from "@/lib/utm"
@@ -72,6 +73,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
     const [reviews, setReviews] = useState<ReviewWithUser[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const [imageError, setImageError] = useState(false)
 
     // Preview Banner
     const isPreview = tool.status !== 'approved'
@@ -302,13 +304,15 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                             animate={{ opacity: 1, scale: 1 }}
                             className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-2xl border border-white/30 overflow-hidden"
                         >
-                            {tool.logo_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
+                            {tool.logo_url && !imageError ? (
+                                <NextImage
                                     src={tool.logo_url}
                                     alt={tool.name}
-                                    referrerPolicy="no-referrer"
+                                    width={128}
+                                    height={128}
                                     className="w-full h-full object-cover"
+                                    onError={() => setImageError(true)}
+                                    unoptimized={true}
                                 />
                             ) : (
                                 <IconComponent className="w-12 h-12 md:w-16 md:h-16 text-white" />

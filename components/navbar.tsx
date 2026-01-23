@@ -155,8 +155,8 @@ export default function Navbar() {
             )}
 
             {/* Main Navbar */}
-            <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container mx-auto flex h-14 items-center justify-between px-4">
+            <nav className="border-b border-white/10 bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
+                <div className="container mx-auto flex h-16 items-center justify-between px-4">
                     {/* Logo & Mobile Menu Trigger */}
                     <div className="flex items-center gap-4">
                         {/* Mobile Menu */}

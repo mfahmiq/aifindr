@@ -16,6 +16,8 @@ import {
     Sparkles
 } from "lucide-react"
 import { PLAN_NAMES } from "@/lib/constants"
+import Image from "next/image"
+import { useState } from "react"
 
 interface ToolCardProps {
     tool: ToolWithRelations
@@ -36,6 +38,7 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
     const hasBlueBadge = tool.is_verified && !hasGoldBadge && planLower !== 'free';
 
     const isPro = planValue === PLAN_NAMES.PRO
+    const [imageError, setImageError] = useState(false)
 
     // Premium badge configurations
     const getPremiumBadge = () => {
@@ -57,14 +60,12 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
         >
             <Card className={`
                 relative h-full flex flex-col items-center p-5
-                rounded-2xl
-                transition-all duration-300
+                rounded-3xl
+                transition-all duration-300 ease-out
                 group overflow-hidden
                 ${isSponsor
-                    ? 'rgb-border bg-transparent border-0 hover:shadow-lg'
-                    : isFeatured
-                        ? 'bg-white dark:bg-gray-900 border border-rose-100 dark:border-rose-900/30 shadow-[0_4px_20px_-2px_rgba(255,100,200,0.15)] hover:shadow-[0_8px_30px_-5px_rgba(255,100,200,0.25)]'
-                        : 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-md hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_-5px_rgba(0,0,0,0.3)]'
+                    ? 'rgb-border bg-transparent border-0 shadow-lg'
+                    : 'bg-white dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1'
                 }
             `}
             >
@@ -160,18 +161,16 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                 {/* Main Content: Logo, Name, Description */}
                 <div className="flex-1 flex flex-col items-center text-center z-10 w-full px-2 mt-2">
                     {/* Logo */}
-                    <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800">
-                        {tool.logo_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
+                    <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative">
+                        {tool.logo_url && !imageError ? (
+                            <Image
                                 src={tool.logo_url}
                                 alt={tool.name}
-                                referrerPolicy="no-referrer"
+                                width={64}
+                                height={64}
                                 className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                    e.currentTarget.parentElement?.classList.add('fallback-icon');
-                                }}
+                                onError={() => setImageError(true)}
+                                unoptimized={true} // Use unoptimized to avoid "hostname not configured" generic errors if wildcard fails or for faster testing
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400">
@@ -272,15 +271,15 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
 
                 </div>
                 {/* Footer: Visit Button */}
-                <div className="w-full z-10 mt-auto">
+                <div className="w-full z-10 mt-auto pt-4">
                     <Link href={`/tool/${tool.slug}`} className="w-full block">
-                        <Button className="w-full bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-bold tracking-wide shadow-md shadow-blue-500/20 rounded-xl py-5 uppercase text-xs transition-transform active:scale-[0.98]">
+                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
                             <ExternalLink className="w-3.5 h-3.5 mr-2" />
                             Visit
                         </Button>
                     </Link>
                 </div>
             </Card>
-        </motion.div>
+        </motion.div >
     )
 }

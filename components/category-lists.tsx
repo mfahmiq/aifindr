@@ -125,8 +125,9 @@ export function CategoryLists() {
                 const dataLatest = await resLatest.json()
                 setLatest(dataLatest.tools || [])
 
-                // 2. Selection (Featured)
-                const resSelection = await fetch('/api/tools?limit=10&highlight=true')
+                // 2. Selection (The AI Select Picks)
+                // Use picks=true to get Priority + Sponsors/High Rated
+                const resSelection = await fetch('/api/tools?limit=10&picks=true')
                 const dataSelection = await resSelection.json()
                 setSelection(dataSelection.tools || [])
 
@@ -186,7 +187,7 @@ export function CategoryLists() {
                     loading={loading}
                     color="text-amber-500"
                     showRank
-                    link="/?highlight=true"
+                    link="/?picks=true"
                     totalCount={counts.selection || 0}
                 />
                 <ToolListCard

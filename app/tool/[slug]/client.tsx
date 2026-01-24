@@ -399,7 +399,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                     src={tool.image_url}
                                     alt={`Screenshot of ${tool.name}`}
                                     referrerPolicy="no-referrer"
-                                    className="w-full h-auto max-h-[400px] object-contain mx-auto"
+                                    className="w-full h-auto max-h-[300px] object-contain mx-auto"
                                 />
                             </motion.div>
                         )}

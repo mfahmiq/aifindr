@@ -71,13 +71,20 @@ export function HeroSection() {
             </div>
 
             <div className="mx-auto max-w-4xl px-6 py-24 sm:py-32 lg:py-40 text-center relative">
-                {/* Badge */}
+                {/* Logo & Badge Container */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
+                    className="flex flex-col items-center justify-center gap-6 mb-8"
                 >
-                    <Badge className="mb-6 px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-primary/20 hover:bg-primary/10">
+                    {/* Logo - Centered and clear of text */}
+                    <div className="relative w-20 h-20 sm:w-24 sm:h-24 animate-bounce-slow">
+                        {/* @ts-ignore */}
+                        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+                    </div>
+
+                    <Badge className="px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-primary/20 hover:bg-primary/10">
                         <Sparkles className="w-3.5 h-3.5 mr-2 text-yellow-500" />
                         <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             🚀 20+ AI Tools & Growing
@@ -94,11 +101,7 @@ export function HeroSection() {
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight">
                         <span className="text-foreground">Discover the</span>
                         <br />
-                        <span className="relative inline-block mt-8 sm:mt-0">
-                            <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-20 sm:h-20 animate-bounce-slow z-10">
-                                {/* @ts-ignore */}
-                                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
-                            </div>
+                        <span className="relative inline-block mt-2">
                             <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
                                 Best AI Tools Directory
                             </span>

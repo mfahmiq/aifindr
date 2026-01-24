@@ -46,7 +46,7 @@ import Link from "next/link"
 import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, use } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "../../../hooks/use-toast"
 import { appendUTMParams, getUTMConfig, UTMConfig } from "@/lib/utm"
 import { getGradientPair, hexToRgb, extractDominantColor, isLightColor } from "@/lib/colorUtils"
 

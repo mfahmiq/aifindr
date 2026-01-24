@@ -201,6 +201,89 @@ export type Database = {
                 }
                 Relationships: []
             }
+            collections: {
+                Row: {
+                    created_at: string
+                    description: string | null
+                    id: string
+                    is_public: boolean | null
+                    name: string
+                    slug: string
+                    updated_at: string
+                    user_id: string
+                }
+                Insert: {
+                    created_at?: string
+                    description?: string | null
+                    id?: string
+                    is_public?: boolean | null
+                    name: string
+                    slug: string
+                    updated_at?: string
+                    user_id: string
+                }
+                Update: {
+                    created_at?: string
+                    description?: string | null
+                    id?: string
+                    is_public?: boolean | null
+                    name?: string
+                    slug?: string
+                    updated_at?: string
+                    user_id?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "collections_user_id_fkey"
+                        columns: ["user_id"]
+                        isOneToOne: false
+                        referencedRelation: "users"
+                        referencedColumns: ["id"]
+                    }
+                ]
+            },
+            collection_items: {
+                Row: {
+                    collection_id: string
+                    created_at: string
+                    id: string
+                    note: string | null
+                    order: number | null
+                    tool_id: string
+                }
+                Insert: {
+                    collection_id: string
+                    created_at?: string
+                    id?: string
+                    note?: string | null
+                    order?: number | null
+                    tool_id: string
+                }
+                Update: {
+                    collection_id?: string
+                    created_at?: string
+                    id?: string
+                    note?: string | null
+                    order?: number | null
+                    tool_id?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "collection_items_collection_id_fkey"
+                        columns: ["collection_id"]
+                        isOneToOne: false
+                        referencedRelation: "collections"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "collection_items_tool_id_fkey"
+                        columns: ["tool_id"]
+                        isOneToOne: false
+                        referencedRelation: "tools"
+                        referencedColumns: ["id"]
+                    }
+                ]
+            },
             categories: {
                 Row: {
                     color: string | null

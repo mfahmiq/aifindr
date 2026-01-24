@@ -392,14 +392,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.15 }}
-                                className="rounded-xl overflow-hidden shadow-xl border border-muted/50 max-w-2xl mx-auto bg-muted/20"
+                                className="rounded-xl overflow-hidden shadow-xl border border-muted/50 w-full max-w-[500px] aspect-square mx-auto bg-muted/20 flex items-center justify-center p-4 relative"
                             >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={tool.image_url}
                                     alt={`Screenshot of ${tool.name}`}
                                     referrerPolicy="no-referrer"
-                                    className="w-full h-auto max-h-[300px] object-contain mx-auto"
+                                    className="w-full h-full object-contain"
                                 />
                             </motion.div>
                         )}

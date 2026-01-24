@@ -294,14 +294,14 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                     className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/20 blur-3xl"
                 />
 
-                <div className="container mx-auto px-4 py-12 relative">
+                <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
                     {/* Back Button */}
                     <Link href="/" className="inline-flex items-center text-sm text-white/80 hover:text-white mb-8 transition-colors">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back to Directory
                     </Link>
 
-                    <div className="flex flex-col md:flex-row items-start gap-6">
+                    <div className="flex flex-col md:flex-row items-start gap-8 lg:gap-12">
                         {/* Large Icon/Logo */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }}

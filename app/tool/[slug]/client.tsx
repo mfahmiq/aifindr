@@ -314,7 +314,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                     alt={tool.name}
                                     width={128}
                                     height={128}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-contain p-2"
                                     onError={() => setImageError(true)}
                                     unoptimized={true}
                                 />
@@ -399,7 +399,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                     src={tool.image_url}
                                     alt={`Screenshot of ${tool.name}`}
                                     referrerPolicy="no-referrer"
-                                    className="w-full h-auto object-cover"
+                                    className="w-full h-auto max-w-full object-contain"
                                 />
                             </motion.div>
                         )}

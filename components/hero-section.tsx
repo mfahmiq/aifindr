@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { Search, Sparkles, Zap, Star, ArrowRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -80,8 +81,14 @@ export function HeroSection() {
                 >
                     {/* Logo - Centered and clear of text */}
                     <div className="relative w-20 h-20 sm:w-24 sm:h-24 animate-bounce-slow">
-                        {/* @ts-ignore */}
-                        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+                        <NextImage
+                            src="/logo.png"
+                            alt="Logo"
+                            width={96}
+                            height={96}
+                            priority
+                            className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]"
+                        />
                     </div>
 
                     <Badge className="px-4 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-primary/20 hover:bg-primary/10">

@@ -286,3 +286,35 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
         </motion.div >
     )
 }
+
+export function ToolCardSkeleton() {
+    return (
+        <Card className="relative h-full flex flex-col items-center p-5 rounded-3xl bg-white dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 shadow-sm">
+            <div className="w-full grid grid-cols-3 items-start mb-4">
+                <div className="space-y-2">
+                    <div className="h-4 w-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                    <div className="h-3 w-10 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                </div>
+                <div className="justify-self-center">
+                    <div className="h-4 w-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                </div>
+                <div className="justify-self-end">
+                    <div className="h-4 w-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                </div>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center w-full px-2 mt-2">
+                <div className="w-16 h-16 mb-4 rounded-full bg-gray-100 dark:bg-gray-800 animate-pulse" />
+                <div className="h-6 w-3/4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-3" />
+                <div className="space-y-2 w-full">
+                    <div className="h-3 w-full bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                    <div className="h-3 w-5/6 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mx-auto" />
+                </div>
+            </div>
+
+            <div className="w-full mt-auto pt-4">
+                <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />
+            </div>
+        </Card>
+    )
+}

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ToolWithRelations } from "@/lib/types"
+import Image from "next/image"
 import {
     Sparkles,
     Zap,
@@ -47,8 +48,11 @@ function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link
             <div className="flex-1 overflow-y-auto px-2 max-h-[400px] scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800">
                 {loading ? (
                     <div className="space-y-3 p-2">
-                        {[1, 2, 3, 4, 5].map(i => (
-                            <div key={i} className="h-8 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                            <div key={i} className="flex items-center gap-3 p-2">
+                                <div className="w-5 h-5 bg-gray-100 dark:bg-gray-800 rounded animate-pulse shrink-0" />
+                                <div className="h-4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse flex-1" />
+                            </div>
                         ))}
                     </div>
                 ) : (
@@ -69,14 +73,19 @@ function ToolListCard({ title, icon: Icon, tools, loading, color, showRank, link
                                     )}
 
                                     {/* Logo (Small) */}
-                                    <div className="w-5 h-5 rounded overflow-hidden shrink-0 bg-gray-100">
+                                    <div className="w-5 h-5 rounded overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center border border-gray-100 dark:border-gray-800">
                                         {tool.logo_url ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={tool.logo_url} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                                            <Image
+                                                src={tool.logo_url}
+                                                alt={tool.name}
+                                                width={20}
+                                                height={20}
+                                                className="w-full h-full object-contain"
+                                                priority={idx < 3} // Priority for top 3 tools in each list
+                                                unoptimized={true} // For external logos
+                                            />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                                <Zap className="w-3 h-3 text-gray-400" />
-                                            </div>
+                                            <Zap className="w-3 h-3 text-gray-300" />
                                         )}
                                     </div>
 
@@ -117,28 +126,24 @@ export function CategoryLists() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // In a real app we might want to parallelize these or use a specific endpoint
-                // For now, we'll make simple calls
+                // Fetch all data in parallel for significant performance boost
+                const [resLatest, resSelection, resPopular, resChat] = await Promise.all([
+                    fetch('/api/tools?limit=10&sortBy=newest'),
+                    fetch('/api/tools?limit=10&picks=true'),
+                    fetch('/api/tools?limit=10&sortBy=popular'),
+                    fetch('/api/tools?limit=10&category=Chat')
+                ])
 
-                // 1. Latest
-                const resLatest = await fetch('/api/tools?limit=10&sortBy=newest')
-                const dataLatest = await resLatest.json()
+                const [dataLatest, dataSelection, dataPopular, dataChat] = await Promise.all([
+                    resLatest.json(),
+                    resSelection.json(),
+                    resPopular.json(),
+                    resChat.json()
+                ])
+
                 setLatest(dataLatest.tools || [])
-
-                // 2. Selection (The AI Select Picks)
-                // Use picks=true to get Priority + Sponsors/High Rated
-                const resSelection = await fetch('/api/tools?limit=10&picks=true')
-                const dataSelection = await resSelection.json()
                 setSelection(dataSelection.tools || [])
-
-                // 3. SuperTools (Popular)
-                const resPopular = await fetch('/api/tools?limit=10&sortBy=popular')
-                const dataPopular = await resPopular.json()
                 setPopular(dataPopular.tools || [])
-
-                // 4. Chat
-                const resChat = await fetch('/api/tools?limit=10&category=Chat')
-                const dataChat = await resChat.json()
                 setChat(dataChat.tools || [])
 
                 setCounts({

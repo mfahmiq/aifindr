@@ -26,18 +26,28 @@ export const toolsService = {
         let query = supabase
             .from('tools')
             .select(`
-        *,
-        categories (name, slug, icon),
-        tool_tags (
-          tags (name, slug)
-        ),
-        reviews (
-            rating,
-            comment,
-            guest_name,
-            created_at
-        )
-      `, { count: 'exact' })
+                id, 
+                name, 
+                slug, 
+                logo_url, 
+                short_description, 
+                pricing_type, 
+                view_count, 
+                favorite_count, 
+                rating, 
+                review_count, 
+                plan, 
+                is_featured, 
+                is_verified, 
+                is_priority,
+                dominant_color,
+                categories (name, slug, icon),
+                tool_tags (
+                    tags (name, slug)
+                ),
+                reviews:reviews(rating, comment)
+            `, { count: 'exact' })
+            .limit(1, { foreignTable: 'reviews' })
 
         // Admin filtering logic
         if (filters?.status === 'all') {

@@ -8,6 +8,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ExternalLink, Star, Check, Zap, Eye, Sparkles } from "lucide-react"
 import { getGradientPair } from "@/lib/colorUtils"
+import Image from "next/image"
 
 interface FeaturedToolCardProps {
     tool: ToolWithRelations
@@ -73,11 +74,14 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
                         {/* Logo */}
                         <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-3xl overflow-hidden shadow-2xl z-10 group-hover:scale-105 transition-transform duration-500 ring-4 ring-white/20 dark:ring-black/20">
                             {tool.logo_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
+                                <Image
                                     src={tool.logo_url}
                                     alt={tool.name}
+                                    width={160}
+                                    height={160}
                                     className="w-full h-full object-cover"
+                                    priority
+                                    unoptimized={true}
                                 />
                             ) : (
                                 <div className="w-full h-full bg-white dark:bg-gray-700 flex items-center justify-center">

@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation"
 import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 
 import { HeroSection } from "@/components/hero-section"
-import { ToolCard } from "@/components/tool-card"
+import { ToolCard, ToolCardSkeleton } from "@/components/tool-card"
 import { FilterSidebar, defaultFilters } from "@/components/filter-sidebar"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { TopBannerAd, SidebarAd, InlineToolAd, FooterCtaAd, SponsorToolBanner } from "@/components/ad-sections"
@@ -204,8 +204,10 @@ function HomeContent() {
 
             {/* Tools Grid */}
             {loading ? (
-              <div className="flex justify-center py-20">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <ToolCardSkeleton key={i} />
+                ))}
               </div>
             ) : tools.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

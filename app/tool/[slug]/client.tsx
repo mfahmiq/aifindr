@@ -326,6 +326,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                     className="w-full h-full object-contain p-2"
                                     onError={() => setImageError(true)}
                                     unoptimized={true}
+                                    priority
                                 />
                             ) : (
                                 <IconComponent className="w-12 h-12 md:w-16 md:h-16 text-white" />

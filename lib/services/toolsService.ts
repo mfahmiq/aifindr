@@ -17,6 +17,7 @@ export const toolsService = {
         status?: string // Allow filtering by status (approved, pending, etc)
         plan?: string // Filter by subscription plan (Free, Pro, Featured, Sponsor)
         highlight?: boolean // for "IndoAI Selection" (Featured + Sponsor)
+        picks?: boolean // for "The AI Select Picks" (Priority + High Rating)
         sortBy?: 'rating' | 'newest' | 'trending' | 'popular'
         limit?: number
         page?: number
@@ -63,6 +64,17 @@ export const toolsService = {
         if (filters?.highlight) {
             // Check for both Title Case (as in constants.ts) and lowercase (as in types.ts) to be safe
             query = query.or('plan.eq.Featured,plan.eq.Sponsor,plan.eq.featured,plan.eq.sponsor,is_featured.eq.true')
+        }
+
+        if (filters?.picks) {
+            // Picks logic:
+            // 1. Manually priority (is_priority = true)
+            // 2. OR Sponsor Plan
+            // 3. OR High Rating (> 4.8)
+            query = query.or('is_priority.eq.true,plan.eq.Sponsor,plan.eq.sponsor,rating.gte.4.8')
+
+            // Ensure they are approved
+            query = query.eq('status', 'approved')
         }
 
         if (filters?.search) {

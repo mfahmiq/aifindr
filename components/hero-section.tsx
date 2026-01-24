@@ -98,6 +98,10 @@ export function HeroSection() {
                             <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
                                 Best AI Tools Directory
                             </span>
+                            <div className="absolute -top-12 sm:-top-16 left-1/2 -translate-x-1/2 w-16 h-16 sm:w-20 sm:h-20 animate-bounce-slow">
+                                {/* @ts-ignore */}
+                                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+                            </div>
                             {/* Underline decoration */}
                             <motion.svg
                                 initial={{ pathLength: 0, opacity: 0 }}

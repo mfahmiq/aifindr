@@ -24,7 +24,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Menu, TrendingUp, Gift, BarChart3, BookOpen, Sparkles, ExternalLink, Zap, User, Settings, LogOut } from "lucide-react"
+import { Menu, TrendingUp, Gift, BarChart3, BookOpen, Sparkles, ExternalLink, Zap, User, Settings, LogOut, Search } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { adsService, Ad } from "@/lib/services/adsService"
 import { createBrowserClient } from "@supabase/ssr"
@@ -200,6 +201,21 @@ export default function Navbar() {
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+                        {pathname !== '/' ? (
+                            <div className="relative w-64 mr-4 hidden lg:block">
+                                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search tools..."
+                                    className="pl-9 h-9 rounded-full bg-muted/50 border-transparent focus:bg-background focus:border-input transition-all"
+                                    onKeyDown={(e: any) => {
+                                        if (e.key === 'Enter') {
+                                            window.location.href = `/?search=${encodeURIComponent(e.target.value)}`
+                                        }
+                                    }}
+                                />
+                            </div>
+                        ) : null}
+
                         <Link href="/" className="transition-colors hover:text-foreground/80 text-foreground/60">
                             Tools
                         </Link>

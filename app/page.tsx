@@ -17,6 +17,7 @@ import { Footer } from "@/components/footer"
 const ITEMS_PER_PAGE = 12
 
 import { FeaturedToolCard } from "@/components/featured-tool-card"
+import { AISelectPicks } from "@/components/ai-select-picks"
 
 // ... imports
 
@@ -143,6 +144,8 @@ function HomeContent() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+
+      <AISelectPicks />
 
       {/* Top Banner Ad */}
       <TopBannerAd />

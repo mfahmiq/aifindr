@@ -46,6 +46,7 @@ import Link from "next/link"
 import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, use } from "react"
+import { useToast } from "@/hooks/use-toast"
 import { appendUTMParams, getUTMConfig, UTMConfig } from "@/lib/utm"
 import { getGradientPair, hexToRgb, extractDominantColor, isLightColor } from "@/lib/colorUtils"
 
@@ -67,6 +68,7 @@ const categoryConfig: Record<string, { icon: React.ElementType; color: string; b
 }
 
 export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
+    const { toast } = useToast()
     const slug = tool.slug
     // const [tool, setTool] = useState<ToolWithRelations | null>(null) // REMOVED
 
@@ -156,7 +158,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
             }
         }
         fetchData()
-    }, [slug, tool])
+    }, [slug, tool.id])
 
     // Loading state removed to show content immediately
     // Error state used for notifications instead of full page error
@@ -196,12 +198,19 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                 const data = await res.json()
 
                 if (res.ok) {
-                    alert(`Review submitted! It will appear after moderation.`)
+                    toast({
+                        title: "Review submitted!",
+                        description: "It will appear after moderation.",
+                    })
                     setReviewText("")
                     setUserRating(0)
                 } else {
                     console.error('Review submission failed:', data)
-                    alert(`Failed to submit review: ${data.details || data.error || 'Unknown error'}`)
+                    toast({
+                        title: "Submission failed",
+                        description: data.details || data.error || 'Unknown error',
+                        variant: "destructive"
+                    })
                 }
             } catch (e) {
                 console.error('Review submission error:', e)
@@ -221,7 +230,7 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
     const handleVisitWebsite = async (e: React.MouseEvent) => {
         // Track click
         try {
-            fetch(`/api/tools/${slug}/click`, { method: 'POST' }).catch(console.error)
+            fetch(`/api/tools/${slug}/click`, { method: 'POST', keepalive: true }).catch(console.error)
         } catch (err) {
             // Ignore errors
         }

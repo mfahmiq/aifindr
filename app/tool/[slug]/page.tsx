@@ -14,10 +14,12 @@ interface PageProps {
     params: Promise<{ slug: string }>
 }
 
-async function getTool(slug: string) {
+import { cache } from 'react'
+
+const getTool = cache(async (slug: string) => {
     const supabase = await createClient()
     return toolsService.getToolBySlug(slug, supabase)
-}
+})
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params

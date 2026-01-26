@@ -37,7 +37,7 @@ function HomeContent() {
   useEffect(() => {
     const search = searchParams.get('search') || ''
     const category = searchParams.get('category') || 'All'
-    const sortBy = searchParams.get('sortBy') || 'popular'
+    const sortBy = searchParams.get('sortBy') || 'newest'
     const highlight = searchParams.get('highlight') === 'true'
 
     setFilters(prev => {

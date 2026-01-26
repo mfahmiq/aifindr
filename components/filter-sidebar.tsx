@@ -91,7 +91,7 @@ export function FilterSidebar({ filters, onFilterChange }: FilterSidebarProps) {
             category: 'All',
             pricing: [],
             tags: [],
-            sortBy: 'popular',
+            sortBy: 'newest',
             features: {
                 hasFreeTrial: false,
                 hasAPI: false,
@@ -285,7 +285,7 @@ export const defaultFilters: FilterState = {
     category: 'All',
     pricing: [],
     tags: [],
-    sortBy: 'popular',
+    sortBy: 'newest',
     features: {
         hasFreeTrial: false,
         hasAPI: false,

@@ -74,9 +74,9 @@ export const toolsService = {
         // Highlight/Featured Filter (IndoAI Selection)
         // Includes tools that are 'featured' or 'sponsor' plan, or have is_featured=true
         if (filters?.highlight) {
-            // Simplified OR logic - check for is_featured flag OR premium plans
-            // Using in() operator for plans to be cleaner if supported, but OR string is standard
-            query = query.or('is_featured.eq.true,plan.in.(Featured,Sponsor,featured,sponsor)')
+            // Check for premium plans (Featured/Sponsor). 
+            // 'is_featured' column doesn't exist in DB, so we rely solely on plan.
+            query = query.or('plan.in.(Featured,Sponsor,featured,sponsor)')
         }
 
         if (filters?.picks) {

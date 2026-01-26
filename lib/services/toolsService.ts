@@ -26,7 +26,14 @@ export const toolsService = {
         const supabase = client || createClient()
         const includeDetails = filters?.includeDetails !== false
 
-        let selectQuery = `
+        let query;
+
+        if (!includeDetails) {
+            // Simplified query for Admin: Fetch ALL columns to avoid missing field errors
+            // We skip joins for now to ensure stability
+            query = supabase.from('tools').select('*', { count: 'exact' })
+        } else {
+            let selectQuery = `
             id, 
             name, 
             slug, 
@@ -42,23 +49,15 @@ export const toolsService = {
             is_verified, 
             is_priority,
             dominant_color,
-            subscription_ends_at
-        `
-
-        if (includeDetails) {
-            selectQuery += `,
-                is_active,
-                categories (name, slug, icon),
-                tool_tags (
-                    tags (name, slug)
-                ),
-                reviews:reviews(rating, comment)
+            subscription_ends_at,
+            categories (name, slug, icon),
+            tool_tags (
+                tags (name, slug)
+            ),
+            reviews:reviews(rating, comment)
             `
+            query = supabase.from('tools').select(selectQuery, { count: 'exact' })
         }
-
-        let query = supabase
-            .from('tools')
-            .select(selectQuery, { count: 'exact' })
         // Only apply limit to foreign table if we are actually fetching it
         // .limit(1, { foreignTable: 'reviews' }) // generic limit on 'tools' query doesn't accept foreignTable options like this in builder chain usually, it's specific to select?
         // Actually, the previous code had `.limit(1, { foreignTable: 'reviews' })` appended to `.select(...)`. 

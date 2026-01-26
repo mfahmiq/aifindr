@@ -67,7 +67,7 @@ function HomeContent() {
       try {
         const { adsService } = await import("@/lib/services/adsService")
         const [res, status] = await Promise.all([
-          fetch('/api/tools?highlight=true&limit=2'),
+          fetch('/api/tools?highlight=true&limit=4'),
           adsService.getFeaturedSlotsStatus()
         ])
 

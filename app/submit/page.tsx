@@ -80,6 +80,7 @@ const SubmitToolContent = () => {
         banner: 0,
         inline: 3
     })
+    const [featuredSlots, setFeaturedSlots] = useState({ total: 10, used: 0, remaining: 10 })
     const [adPrices, setAdPrices] = useState<Record<string, number>>({})
 
     // Initialize Supabase client
@@ -108,10 +109,12 @@ const SubmitToolContent = () => {
             // Fetch ad settings (mock/real combo)
             const { adsService } = await import("@/lib/services/adsService")
             try {
-                const [slots, settings] = await Promise.all([
+                const [slots, settings, featStatus] = await Promise.all([
                     adsService.getRemainingSlots(),
-                    adsService.getSettings()
+                    adsService.getSettings(),
+                    adsService.getFeaturedSlotsStatus()
                 ])
+                setFeaturedSlots(featStatus)
 
                 setRemainingSlots(prev => ({ ...prev, ...slots } as any))
                 const prices: Record<string, number> = {}
@@ -280,10 +283,11 @@ const SubmitToolContent = () => {
         {
             id: "featured",
             name: "Featured",
-            price: "Rp 450rb",
+            price: "Rp 150rb",
+            originalPrice: "Rp 750rb",
             period: "/month",
-            description: "Maximum visibility",
-            features: ["Everything in Pro", "Featured badge", "Top of category", "Newsletter mention"],
+            description: "Elite Quartet (Top 4)",
+            features: ["Everything in Pro", "Featured badge", "Top of category", "Limited availability (4/mo)"],
             color: "from-purple-500 to-pink-500"
         },
         {
@@ -292,7 +296,7 @@ const SubmitToolContent = () => {
             price: "Rp 750rb",
             period: "/month",
             description: "Exclusive promotion",
-            features: ["Everything in Featured", "Banner ads", "No competitor ads", "Premium support"],
+            features: ["Everything in Featured", "Banner ads", "No competitor ads", "Dedicated support"],
             color: "from-yellow-500 to-orange-500"
         }
     ]
@@ -407,46 +411,83 @@ const SubmitToolContent = () => {
                             Choose Your Plan
                         </h2>
                         <div className="space-y-4">
-                            {plans.map((plan) => (
-                                <Card
-                                    key={plan.id}
-                                    className={`cursor-pointer transition-all ${selectedPlan === plan.id
-                                        ? 'border-2 border-primary shadow-lg shadow-primary/10'
-                                        : 'border-2 border-muted hover:border-primary/30'
-                                        }`}
-                                    onClick={() => setSelectedPlan(plan.id)}
-                                >
-                                    <CardContent className="p-4">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center text-white shadow-lg`}>
-                                                    {plan.id === "free" ? <CheckCircle2 className="w-5 h-5" /> :
-                                                        plan.id === "pro" ? <Award className="w-5 h-5" /> :
-                                                            plan.id === "featured" ? <Star className="w-5 h-5" /> :
-                                                                <Megaphone className="w-5 h-5" />}
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold flex items-center gap-2">
-                                                        {plan.name}
-                                                        {plan.popular && (
-                                                            <Badge variant="secondary" className="text-xs">Popular</Badge>
-                                                        )}
+                            {plans.map((plan) => {
+                                // Sold out logic
+                                let isSoldOut = false
+                                if (plan.id === 'featured' && featuredSlots.remaining <= 0) isSoldOut = true
+                                // For sponsor, check if ALL main slots are out? Or just one? 
+                                // Let's simplify: if Banner AND Sidebar are out, it's effectively limited.
+                                // But Sponsor grants choice. So if ANY is available, it's open.
+                                // Logic: If ALL are 0, then sold out.
+                                if (plan.id === 'sponsor') {
+                                    // Check if sidebar, navbar, banner, inline are all 0
+                                    if (remainingSlots.sidebar <= 0 && remainingSlots.navbar <= 0 && remainingSlots.banner <= 0 && remainingSlots.inline <= 0) {
+                                        isSoldOut = true
+                                    }
+                                }
+
+                                return (
+                                    <Card
+                                        key={plan.id}
+                                        className={`relative transition-all ${isSoldOut ? 'opacity-60 grayscale cursor-not-allowed border-muted' :
+                                            selectedPlan === plan.id
+                                                ? 'border-2 border-primary shadow-lg shadow-primary/10 cursor-pointer'
+                                                : 'border-2 border-muted hover:border-primary/30 cursor-pointer'
+                                            }`}
+                                        onClick={() => !isSoldOut && setSelectedPlan(plan.id)}
+                                    >
+                                        {isSoldOut && (
+                                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50 backdrop-blur-[1px] rounded-xl">
+                                                <Badge variant="destructive" className="text-lg px-4 py-1 rotate-[-12deg] shadow-lg border-2 border-white">
+                                                    SOLD OUT
+                                                </Badge>
+                                            </div>
+                                        )}
+                                        <CardContent className="p-4">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center text-white shadow-lg`}>
+                                                        {plan.id === "free" ? <CheckCircle2 className="w-5 h-5" /> :
+                                                            plan.id === "pro" ? <Award className="w-5 h-5" /> :
+                                                                plan.id === "featured" ? <Star className="w-5 h-5" /> :
+                                                                    <Megaphone className="w-5 h-5" />}
                                                     </div>
-                                                    <div className="text-sm text-muted-foreground">{plan.description}</div>
+                                                    <div>
+                                                        <div className="font-semibold flex items-center gap-2">
+                                                            {plan.name}
+                                                            {plan.popular && (
+                                                                <Badge variant="secondary" className="text-xs">Popular</Badge>
+                                                            )}
+                                                            {plan.id === 'featured' && !isSoldOut && featuredSlots.remaining < 3 && (
+                                                                <Badge variant="destructive" className="text-[10px] h-5 px-1.5 animate-pulse">
+                                                                    Only {featuredSlots.remaining} left
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-sm text-muted-foreground">{plan.description}</div>
+                                                    </div>
+                                                </div>
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPlan === plan.id ? 'bg-primary border-primary' : 'border-muted-foreground/30'
+                                                    }`}>
+                                                    {selectedPlan === plan.id && <Check className="w-3 h-3 text-white" />}
                                                 </div>
                                             </div>
-                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPlan === plan.id ? 'bg-primary border-primary' : 'border-muted-foreground/30'
-                                                }`}>
-                                                {selectedPlan === plan.id && <Check className="w-3 h-3 text-white" />}
+                                            <div className="flex flex-col mb-3">
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className="text-xl font-bold">{plan.price}</span>
+                                                    <span className="text-sm text-muted-foreground">{plan.period}</span>
+                                                </div>
+                                                {/* @ts-ignore */}
+                                                {plan.originalPrice && (
+                                                    <span className="text-xs text-muted-foreground line-through decoration-red-500">
+                                                        Normally {plan.originalPrice}
+                                                    </span>
+                                                )}
                                             </div>
-                                        </div>
-                                        <div className="flex items-baseline gap-1 mb-3">
-                                            <span className="text-xl font-bold">{plan.price}</span>
-                                            <span className="text-sm text-muted-foreground">{plan.period}</span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                        </CardContent>
+                                    </Card>
+                                )
+                            })}
                         </div>
                     </motion.div>
 
@@ -637,7 +678,10 @@ const SubmitToolContent = () => {
                                                             </div>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 100000).toLocaleString()}</p>
+                                                            <div className="flex flex-col items-end">
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 200,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 50000).toLocaleString()}</p>
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.sidebar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.sidebar} slots left
@@ -659,7 +703,10 @@ const SubmitToolContent = () => {
                                                             </div>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 200000).toLocaleString()}</p>
+                                                            <div className="flex flex-col items-end">
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 500,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 100000).toLocaleString()}</p>
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.navbar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.navbar > 0 ? `${remainingSlots.navbar} slots left` : 'Sold out'}
@@ -681,7 +728,10 @@ const SubmitToolContent = () => {
                                                             </div>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 500000).toLocaleString()}</p>
+                                                            <div className="flex flex-col items-end">
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 1,500,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 300000).toLocaleString()}</p>
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.banner > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.banner > 0 ? `${remainingSlots.banner} slots left` : 'Sold out'}
@@ -703,7 +753,10 @@ const SubmitToolContent = () => {
                                                             </div>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 75000).toLocaleString()}</p>
+                                                            <div className="flex flex-col items-end">
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 100,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 25000).toLocaleString()}</p>
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.inline > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.inline} slots left

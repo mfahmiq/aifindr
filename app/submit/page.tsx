@@ -120,7 +120,7 @@ const SubmitToolContent = () => {
                 const prices: Record<string, number> = {}
                 if (settings) {
                     settings.forEach((s: any) => {
-                        prices[s.placement] = s.price_per_period * 1000
+                        prices[s.placement] = s.price_per_period
                     })
                 }
                 setAdPrices(prices)

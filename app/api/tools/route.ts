@@ -20,9 +20,10 @@ export async function GET(request: Request) {
         plan: searchParams.get('plan') || undefined, // Filter by subscription plan
         highlight: searchParams.get('highlight') === 'true', // Filter for featured tools
         picks: searchParams.get('picks') === 'true', // Filter for "AI Select Picks"
-        sortBy: searchParams.get('sortBy') as any || 'popular',
+        sortBy: searchParams.get('sortBy') as any || 'newest', // Changed default to 'newest'
         limit: parseInt(searchParams.get('limit') || '12'),
-        page: parseInt(searchParams.get('page') || '1')
+        page: parseInt(searchParams.get('page') || '1'),
+        includeDetails: searchParams.get('includeDetails') !== 'false' // Default true
     }
 
     try {

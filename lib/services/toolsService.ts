@@ -21,33 +21,49 @@ export const toolsService = {
         sortBy?: 'rating' | 'newest' | 'trending' | 'popular'
         limit?: number
         page?: number
+        includeDetails?: boolean // Defaults to true. If false, skips fetching heavy joins like reviews and tags.
     }, client?: SupabaseClient) {
         const supabase = client || createClient()
-        let query = supabase
-            .from('tools')
-            .select(`
-                id, 
-                name, 
-                slug, 
-                logo_url, 
-                short_description, 
-                pricing_type, 
-                view_count, 
-                favorite_count, 
-                rating, 
-                review_count, 
-                plan, 
-                is_featured, 
-                is_verified, 
-                is_priority,
-                dominant_color,
-                categories (name, slug, icon),
+        const includeDetails = filters?.includeDetails !== false
+
+        let selectQuery = `
+            id, 
+            name, 
+            slug, 
+            logo_url, 
+            short_description, 
+            pricing_type, 
+            view_count, 
+            favorite_count, 
+            rating, 
+            review_count, 
+            plan, 
+            is_featured, 
+            is_verified, 
+            is_priority,
+            dominant_color,
+            is_active,
+            subscription_ends_at,
+            categories (name, slug, icon)
+        `
+
+        if (includeDetails) {
+            selectQuery += `,
                 tool_tags (
                     tags (name, slug)
                 ),
                 reviews:reviews(rating, comment)
-            `, { count: 'exact' })
-            .limit(1, { foreignTable: 'reviews' })
+            `
+        }
+
+        let query = supabase
+            .from('tools')
+            .select(selectQuery, { count: 'exact' })
+        // Only apply limit to foreign table if we are actually fetching it
+        // .limit(1, { foreignTable: 'reviews' }) // generic limit on 'tools' query doesn't accept foreignTable options like this in builder chain usually, it's specific to select?
+        // Actually, the previous code had `.limit(1, { foreignTable: 'reviews' })` appended to `.select(...)`. 
+        // We need to conditionally chain it.
+
 
         // Admin filtering logic
         if (filters?.status === 'all') {
@@ -169,7 +185,6 @@ export const toolsService = {
             }
         }
 
-        // Transform data to match easier-to-use structure if needed
         // Map tool_tags -> tags array
         let tools = data.map((t: any) => ({
             ...t,

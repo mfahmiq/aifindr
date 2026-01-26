@@ -191,6 +191,7 @@ export default function AdminToolsPage() {
             params.append('limit', pageSize.toString())
             params.append('page', currentPage.toString())
             params.append('sortBy', 'newest')
+            params.append('includeDetails', 'false') // Optimize for admin list (no heavy joins)
 
             // Add server-side filters
             if (filterName) params.append('search', filterName)

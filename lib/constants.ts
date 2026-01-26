@@ -28,9 +28,9 @@ export type PlanName = typeof PLAN_NAMES[keyof typeof PLAN_NAMES]
 // Plan pricing in IDR
 export const PLAN_PRICING = {
     [PLAN_NAMES.FREE]: 0,
-    [PLAN_NAMES.PRO]: 150000,      // ~$9/month
-    [PLAN_NAMES.FEATURED]: 450000, // ~$29/month
-    [PLAN_NAMES.SPONSOR]: 750000,  // ~$49/month
+    [PLAN_NAMES.PRO]: 49000,       // ~$3/month
+    [PLAN_NAMES.FEATURED]: 149000, // ~$10/month
+    [PLAN_NAMES.SPONSOR]: 299000,  // ~$20/week
 } as const
 
 // Plan features - single source of truth

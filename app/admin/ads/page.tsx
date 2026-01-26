@@ -80,9 +80,10 @@ export default function AdminAdsPage() {
             setAds(adsData)
             setStats(statsData)
             setSettings(settingsData.length > 0 ? settingsData : [
-                { placement: 'sidebar', max_slots: 5, price_per_period: 150000 },
-                { placement: 'navbar', max_slots: 2, price_per_period: 250000 },
-                { placement: 'banner', max_slots: 1, price_per_period: 500000 },
+                { placement: 'sidebar', max_slots: 5, price_per_period: 49000 },
+                { placement: 'navbar', max_slots: 2, price_per_period: 99000 },
+                { placement: 'banner', max_slots: 1, price_per_period: 299000 },
+                { placement: 'inline', max_slots: 3, price_per_period: 29000 },
             ])
         } catch (error) {
             console.error('Error fetching data:', error)

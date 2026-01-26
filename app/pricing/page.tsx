@@ -86,9 +86,10 @@ export default function PricingPage() {
             name: "Pro Plan",
             icon: <Award className="w-6 h-6" />,
             iconColor: "from-blue-500 to-cyan-500",
-            price: "Rp 150rb",
+            price: "Rp 49rb",
+            originalPrice: "Rp 150rb",
             period: "/bulan",
-            description: "Stand out with a verified badge and priority ranking.",
+            description: "Entry Level (Best Value)",
             features: [
                 "Everything in Free",
                 "View Analytics (Stats)",
@@ -107,15 +108,16 @@ export default function PricingPage() {
             name: "Featured Plan",
             icon: <Star className="w-6 h-6" />,
             iconColor: "from-purple-500 to-pink-500",
-            price: "Rp 450rb",
+            price: "Rp 149rb",
+            originalPrice: "Rp 750rb",
             period: "/bulan",
-            description: "Higher visibility in category results and verified status.",
+            description: "Elite Quartet (Top 4) - Maximum visibility.",
             features: [
                 "Everything in Pro",
                 "Featured Badge",
                 "Top position in Categories",
                 "Homepage Placement",
-                "~5k monthly impressions"
+                "Limited availability (4/mo)"
             ],
             cta: "Get Featured",
             href: "/submit?plan=featured",
@@ -128,9 +130,10 @@ export default function PricingPage() {
             name: "Sponsor Plan",
             icon: <Megaphone className="w-6 h-6" />,
             iconColor: "from-yellow-500 to-orange-500",
-            price: "Rp 750rb",
-            period: "/bulan",
-            description: "Maximum visibility with exclusive ad-free profile.",
+            price: "Rp 299rb",
+            originalPrice: "Rp 1.5jt",
+            period: "/minggu",
+            description: "Exclusive visibility with ad-free profile options.",
             features: [
                 "Everything in Featured",
                 "Exclusive Banner Ads",
@@ -253,9 +256,17 @@ export default function PricingPage() {
                                     <CardDescription className="min-h-[40px]">{plan.description}</CardDescription>
                                 </CardHeader>
                                 <CardContent className="flex-1">
-                                    <div className="flex items-baseline mb-6">
-                                        <span className="text-4xl font-bold">{plan.price}</span>
-                                        <span className="text-muted-foreground text-sm ml-1">{plan.period}</span>
+                                    <div className="flex flex-col mb-6">
+                                        <div className="flex items-baseline">
+                                            <span className="text-4xl font-bold">{plan.price}</span>
+                                            <span className="text-muted-foreground text-sm ml-1">{plan.period}</span>
+                                        </div>
+                                        {/* @ts-ignore */}
+                                        {plan.originalPrice && (
+                                            <span className="text-sm text-muted-foreground line-through decoration-red-500 mt-1">
+                                                Normally {plan.originalPrice}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="space-y-3">
                                         {plan.name.includes("Sponsor") && (

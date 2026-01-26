@@ -277,7 +277,7 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                 {/* Footer: Visit Button + Save */}
                 <div className="w-full z-10 mt-auto pt-4 flex gap-2">
                     <Link href={`/tool/${tool.slug}`} className="flex-1">
-                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
+                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
                             <ExternalLink className="w-3.5 h-3.5 mr-2" />
                             Visit
                         </Button>

@@ -27,6 +27,7 @@ function HomeContent() {
   const [featuredTools, setFeaturedTools] = useState<ToolWithRelations[]>([])
   const [loading, setLoading] = useState(true)
   const [featuredLoading, setFeaturedLoading] = useState(true)
+  const [slotsStatus, setSlotsStatus] = useState({ total: 10, used: 0, remaining: 2 })
   const [inlineAds, setInlineAds] = useState<any[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
@@ -60,14 +61,21 @@ function HomeContent() {
   }, [searchParams])
 
   // Fetch featured tools (Spotlight)
+  // Fetch featured tools (Spotlight) + Slots Status
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await fetch('/api/tools?highlight=true&limit=2')
+        const { adsService } = await import("@/lib/services/adsService")
+        const [res, status] = await Promise.all([
+          fetch('/api/tools?highlight=true&limit=2'),
+          adsService.getFeaturedSlotsStatus()
+        ])
+
         if (res.ok) {
           const data = await res.json()
           setFeaturedTools(data.tools || [])
         }
+        setSlotsStatus(status)
       } catch (e) {
         console.error(e)
       } finally {
@@ -163,7 +171,12 @@ function HomeContent() {
               {featuredTools.map((tool, index) => (
                 <div key={tool.id} className="h-[320px]">
                   {/* @ts-ignore */}
-                  <FeaturedToolCard tool={tool} index={index} />
+                  <FeaturedToolCard
+                    tool={tool}
+                    index={index}
+                    totalSlots={slotsStatus.total}
+                    remainingSlots={slotsStatus.remaining}
+                  />
                 </div>
               ))}
             </div>

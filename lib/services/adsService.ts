@@ -318,5 +318,43 @@ export const adsService = {
 
         const ads = await this.getActiveAds(placement)
         return ads.slice(0, maxSlots)
+    },
+
+    /**
+     * Get Featured/Sponsor Slots Status (Real-time)
+     */
+    async getFeaturedSlotsStatus() {
+        const supabase = createClient()
+
+        // 1. Get Settings for 'featured_tool'
+        const { data: setting } = await supabase
+            .from('ad_settings')
+            .select('*')
+            .eq('placement', 'featured_tool')
+            .single()
+
+        const maxSlots = setting?.max_slots || 10 // Default to 10 if not configured
+
+        // 2. Count Active Tools with Premium Status
+        const { count, error } = await supabase
+            .from('tools')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'approved')
+            .or('plan.eq.Featured,plan.eq.Sponsor,plan.eq.featured,plan.eq.sponsor')
+        // Note: We don't check is_featured column as it doesn't exist
+
+        if (error) {
+            console.error('Error counting featured tools:', error)
+            return { total: maxSlots, used: 0, remaining: maxSlots }
+        }
+
+        const used = count || 0
+        const remaining = Math.max(0, maxSlots - used)
+
+        return {
+            total: maxSlots,
+            used,
+            remaining
+        }
     }
 }

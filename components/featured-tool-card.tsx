@@ -13,9 +13,11 @@ import Image from "next/image"
 interface FeaturedToolCardProps {
     tool: ToolWithRelations
     index?: number
+    remainingSlots?: number
+    totalSlots?: number
 }
 
-export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
+export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlots = 10 }: FeaturedToolCardProps) {
     // Shared Badge Logic
     const isVerified = tool.is_verified;
     // Featured cards are by definition at least "Featured" or "Sponsor" usually,
@@ -190,10 +192,15 @@ export function FeaturedToolCard({ tool, index = 0 }: FeaturedToolCardProps) {
                         <div className="mt-auto flex flex-col gap-3">
                             <div className="flex items-center justify-between text-xs font-medium text-gray-500 dark:text-gray-400 px-1">
                                 <span>Monthly Slots</span>
-                                <span className="text-orange-500 font-bold">Only 2 spots left</span>
+                                <span className={`${remainingSlots < 3 ? 'text-orange-500 font-bold' : 'text-green-500'}`}>
+                                    {remainingSlots === 0 ? 'Fully Booked' : `Only ${remainingSlots} spots left`}
+                                </span>
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-2 overflow-hidden">
-                                <div className="bg-gradient-to-r from-orange-500 to-red-500 h-1.5 rounded-full w-[85%] animate-pulse" />
+                                <div
+                                    className={`bg-gradient-to-r ${remainingSlots < 3 ? 'from-orange-500 to-red-500' : 'from-green-400 to-green-600'} h-1.5 rounded-full`}
+                                    style={{ width: `${Math.min(100, Math.max(5, ((totalSlots - remainingSlots) / totalSlots) * 100))}%` }}
+                                />
                             </div>
 
                             <div className="flex items-center gap-4">

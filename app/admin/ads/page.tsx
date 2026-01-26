@@ -31,7 +31,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { adsService, Ad } from "@/lib/services/adsService"
-import { PlusCircle, Edit, Trash2, Megaphone, Eye, MousePointer, Loader2, Settings } from "lucide-react"
+import { PlusCircle, Edit, Trash2, Megaphone, Eye, MousePointer, Loader2, Settings, Check, X } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const PLACEMENTS = [
@@ -442,27 +442,98 @@ export default function AdminAdsPage() {
                         <DialogDescription>Configure ad placement limits and pricing</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        {settings.map((setting, index) => (
-                            <div key={setting.placement} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                                <div>
-                                    <span className="font-medium capitalize">{setting.placement}</span>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <div className="text-sm">
-                                        <span className="text-muted-foreground">Max slots:</span> {setting.max_slots}
-                                    </div>
-                                    <div className="text-sm">
-                                        <span className="text-muted-foreground">Price:</span> Rp {(setting.price_per_period || 0).toLocaleString()}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        <div className="space-y-4 py-4">
+                            {settings.map((setting) => (
+                                <SettingsItem key={setting.placement} setting={setting} onUpdate={fetchData} />
+                            ))}
+                        </div>
                     </div>
                     <DialogFooter>
-                        <Button onClick={() => setIsSettingsOpen(false)}>Close</Button>
+                        <Button onClick={() => setIsSettingsOpen(false)}>Done</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+        </div>
+    )
+}
+
+function SettingsItem({ setting, onUpdate }: { setting: any, onUpdate: () => void }) {
+    const [isEditing, setIsEditing] = useState(false)
+    const [maxSlots, setMaxSlots] = useState(setting.max_slots)
+    const [price, setPrice] = useState(setting.price_per_period)
+    const [saving, setSaving] = useState(false)
+
+    const handleSave = async () => {
+        try {
+            setSaving(true)
+            await adsService.updateSettings(setting.placement, {
+                max_slots: parseInt(maxSlots),
+                price_per_period: parseInt(price)
+            })
+            setIsEditing(false)
+            onUpdate()
+        } catch (error) {
+            console.error(error)
+            alert('Failed to update setting')
+        } finally {
+            setSaving(false)
+        }
+    }
+
+    if (isEditing) {
+        return (
+            <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/50">
+                <div className="capitalize font-medium w-24 shrink-0">{setting.placement.replace('_', ' ')}</div>
+                <div className="grid grid-cols-2 gap-2 flex-1">
+                    <div>
+                        <Label className="text-xs">Max Slots</Label>
+                        <Input
+                            type="number"
+                            value={maxSlots}
+                            onChange={(e) => setMaxSlots(e.target.value)}
+                            className="h-8"
+                        />
+                    </div>
+                    <div>
+                        <Label className="text-xs">Price</Label>
+                        <Input
+                            type="number"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className="h-8"
+                        />
+                    </div>
+                </div>
+                <div className="flex gap-1">
+                    <Button size="sm" onClick={handleSave} disabled={saving}>
+                        {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>
+                        <X className="w-3 h-3" />
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 group">
+            <div>
+                <span className="font-medium capitalize">{setting.placement.replace('_', ' ')}</span>
+            </div>
+            <div className="flex items-center gap-4">
+                <div className="text-sm">
+                    <span className="text-muted-foreground mr-1">Slots:</span>
+                    {setting.max_slots}
+                </div>
+                <div className="text-sm">
+                    <span className="text-muted-foreground mr-1">Price:</span>
+                    Rp {(setting.price_per_period || 0).toLocaleString()}
+                </div>
+                <Button size="sm" variant="ghost" className="opacity-0 group-hover:opacity-100 h-8 w-8 p-0" onClick={() => setIsEditing(true)}>
+                    <Edit className="w-3 h-3" />
+                </Button>
+            </div>
         </div>
     )
 }

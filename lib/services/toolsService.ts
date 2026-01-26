@@ -58,10 +58,10 @@ export const toolsService = {
         } else if (filters?.status === 'rejected') {
             query = query.eq('status', 'rejected')
         } else if (filters?.status === 'approved') {
-            query = query.eq('status', 'approved').eq('is_verified', true)
+            query = query.eq('status', 'approved')
         } else {
             // Default public listing
-            query = query.eq('status', 'approved').eq('is_verified', true)
+            query = query.eq('status', 'approved')
         }
 
         // Filter by subscription plan

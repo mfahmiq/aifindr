@@ -42,13 +42,13 @@ export const toolsService = {
             is_verified, 
             is_priority,
             dominant_color,
-            is_active,
-            subscription_ends_at,
-            categories (name, slug, icon)
+            subscription_ends_at
         `
 
         if (includeDetails) {
             selectQuery += `,
+                is_active,
+                categories (name, slug, icon),
                 tool_tags (
                     tags (name, slug)
                 ),

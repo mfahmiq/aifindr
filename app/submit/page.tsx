@@ -273,9 +273,10 @@ const SubmitToolContent = () => {
         {
             id: "pro",
             name: "Pro",
-            price: "Rp 150rb",
+            price: "Rp 49rb",
+            originalPrice: "Rp 150rb",
             period: "/month",
-            description: "Stand out",
+            description: "Entry Level (Best Value)",
             features: ["Everything in Free", "Video upload", "Verified badge", "Priority ranking"],
             color: "from-blue-500 to-cyan-500",
             popular: true
@@ -283,7 +284,7 @@ const SubmitToolContent = () => {
         {
             id: "featured",
             name: "Featured",
-            price: "Rp 150rb",
+            price: "Rp 149rb",
             originalPrice: "Rp 750rb",
             period: "/month",
             description: "Elite Quartet (Top 4)",
@@ -293,8 +294,8 @@ const SubmitToolContent = () => {
         {
             id: "sponsor",
             name: "Sponsor",
-            price: "Rp 750rb",
-            period: "/month",
+            price: "Rp 299rb",
+            period: "/week",
             description: "Exclusive promotion",
             features: ["Everything in Featured", "Banner ads", "No competitor ads", "Dedicated support"],
             color: "from-yellow-500 to-orange-500"
@@ -312,12 +313,18 @@ const SubmitToolContent = () => {
             return 0
         }
 
-        let total = 750000
+
+
+        let total = 0
         if (date?.from && date?.to && adPlacement && adPrices[adPlacement]) {
             const days = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24))
             const extraDays = Math.max(0, days - 30)
             const extraWeeks = Math.ceil(extraDays / 7)
-            if (extraWeeks > 0) total += extraWeeks * adPrices[adPlacement]
+            // Base price for 30 days is roughly 4 weeks
+            const weeklyPrice = adPrices[adPlacement]
+            total = weeklyPrice * 4
+
+            if (extraWeeks > 0) total += extraWeeks * weeklyPrice
         }
         return total
     }
@@ -679,8 +686,8 @@ const SubmitToolContent = () => {
                                                         </div>
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
-                                                                <span className="text-xs text-muted-foreground line-through">Rp 200,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 50000).toLocaleString()}</p>
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 150,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 49000).toLocaleString()}</p>
                                                             </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.sidebar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
@@ -704,8 +711,8 @@ const SubmitToolContent = () => {
                                                         </div>
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
-                                                                <span className="text-xs text-muted-foreground line-through">Rp 500,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 100000).toLocaleString()}</p>
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 250,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 99000).toLocaleString()}</p>
                                                             </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.navbar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
@@ -729,8 +736,8 @@ const SubmitToolContent = () => {
                                                         </div>
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
-                                                                <span className="text-xs text-muted-foreground line-through">Rp 1,500,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 300000).toLocaleString()}</p>
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 1,000,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 299000).toLocaleString()}</p>
                                                             </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.banner > 0 ? "outline" : "destructive"} className="text-xs mt-1">
@@ -754,8 +761,8 @@ const SubmitToolContent = () => {
                                                         </div>
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
-                                                                <span className="text-xs text-muted-foreground line-through">Rp 100,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 25000).toLocaleString()}</p>
+                                                                <span className="text-xs text-muted-foreground line-through">Rp 75,000</span>
+                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 29000).toLocaleString()}</p>
                                                             </div>
                                                             <p className="text-xs text-muted-foreground">/week</p>
                                                             <Badge variant={remainingSlots.inline > 0 ? "outline" : "destructive"} className="text-xs mt-1">
@@ -847,12 +854,12 @@ const SubmitToolContent = () => {
                                             {/* Price Breakdown */}
                                             <div className="bg-background/80 rounded-xl p-4 space-y-2">
                                                 <div className="flex justify-between text-sm">
-                                                    <span className="text-muted-foreground">Sponsor Plan Base</span>
-                                                    <span>Rp 750,000</span>
-                                                </div>
-                                                <div className="flex justify-between text-sm">
                                                     <span className="text-muted-foreground">Ad Placement ({adPlacement})</span>
-                                                    <span className="text-green-500">Included (30 days)</span>
+                                                    <span>Rp {(adPrices[adPlacement] || 0).toLocaleString()} x 4 weeks</span>
+                                                </div>
+                                                <div className="flex justify-between font-bold pt-2 border-t">
+                                                    <span>Total (30 Days)</span>
+                                                    <span>Rp {calculateTotal().toLocaleString()}</span>
                                                 </div>
                                                 {date?.from && date?.to && (() => {
                                                     const days = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24))

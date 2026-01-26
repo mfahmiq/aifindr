@@ -169,7 +169,7 @@ function HomeContent() {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {featuredTools.map((tool, index) => (
-                <div key={tool.id} className="h-[320px]">
+                <div key={tool.id} className="h-full">
                   {/* @ts-ignore */}
                   <FeaturedToolCard
                     tool={tool}

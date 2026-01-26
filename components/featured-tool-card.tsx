@@ -189,38 +189,36 @@ export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlo
                             </div>
                         )}
 
-                        <div className="mt-auto flex flex-col gap-3">
-                            <div className="flex items-center justify-between text-xs font-medium text-gray-500 dark:text-gray-400 px-1">
-                                <span>Monthly Slots</span>
-                                <span className={`${remainingSlots < 3 ? 'text-orange-500 font-bold' : 'text-green-500'}`}>
-                                    {remainingSlots === 0 ? 'Fully Booked' : `Only ${remainingSlots} spots left`}
-                                </span>
+                        {/* Trending / Social Proof Area - Replaces Monthly Slots */}
+                        <div className="flex items-center gap-4 py-2 mt-auto">
+                            <div className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <Eye className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
+                                <span>{(tool.view_count || 0).toLocaleString()} views</span>
                             </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-2 overflow-hidden">
-                                <div
-                                    className={`bg-gradient-to-r ${remainingSlots < 3 ? 'from-orange-500 to-red-500' : 'from-green-400 to-green-600'} h-1.5 rounded-full`}
-                                    style={{ width: `${Math.min(100, Math.max(5, ((totalSlots - remainingSlots) / totalSlots) * 100))}%` }}
-                                />
+                            <div className="h-3 w-px bg-gray-200 dark:bg-gray-700" />
+                            <div className="flex items-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <Zap className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
+                                <span>Trending now</span>
                             </div>
+                        </div>
 
-                            <div className="flex items-center gap-4">
-                                <Link href={`/tool/${tool.slug}`} className="flex-1">
-                                    <Button className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 h-12 text-base font-bold shadow-xl shadow-gray-200 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]">
-                                        Get Started
-                                        <ExternalLink className="w-4 h-4 ml-2" />
-                                    </Button>
-                                </Link>
+                        <div className="flex items-center gap-4">
+                            <Link href={`/tool/${tool.slug}`} className="flex-1">
+                                <Button className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 h-12 text-base font-bold shadow-xl shadow-gray-200 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]">
+                                    Get Started
+                                    <ExternalLink className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Link>
 
-                                <Link href={`/tool/${tool.slug}`}>
-                                    <Button variant="outline" className="h-12 w-12 p-0 rounded-xl border-2 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <Eye className="w-5 h-5" />
-                                    </Button>
-                                </Link>
-                            </div>
+                            <Link href={`/tool/${tool.slug}`}>
+                                <Button variant="outline" className="h-12 w-12 p-0 rounded-xl border-2 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <Eye className="w-5 h-5" />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>
             </Card>
-        </motion.div>
+        </motion.div >
     )
 }

@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { adsService, ActiveAd } from "@/lib/services/adsService"
 import { ToolWithRelations } from "@/lib/types"
+import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { format, addDays } from "date-fns"
 
@@ -116,8 +117,24 @@ export function AdManagement({ tool }: AdManagementProps) {
     const fetchAds = async () => {
         try {
             setLoading(true)
-            // Fetch all ads for this tool (active, scheduled, inactive)
-            const myAds = await adsService.getAdsByTool(tool.slug)
+            // 1. Try fetching all ads for this tool by slug in link_url
+            let myAds = await adsService.getAdsByTool(tool.slug)
+
+            // 2. Fallback: If no ads found, try fetching by current user email
+            // (In case link_url format changed or has unexpected domain)
+            if (myAds.length === 0) {
+                const supabase = createClient()
+                const { data: { user } } = await supabase.auth.getUser()
+                if (user?.email) {
+                    const emailAds = await adsService.getAdsByEmail(user.email)
+                    // Filter ads that belong to THIS tool specifically
+                    myAds = emailAds.filter(ad =>
+                        ad.link_url.toLowerCase().includes(tool.slug.toLowerCase()) ||
+                        ad.name.toLowerCase().includes(tool.name.toLowerCase())
+                    )
+                }
+            }
+
             setAds(myAds)
 
             // Fetch slots stats

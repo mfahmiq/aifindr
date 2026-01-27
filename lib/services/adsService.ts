@@ -374,5 +374,23 @@ export const adsService = {
             return []
         }
         return data as Ad[]
+    },
+
+    /**
+     * Get ALL ads for a specific advertiser email
+     */
+    async getAdsByEmail(email: string) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('ads')
+            .select('*')
+            .eq('advertiser_email', email)
+            .order('created_at', { ascending: false })
+
+        if (error) {
+            console.error('Error fetching email ads:', error)
+            return []
+        }
+        return data as Ad[]
     }
 }

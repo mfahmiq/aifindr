@@ -260,61 +260,60 @@ export function SidebarAd() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.3 + (index * 0.1) }}
+                    className="h-full"
                 >
-                    <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background shadow-xl hover:shadow-2xl hover:border-primary/40 transition-all duration-300 group relative">
+                    <Card className={`
+                        relative h-full flex flex-col items-center p-5
+                        rounded-3xl
+                        transition-all duration-300 ease-out
+                        group overflow-hidden
+                        rgb-border bg-transparent border-0 shadow-lg
+                    `}>
                         {/* Static decorative glow */}
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/20 transition-colors" />
 
-                        <CardContent className="p-5 relative z-10">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center gap-2">
-                                    <div className="bg-primary/10 p-1 rounded-md">
-                                        <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-                                    </div>
-                                    <Badge variant="outline" className="text-[10px] text-primary border-primary/30 bg-primary/5 font-bold tracking-wider uppercase">
-                                        Featured Sponsor
-                                    </Badge>
-                                </div>
-                                <div className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
-                                    <ExternalLink className="w-2.5 h-2.5" />
-                                    Sponsor
-                                </div>
+                        <CardContent className="p-0 flex flex-col items-center text-center z-10 w-full relative">
+                            <div className="w-full flex justify-between mb-4">
+                                <Badge variant="outline" className="text-[10px] text-primary border-primary/30 bg-primary/5 font-black uppercase tracking-widest px-2 py-0.5">
+                                    SPONSORED
+                                </Badge>
+                                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                             </div>
 
                             <a
                                 href={ad.link_url || '#'}
                                 target="_blank"
                                 rel="noopener noreferrer sponsored"
-                                className="block"
+                                className="block w-full flex flex-col items-center"
                                 onClick={() => adsService.trackClick(ad.id)}
                             >
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className="w-16 h-16 rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-primary/20 p-2 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 overflow-hidden shrink-0 ring-4 ring-primary/5">
-                                        {ad.tool_logo_url || ad.image_url ? (
-                                            <img src={ad.tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-contain" />
-                                        ) : (
-                                            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
-                                                {ad.title?.substring(0, 2) || 'AD'}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="min-w-0 pt-0.5">
-                                        <h3 className="font-black text-xl leading-tight group-hover:text-primary transition-colors decoration-primary/30 group-hover:underline underline-offset-4 decoration-2">
-                                            {ad.title}
-                                        </h3>
-                                        <div className="text-xs text-primary/80 font-black mt-1 uppercase tracking-tighter flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                            EDITOR'S PICK
+                                <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-110 transition-transform duration-500">
+                                    {ad.tool_logo_url || ad.image_url ? (
+                                        <img src={ad.tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
+                                            {ad.title?.substring(0, 2) || 'AD'}
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-6 leading-relaxed line-clamp-3 font-medium opacity-90">
-                                    {ad.description}
+
+                                <h3 className="font-black text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors text-center line-clamp-2 mb-2">
+                                    {ad.title}
+                                </h3>
+
+                                <div className="text-xs text-primary/80 font-black mt-1 uppercase tracking-tighter flex items-center gap-1.5 mb-4">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                    EDITOR'S PICK
+                                </div>
+
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed line-clamp-3 font-medium px-2">
+                                    &laquo; {ad.description} &raquo;
                                 </p>
-                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black h-12 shadow-xl shadow-primary/30 group-hover:shadow-primary/50 group-hover:-translate-y-1 transition-all text-base border-b-4 border-primary-foreground/20 active:translate-y-0 active:border-b-0" size="lg">
-                                    <Zap className="w-4 h-4 mr-2 fill-current" />
+
+                                <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-black tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02] mt-auto">
+                                    <Zap className="w-3.5 h-3.5 mr-2" />
                                     {ad.cta_text || 'ACCESS NOW'}
-                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                    <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </a>
                         </CardContent>
@@ -356,30 +355,32 @@ export function CompactSidebarAd() {
                 className="block group"
                 onClick={() => adsService.trackClick(ad.id)}
             >
-                <Card className="border-2 border-dashed border-primary/20 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent transition-all duration-300">
+                <Card className="rounded-3xl border-2 border-dashed border-primary/20 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent transition-all duration-300">
                     <CardContent className="p-4">
                         <div className="flex items-center gap-2 mb-3">
                             <Sparkles className="w-3 h-3 text-primary" />
-                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Sponsored</span>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">SPONSORED</span>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform overflow-hidden">
+                            <div className="w-12 h-12 rounded-full bg-white shadow-md border border-primary/10 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform overflow-hidden relative">
                                 {ad.image_url ? (
                                     <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-cover" />
                                 ) : (
-                                    ad.title?.substring(0, 2) || 'AD'
+                                    <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                                        {ad.title?.substring(0, 2) || 'AD'}
+                                    </div>
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <div className="font-semibold group-hover:text-primary transition-colors">
+                                <div className="font-bold group-hover:text-primary transition-colors truncate">
                                     {ad.title}
                                 </div>
-                                <div className="text-xs text-muted-foreground truncate">
+                                <div className="text-xs text-muted-foreground truncate opacity-80">
                                     {ad.description?.substring(0, 30)}...
                                 </div>
                             </div>
                         </div>
-                        <Button variant="outline" size="sm" className="w-full mt-3 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                        <Button variant="outline" size="sm" className="w-full mt-3 rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 font-bold border-primary/20">
                             {ad.cta_text || 'Learn More'}
                             <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                         </Button>
@@ -426,46 +427,54 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
                 className="block h-full"
                 onClick={() => adsService.trackClick(ad.id)}
             >
-                <Card className="h-full border-2 border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all group overflow-hidden relative group">
-                    {/* Glowing background effect */}
-                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <Card className={`
+                    relative h-full flex flex-col items-center p-5
+                    rounded-3xl
+                    transition-all duration-300 ease-out
+                    group overflow-hidden
+                    rgb-border bg-transparent border-0 shadow-lg hover:shadow-2xl hover:-translate-y-1
+                `}>
+                    {/* Glow Effect Background - simulating tool.dominant_color */}
+                    <div
+                        className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                            backgroundImage: `linear-gradient(to top, #3b82f615, transparent)`
+                        }}
+                    />
 
-                    {/* Animated shine */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500" />
-
-                    <CardContent className="p-5 h-full flex flex-col relative z-20">
-                        <div className="flex items-center justify-between mb-4">
+                    <CardContent className="p-0 flex-1 flex flex-col items-center text-center z-10 w-full relative">
+                        <div className="w-full flex justify-between mb-4">
                             <Badge className="bg-primary text-primary-foreground font-black text-[10px] tracking-widest px-2.5 py-1 shadow-lg ring-1 ring-white/20">
                                 ⭐ PROMOTED
                             </Badge>
                             <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                         </div>
 
-                        <div className="flex items-center gap-4 mb-5">
-                            <div className="w-15 h-15 rounded-2xl bg-white shadow-xl border border-primary/10 p-2 flex items-center justify-center group-hover:scale-115 group-hover:-rotate-6 transition-transform duration-500 overflow-hidden ring-4 ring-primary/5 shrink-0">
-                                {(ad as AdWithLogo).tool_logo_url || ad.image_url ? (
-                                    <img src={(ad as AdWithLogo).tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-contain" />
-                                ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-lg">
-                                        {ad.title?.substring(0, 2) || 'AD'}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="min-w-0">
-                                <h3 className="font-black text-xl group-hover:text-primary transition-colors truncate tracking-tight">
-                                    {ad.title}
-                                </h3>
-                                <div className="text-[10px] text-primary/80 border border-primary/20 rounded-full px-2 py-0.5 w-fit mt-1 bg-primary/5 font-black uppercase tracking-widest shadow-sm">
-                                    Sponsor
+                        {/* Centered Logo like ToolCard */}
+                        <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-110 transition-transform duration-500">
+                            {(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url ? (
+                                <img src={(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url || ''} alt={(ad as Ad).title || ''} className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
+                                    {ad.title?.substring(0, 2) || 'AD'}
                                 </div>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col items-center gap-2 mb-3">
+                            <h3 className="font-black text-xl text-gray-900 dark:text-white group-hover:text-primary transition-colors text-center line-clamp-2">
+                                {ad.title}
+                            </h3>
+                            <div className="text-[10px] text-primary/80 border border-primary/20 rounded-full px-2 py-0.5 w-fit bg-primary/5 font-black uppercase tracking-widest shadow-sm">
+                                Sponsor
                             </div>
                         </div>
 
-                        <p className="text-sm text-muted-foreground flex-1 line-clamp-3 mb-6 leading-relaxed font-medium">
-                            {ad.description}
+                        <p className="text-sm text-gray-500 dark:text-gray-400 flex-1 line-clamp-3 mb-6 leading-relaxed font-medium px-2">
+                            &laquo; {ad.description} &raquo;
                         </p>
 
-                        <Button className="w-full bg-background border-2 border-primary/30 hover:bg-primary hover:text-primary-foreground text-primary font-black py-6 shadow-md group-hover:shadow-xl group-hover:shadow-primary/20 transition-all rounded-2xl text-base tracking-tight" variant="outline" size="sm">
+                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-black tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02] mt-auto">
                             <Zap className="w-4 h-4 mr-2" />
                             {ad.cta_text || 'GET ACCESS'}
                             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -509,13 +518,13 @@ export function FooterCtaAd() {
                 className="block group"
                 onClick={() => adsService.trackClick(ad.id)}
             >
-                <Card className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white border-0 overflow-hidden relative">
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
-                    <CardContent className="p-8 text-center relative">
-                        <Badge className="bg-white/20 text-white border-0 mb-4">Sponsored</Badge>
-                        <h3 className="text-2xl font-bold mb-2">{ad.title}</h3>
-                        <p className="text-white/90 mb-6 max-w-lg mx-auto">{ad.description}</p>
-                        <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-white/90 font-bold group-hover:scale-105 transition-transform">
+                <Card className="rounded-3xl bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white border-0 overflow-hidden relative shadow-2xl">
+                    <div className="absolute inset-x-0 bottom-0 h-full bg-black/10 group-hover:bg-black/0 transition-colors" />
+                    <CardContent className="p-10 text-center relative z-10">
+                        <Badge className="bg-white/20 text-white border-0 mb-6 font-bold tracking-widest px-3 py-1">SPONSORED</Badge>
+                        <h3 className="text-3xl font-black mb-3 tracking-tight">{ad.title}</h3>
+                        <p className="text-white/95 mb-8 max-w-lg mx-auto font-medium leading-relaxed italic">&laquo; {ad.description} &raquo;</p>
+                        <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-white/90 font-black px-10 h-14 rounded-2xl group-hover:scale-105 transition-transform shadow-xl">
                             {ad.cta_text || 'Get Started'}
                             <ExternalLink className="w-4 h-4 ml-2" />
                         </Button>

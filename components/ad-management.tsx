@@ -170,6 +170,10 @@ export function AdManagement({ tool }: AdManagementProps) {
             const startDate = new Date()
             const endDate = addDays(startDate, duration)
 
+            // Get current user for email
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+
             // Create Ad
             await adsService.createAd({
                 name: `${tool.name} - ${placementConfig.title}`,
@@ -179,6 +183,7 @@ export function AdManagement({ tool }: AdManagementProps) {
                 description: formData.description || tool.short_description,
                 image_url: tool.image_url || tool.logo_url || '', // Default to tool image if not uploaded (upload logic omitted for brevity, can add later)
                 advertiser_name: tool.name,
+                advertiser_email: user?.email || '',
                 starts_at: startDate.toISOString(),
                 ends_at: endDate.toISOString(),
                 is_active: true // Auto-approve for demo/MVP

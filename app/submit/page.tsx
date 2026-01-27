@@ -330,7 +330,9 @@ const SubmitToolContent = () => {
 
                 if (adError) {
                     console.error("Failed to create ad record:", adError)
-                    // We don't block submission but might want to alert/log
+                    alert("Note: Tool submitted, but failed to create accompanying ad campaign. You can create it later in the dashboard.")
+                } else {
+                    console.log("Ad record created successfully for Sponsor plan")
                 }
             }
 

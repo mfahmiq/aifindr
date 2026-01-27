@@ -35,6 +35,7 @@ export const adsService = {
         description?: string
         image_url?: string
         advertiser_name?: string
+        advertiser_email?: string
         starts_at?: string
         ends_at?: string
         is_active?: boolean
@@ -50,6 +51,7 @@ export const adsService = {
                 description: ad.description || null,
                 image_url: ad.image_url || null,
                 advertiser_name: ad.advertiser_name || null,
+                advertiser_email: ad.advertiser_email || null,
                 starts_at: ad.starts_at || new Date().toISOString(),
                 ends_at: ad.ends_at || null,
                 is_active: ad.is_active !== false,

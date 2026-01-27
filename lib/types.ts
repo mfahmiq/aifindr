@@ -334,6 +334,8 @@ export type Database = {
                     starts_at: string | null
                     tool_id: string
                     updated_at: string | null
+                    original_price: number | null
+                    sale_price: number | null
                 }
                 Insert: {
                     affiliate_url?: string | null
@@ -683,6 +685,10 @@ export type Database = {
                     view_count: number | null
                     website_url: string
                     ad_placement: string | null
+                    monthly_price: number | null
+                    yearly_price: number | null
+                    currency: string | null
+                    pricing_plans: Json | null
                 }
                 Insert: {
                     category_id?: string | null

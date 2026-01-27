@@ -169,5 +169,16 @@ export const dealsService = {
             expiringThisWeek: expiringThisWeek.length,
             totalClaims
         }
+    },
+
+    // Increment claim count
+    async incrementClaimCount(id: string) {
+        const supabase = createClient()
+        const { error } = await supabase.rpc('increment_deal_claim_count', { deal_id: id })
+        if (error) {
+            console.error('Error incrementing claim count:', error)
+            return false
+        }
+        return true
     }
 }

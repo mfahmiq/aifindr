@@ -159,6 +159,11 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                                 {tool.pricing_type}
                             </Badge>
                         )}
+                        {tool.monthly_price && (
+                            <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400">
+                                From ${tool.monthly_price}
+                            </span>
+                        )}
                     </div>
                 </div>
 

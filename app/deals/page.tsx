@@ -299,11 +299,28 @@ export default function DealsPage() {
                                                     </span>
                                                 </div>
                                             )}
+                                            {deal.original_price && (
+                                                <div className="w-full flex items-center justify-between px-1 mb-2">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Original</span>
+                                                        <span className="text-sm font-medium text-muted-foreground line-through">
+                                                            ${deal.original_price}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex flex-col items-end">
+                                                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Deal Price</span>
+                                                        <span className="text-xl font-black text-foreground">
+                                                            ${deal.sale_price || '0'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+
                                             <Button
                                                 className="w-full h-12 rounded-xl bg-gradient-to-r from-[#ff4d4d] to-[#f97316] hover:opacity-90 transition-all text-white font-bold group/btn shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] border-0"
                                                 asChild
                                             >
-                                                <Link href={deal.affiliate_url || (tool?.slug ? `/tool/${tool.slug}` : '#')} target="_blank">
+                                                <Link href={`/api/deals/claim?id=${deal.id}`} target="_blank">
                                                     <ExternalLink className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
                                                     Claim Deal
                                                     <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />

@@ -88,13 +88,14 @@ export default async function Page({ params }: PageProps) {
         operatingSystem: 'Any',
         offers: {
             '@type': 'Offer',
-            price: tool.pricing_type === 'Free' ? '0' : '0',
-            priceCurrency: 'IDR',
+            price: tool.monthly_price || tool.yearly_price || '0',
+            priceCurrency: tool.currency || 'USD',
+            availability: 'https://schema.org/InStock',
         },
         aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: '4.8',
-            ratingCount: '120',
+            ratingValue: tool.rating || '4.5',
+            ratingCount: tool.review_count || '1',
         },
     }
 

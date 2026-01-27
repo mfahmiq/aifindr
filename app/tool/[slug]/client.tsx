@@ -678,6 +678,22 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
                                         </Link>
                                     </Button>
 
+                                    {/* Pricing Info Card */}
+                                    {(tool.monthly_price || tool.yearly_price) && (
+                                        <div className="pt-4 border-t space-y-3">
+                                            <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Starting Price</h4>
+                                            <div className="flex items-baseline gap-2">
+                                                <span className="text-2xl font-black text-foreground">${tool.monthly_price || tool.yearly_price}</span>
+                                                <span className="text-xs text-muted-foreground">/ {tool.monthly_price ? 'month' : 'year'}</span>
+                                            </div>
+                                            {tool.yearly_price && tool.monthly_price && (
+                                                <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                                                    Save with ${tool.yearly_price * 12} billed yearly
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
                                     {/* Claim Tool Button */}
                                     {!tool.owner_id && !tool.is_verified && (
                                         <ClaimToolDialog toolId={tool.id} toolName={tool.name} />

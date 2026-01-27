@@ -492,9 +492,8 @@ const SubmitToolContent = () => {
         updated_at: new Date().toISOString(),
         starts_at: new Date().toISOString(),
         ends_at: new Date().toISOString(),
-        views: 0,
+        impressions: 0,
         clicks: 0,
-        user_id: 'preview-user',
         advertiser_name: 'Preview User',
         advertiser_email: 'preview@example.com'
     }

@@ -295,10 +295,44 @@ const SubmitToolContent = () => {
                     ad_placement: selectedPlan === 'sponsor' ? adPlacement : null,
                     created_at: new Date().toISOString()
                 })
-                .select('id')
+                .select('id, slug')
                 .single()
 
             if (error) throw error
+
+            // Create Ad if Sponsor Plan
+            if (selectedPlan === 'sponsor' && toolData) {
+                // Determine duration
+                let startsAt = new Date()
+                let endsAt = addDays(startsAt, 30) // Default
+                if (date?.from && date?.to) {
+                    startsAt = date.from
+                    endsAt = date.to
+                }
+
+                // Default ad images to tool images for now
+                const { error: adError } = await supabase
+                    .from('ads')
+                    .insert({
+                        name: `${name} - ${adPlacement.replace('_', ' ').toUpperCase()}`,
+                        placement: adPlacement,
+                        link_url: `/tool/${toolData.slug}`,
+                        title: name,
+                        description: description, // Short description
+                        image_url: screenshotUrl || logoUrl || '', // Fallback to logo if no screenshot
+                        advertiser_name: name, // Using Tool Name as advertiser name for now
+                        advertiser_email: userEmail,
+                        starts_at: startsAt.toISOString(),
+                        ends_at: endsAt.toISOString(),
+                        is_active: true, // Active by default for now (or pending payment)
+                        price_paid: totalPrice,
+                    })
+
+                if (adError) {
+                    console.error("Failed to create ad record:", adError)
+                    // We don't block submission but might want to alert/log
+                }
+            }
 
             // Temporary disable payment as requested
             if (false && isPaidPlan && toolData) {

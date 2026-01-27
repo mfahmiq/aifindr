@@ -10,7 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { AdBannerUpload } from "@/components/ad-banner-upload"
+import { AdManagement } from "@/components/ad-management"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -803,43 +803,25 @@ export default function ToolManagePage() {
                             </Dialog>
                         </CardHeader>
                         <CardContent>
+                            {/* Deals List */}
                             {deals.length === 0 ? (
-                                <div className="flex items-center justify-center py-16 text-center">
-                                    <div>
-                                        <Gift className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                                        <h3 className="font-semibold mb-2">No Deals Yet</h3>
-                                        <p className="text-sm text-muted-foreground mb-4">
-                                            Offer discounts and promotions to attract more users.
-                                        </p>
-                                    </div>
+                                <div className="text-center py-8 text-muted-foreground">
+                                    No active deals. Create one to attract more users!
                                 </div>
                             ) : (
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    {deals.map((deal) => (
-                                        <div key={deal.id} className="p-4 border rounded-lg bg-card relative group">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <Badge className="bg-primary text-primary-foreground font-bold">
-                                                    {deal.discount}
-                                                </Badge>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-8 w-8 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    onClick={() => handleDeleteDeal(deal.id)}
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </Button>
+                                <div className="grid gap-4">
+                                    {deals.map(deal => (
+                                        <div key={deal.id} className="flex items-center justify-between p-4 border rounded-lg">
+                                            <div>
+                                                <div className="font-bold text-lg text-green-600">{deal.discount}</div>
+                                                <p className="text-sm font-mono bg-muted px-2 py-0.5 rounded inline-block mt-1">
+                                                    {deal.code || 'NO CODE'}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground mt-1">{deal.description}</p>
                                             </div>
-                                            <h4 className="font-semibold mb-1">{deal.code || 'No code required'}</h4>
-                                            <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                                                {deal.description}
-                                            </p>
-                                            <div className="flex items-center justify-between text-xs text-muted-foreground pt-4 border-t">
-                                                <span>Claims: {deal.claim_count || 0}</span>
-                                                {deal.expires_at && (
-                                                    <span>Expires: {format(new Date(deal.expires_at), 'MMM d, yyyy')}</span>
-                                                )}
-                                            </div>
+                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteDeal(deal.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
                                         </div>
                                     ))}
                                 </div>
@@ -848,85 +830,13 @@ export default function ToolManagePage() {
                     </Card>
                 </TabsContent>
 
-                {/* Ads Tab (Sponsor Only) */}
+                {/* Ads Tab */}
                 {isSponsor && (
                     <TabsContent value="ads">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Sparkles className="w-5 h-5 text-yellow-500" />
-                                    Ad Management
-                                </CardTitle>
-                                <CardDescription>Manage your sponsored ads placements</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {ads.length === 0 ? (
-                                    <div className="flex items-center justify-center py-16 text-center">
-                                        <div>
-                                            <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
-                                            <h3 className="font-semibold mb-2">Create Ad Campaign</h3>
-                                            <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-                                                As a Sponsor, you can create and manage ad banners to be displayed across the platform.
-                                            </p>
-                                            <AdBannerUpload
-                                                fixedPlacement={tool?.ad_placement || undefined}
-                                                onSuccess={() => window.location.reload()}
-                                            />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        <div className="flex justify-end">
-                                            <AdBannerUpload
-                                                fixedPlacement={tool?.ad_placement || undefined}
-                                                onSuccess={() => window.location.reload()}
-                                            />
-                                        </div>
-
-                                        <div className="grid gap-4">
-                                            {ads.map((ad) => (
-                                                <div key={ad.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-16 h-12 bg-muted rounded overflow-hidden">
-                                                            {ad.image_url && <img src={ad.image_url} alt={ad.name} className="w-full h-full object-cover" />}
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="font-semibold">{ad.name}</h4>
-                                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                                <Badge variant="outline" className="capitalize">{ad.placement}</Badge>
-                                                                <span>•</span>
-                                                                <span className={ad.is_active ? "text-green-500" : "text-muted-foreground"}>
-                                                                    {ad.is_active ? "Active" : "Inactive"}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="text-center">
-                                                            <p className="text-xs text-muted-foreground">Impressions</p>
-                                                            <p className="font-semibold">{ad.impressions?.toLocaleString() || 0}</p>
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <p className="text-xs text-muted-foreground">Clicks</p>
-                                                            <p className="font-semibold">{ad.clicks?.toLocaleString() || 0}</p>
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <p className="text-xs text-muted-foreground">CTR</p>
-                                                            <p className="font-semibold">
-                                                                {((ad.clicks || 0) / (ad.impressions || 1) * 100).toFixed(1)}%
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
+                        <AdManagement tool={tool} />
                     </TabsContent>
                 )}
             </Tabs>
-        </div >
+        </div>
     )
 }

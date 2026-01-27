@@ -84,8 +84,17 @@ export function AdManagement({ tool }: AdManagementProps) {
     const [loading, setLoading] = useState(true)
     const [stats, setStats] = useState<any>(null)
 
+    // List only valid placements to prevent errors if invalid string is in DB
+    const VALID_PLACEMENTS = ['sidebar', 'navbar', 'top_banner', 'inline']
+
     // Form State
-    const [selectedPlacement, setSelectedPlacement] = useState<string>('sidebar')
+    const [selectedPlacement, setSelectedPlacement] = useState<string>(() => {
+        if (tool.ad_placement && VALID_PLACEMENTS.includes(tool.ad_placement)) {
+            return tool.ad_placement
+        }
+        return 'sidebar'
+    })
+
     const [duration, setDuration] = useState<number>(30)
     const [creating, setCreating] = useState(false)
     const [formData, setFormData] = useState({
@@ -98,7 +107,11 @@ export function AdManagement({ tool }: AdManagementProps) {
 
     useEffect(() => {
         fetchAds()
-    }, [tool.id])
+        // If tool.ad_placement updates, sync it
+        if (tool.ad_placement && VALID_PLACEMENTS.includes(tool.ad_placement)) {
+            setSelectedPlacement(tool.ad_placement)
+        }
+    }, [tool.id, tool.ad_placement])
 
     const fetchAds = async () => {
         try {

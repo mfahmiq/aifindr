@@ -117,31 +117,44 @@ export function AdManagement({ tool }: AdManagementProps) {
     const fetchAds = async () => {
         try {
             setLoading(true)
+            console.log("[AdManagement] Fetching ads for tool:", tool.slug, tool.id)
+
             // 1. Try fetching all ads for this tool by slug in link_url
             let myAds = await adsService.getAdsByTool(tool.slug)
+            console.log("[AdManagement] Ads by slug result:", myAds.length, myAds)
 
             // 2. Fallback: If no ads found, try fetching by current user email
-            // (In case link_url format changed or has unexpected domain)
             if (myAds.length === 0) {
+                console.log("[AdManagement] No ads found by slug, trying email fallback...")
                 const supabase = createClient()
                 const { data: { user } } = await supabase.auth.getUser()
+                console.log("[AdManagement] Current user:", user?.email)
+
                 if (user?.email) {
                     const emailAds = await adsService.getAdsByEmail(user.email)
+                    console.log("[AdManagement] Total ads for email:", emailAds.length)
+
                     // Filter ads that belong to THIS tool specifically
                     myAds = emailAds.filter(ad =>
                         ad.link_url.toLowerCase().includes(tool.slug.toLowerCase()) ||
                         ad.name.toLowerCase().includes(tool.name.toLowerCase())
                     )
+                    console.log("[AdManagement] Filtered ads for tool:", myAds.length)
                 }
             }
 
             setAds(myAds)
 
+            // If we have ads, default to list view
+            if (myAds.length > 0) {
+                setView('list')
+            }
+
             // Fetch slots stats
             const slotStats = await adsService.getRemainingSlots()
             setStats(slotStats)
         } catch (error) {
-            console.error("Error fetching ads:", error)
+            console.error("[AdManagement] Error fetching ads:", error)
         } finally {
             setLoading(false)
         }

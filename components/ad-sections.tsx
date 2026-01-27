@@ -276,8 +276,12 @@ export function SidebarAd() {
                                 onClick={() => adsService.trackClick(ad.id)}
                             >
                                 <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/40 to-primary/20 flex items-center justify-center font-bold text-primary text-xl shadow-md group-hover:scale-110 transition-transform">
-                                        {ad.title?.substring(0, 2) || 'AD'}
+                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/40 to-primary/20 flex items-center justify-center font-bold text-primary text-xl shadow-md group-hover:scale-110 transition-transform overflow-hidden">
+                                        {ad.image_url ? (
+                                            <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                        ) : (
+                                            ad.title?.substring(0, 2) || 'AD'
+                                        )}
                                     </div>
                                     <div>
                                         <div className="font-bold text-lg group-hover:text-primary transition-colors">
@@ -343,8 +347,12 @@ export function CompactSidebarAd() {
                             <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Sponsored</span>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform">
-                                {ad.title?.substring(0, 2) || 'AD'}
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform overflow-hidden">
+                                {ad.image_url ? (
+                                    <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                ) : (
+                                    ad.title?.substring(0, 2) || 'AD'
+                                )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="font-semibold group-hover:text-primary transition-colors">
@@ -414,8 +422,12 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
                         </div>
 
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary text-lg group-hover:scale-110 transition-transform">
-                                {ad.title?.substring(0, 2) || 'AD'}
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center font-bold text-primary text-lg group-hover:scale-110 transition-transform overflow-hidden">
+                                {ad.image_url ? (
+                                    <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                ) : (
+                                    ad.title?.substring(0, 2) || 'AD'
+                                )}
                             </div>
                             <div>
                                 <h3 className="font-semibold group-hover:text-primary transition-colors">

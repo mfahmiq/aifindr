@@ -21,6 +21,8 @@ export const DEFAULT_UTM_CONFIG: UTMConfig = {
 // LocalStorage key for UTM settings
 export const UTM_STORAGE_KEY = 'theaiselect_utm_config'
 
+import { settingsService } from "./services/settingsService"
+
 /**
  * Get UTM configuration from localStorage
  */
@@ -36,6 +38,21 @@ export function getUTMConfig(): UTMConfig {
         console.error('Error reading UTM config:', e)
     }
     return DEFAULT_UTM_CONFIG
+}
+
+/**
+ * Get UTM configuration from Database
+ */
+export async function getUTMConfigFromDB(): Promise<UTMConfig> {
+    try {
+        const settings = await settingsService.getSettings()
+        if (settings && settings.utm_config) {
+            return settings.utm_config as unknown as UTMConfig
+        }
+    } catch (e) {
+        console.error('Error reading UTM config from DB:', e)
+    }
+    return getUTMConfig() // Fallback to localStorage if DB fails
 }
 
 /**

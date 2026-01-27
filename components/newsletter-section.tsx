@@ -10,10 +10,31 @@ export function NewsletterSection() {
     const [email, setEmail] = useState("")
     const [subscribed, setSubscribed] = useState(false)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [loading, setLoading] = useState(false)
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (email) {
-            setSubscribed(true)
+        if (!email) return
+
+        setLoading(true)
+        try {
+            const res = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+
+            if (res.ok) {
+                setSubscribed(true)
+            } else {
+                const data = await res.json()
+                alert(data.error || "Failed to subscribe")
+            }
+        } catch (error) {
+            console.error("Newsletter error:", error)
+            alert("Something went wrong. Please try again.")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -50,8 +71,8 @@ export function NewsletterSection() {
                         className="flex-1"
                         required
                     />
-                    <Button type="submit">
-                        Subscribe
+                    <Button type="submit" disabled={loading}>
+                        {loading ? "..." : "Subscribe"}
                     </Button>
                 </form>
                 <p className="text-xs text-muted-foreground mt-3">

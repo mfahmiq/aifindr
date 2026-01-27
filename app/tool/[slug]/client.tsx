@@ -47,7 +47,7 @@ import NextImage from "next/image"
 import { motion } from "framer-motion"
 import { useState, useEffect, use } from "react"
 import { useToast } from "../../../hooks/use-toast"
-import { appendUTMParams, getUTMConfig, UTMConfig } from "@/lib/utm"
+import { appendUTMParams, getUTMConfigFromDB, UTMConfig } from "@/lib/utm"
 import { getGradientPair, hexToRgb, extractDominantColor, isLightColor } from "@/lib/colorUtils"
 
 interface PageProps {
@@ -100,7 +100,11 @@ export default function ToolDetailPage({ tool, relatedTools }: PageProps) {
 
     // Load UTM config
     useEffect(() => {
-        setUtmConfig(getUTMConfig())
+        const fetchUTM = async () => {
+            const config = await getUTMConfigFromDB()
+            setUtmConfig(config)
+        }
+        fetchUTM()
     }, [])
 
     useEffect(() => {

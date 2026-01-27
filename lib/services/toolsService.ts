@@ -310,7 +310,9 @@ export const toolsService = {
             { count: premiumCount },
             { count: proCount },
             { count: featuredCount },
-            { count: sponsorCount }
+            { count: sponsorCount },
+            { data: aggregateStats },
+            { data: subscriptionStats }
         ] = await Promise.all([
             supabase.from('tools').select('*', { count: 'exact', head: true }),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('is_verified', true),
@@ -319,8 +321,26 @@ export const toolsService = {
             supabase.from('tools').select('*', { count: 'exact', head: true }).neq('plan', 'Free'),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Pro'),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Featured'),
-            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Sponsor')
+            supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Sponsor'),
+            supabase.from('tools').select('view_count, favorite_count'),
+            supabase.from('subscriptions').select('amount, plan_id').eq('status', 'active')
         ])
+
+        const totalViews = aggregateStats?.reduce((sum: number, t: any) => sum + (t.view_count || 0), 0) || 0
+        const totalFavorites = aggregateStats?.reduce((sum: number, t: any) => sum + (t.favorite_count || 0), 0) || 0
+
+        let proRevenue = 0
+        let sponsorRevenue = 0
+        let featuredRevenue = 0
+
+        subscriptionStats?.forEach((s: any) => {
+            const amount = s.amount || 0
+            if (s.plan_id?.includes('pro')) proRevenue += amount
+            else if (s.plan_id?.includes('sponsor')) sponsorRevenue += amount
+            else if (s.plan_id?.includes('featured')) featuredRevenue += amount
+        })
+
+        const totalRevenue = proRevenue + sponsorRevenue + featuredRevenue
 
         return {
             total: totalCount || 0,
@@ -330,7 +350,13 @@ export const toolsService = {
             premium: premiumCount || 0,
             pro: proCount || 0,
             featured: featuredCount || 0,
-            sponsor: sponsorCount || 0
+            sponsor: sponsorCount || 0,
+            totalViews,
+            totalFavorites,
+            totalRevenue,
+            proRevenue,
+            sponsorRevenue,
+            featuredRevenue
         }
     },
 

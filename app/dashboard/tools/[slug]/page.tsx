@@ -868,13 +868,19 @@ export default function ToolManagePage() {
                                             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
                                                 As a Sponsor, you can create and manage ad banners to be displayed across the platform.
                                             </p>
-                                            <AdBannerUpload onSuccess={() => window.location.reload()} />
+                                            <AdBannerUpload
+                                                fixedPlacement={tool?.ad_placement || undefined}
+                                                onSuccess={() => window.location.reload()}
+                                            />
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
                                         <div className="flex justify-end">
-                                            <AdBannerUpload onSuccess={() => window.location.reload()} />
+                                            <AdBannerUpload
+                                                fixedPlacement={tool?.ad_placement || undefined}
+                                                onSuccess={() => window.location.reload()}
+                                            />
                                         </div>
 
                                         <div className="grid gap-4">

@@ -292,6 +292,7 @@ const SubmitToolContent = () => {
                     is_verified: false,
                     is_priority: false,
                     has_backlink: false,
+                    ad_placement: selectedPlan === 'sponsor' ? adPlacement : null,
                     created_at: new Date().toISOString()
                 })
                 .select('id')

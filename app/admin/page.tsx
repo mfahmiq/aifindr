@@ -38,31 +38,31 @@ export default function AdminDashboardPage() {
         proTools: 0,
         sponsorTools: 0,
         totalViews: 0,
-        totalFavorites: 0
+        totalFavorites: 0,
+        totalRevenue: 0,
+        proRevenue: 0,
+        sponsorRevenue: 0,
+        featuredRevenue: 0
     })
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // 1. Fetch real stats from API (sourced from toolsService.getAdminStats)
+                // 1. Fetch real stats from API
                 const res = await fetch('/api/admin/stats')
                 const realStats = await res.json()
 
-                // 2. Fetch aggregate views/favorites (still need getTools for this or a new API)
-                // Since getAdminStats doesn't sum views/favorites yet, we might still need a separate call or update API.
-                // For now, let's keep the getTools for views/favorites sum but use realStats for counts.
-                const { tools: allTools } = await toolsService.getTools({ limit: 1000 }) // Increase limit for better aggregate accuracy or move to aggregation API
-
-                const views = allTools.reduce((acc: number, t: ToolWithRelations) => acc + (t.view_count || 0), 0)
-                const favorites = allTools.reduce((acc: number, t: ToolWithRelations) => acc + (t.favorite_count || 0), 0)
-
                 setStats({
                     totalTools: realStats.total,
-                    verifiedTools: realStats.published, // 'published' key from API
+                    verifiedTools: realStats.published,
                     proTools: realStats.pro,
-                    sponsorTools: realStats.sponsor + realStats.featured, // Group featured + sponsor? Or just use specific keys if UI separates them
-                    totalViews: views,
-                    totalFavorites: favorites
+                    sponsorTools: realStats.sponsor + realStats.featured,
+                    totalViews: realStats.totalViews,
+                    totalFavorites: realStats.totalFavorites,
+                    totalRevenue: realStats.totalRevenue,
+                    proRevenue: realStats.proRevenue,
+                    sponsorRevenue: realStats.sponsorRevenue,
+                    featuredRevenue: realStats.featuredRevenue
                 })
             } catch (error) {
                 console.error('Error fetching stats:', error)
@@ -72,11 +72,6 @@ export default function AdminDashboardPage() {
         }
         fetchStats()
     }, [])
-
-    // Mock revenue calculation
-    const proRevenue = stats.proTools * 9
-    const sponsorRevenue = stats.sponsorTools * 49 * 4
-    const totalRevenue = proRevenue + sponsorRevenue
 
     const statCards = [
         {
@@ -100,7 +95,7 @@ export default function AdminDashboardPage() {
         {
             title: 'Pro Listings',
             value: stats.proTools,
-            change: '+19%',
+            change: `$${stats.proRevenue}/mo`,
             trend: 'up',
             icon: CreditCard,
             gradient: 'from-purple-500 to-pink-500',
@@ -109,7 +104,7 @@ export default function AdminDashboardPage() {
         {
             title: 'Featured Tools',
             value: stats.sponsorTools,
-            change: `$${sponsorRevenue}/mo`,
+            change: `$${stats.sponsorRevenue + stats.featuredRevenue}/mo`,
             trend: 'up',
             icon: Activity,
             gradient: 'from-green-500 to-emerald-500',
@@ -152,7 +147,7 @@ export default function AdminDashboardPage() {
                                 Total Revenue (This Month)
                             </CardDescription>
                             <div className="text-5xl font-bold text-green-700 dark:text-green-400 mt-2">
-                                ${totalRevenue.toLocaleString()}
+                                ${stats.totalRevenue.toLocaleString()}
                             </div>
                         </div>
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
@@ -163,11 +158,11 @@ export default function AdminDashboardPage() {
                         <div className="flex flex-wrap gap-4 mt-2 text-sm">
                             <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg px-3 py-1.5">
                                 <span className="text-muted-foreground">Pro Listings:</span>
-                                <span className="font-semibold ml-1">${proRevenue}</span>
+                                <span className="font-semibold ml-1">${stats.proRevenue}</span>
                             </div>
                             <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg px-3 py-1.5">
                                 <span className="text-muted-foreground">Sponsorships:</span>
-                                <span className="font-semibold ml-1">${sponsorRevenue}</span>
+                                <span className="font-semibold ml-1">${stats.sponsorRevenue + stats.featuredRevenue}</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 mt-4 text-sm text-green-600">

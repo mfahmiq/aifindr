@@ -29,26 +29,34 @@ import { createClient } from "@/lib/supabase/client"
 // Accessing subscriptionService directly.
 import { subscriptionService } from "@/lib/services/subscriptionService"
 
+import { analyticsService } from "@/lib/services/analyticsService"
+
 export default function DashboardAnalyticsPage() {
     const [loading, setLoading] = useState(true)
     const [plan, setPlan] = useState('free')
+    const [stats, setStats] = useState<any>(null)
 
     useEffect(() => {
-        const checkPlan = async () => {
+        const fetchData = async () => {
             try {
                 const supabase = createClient()
                 const { data: { user } } = await supabase.auth.getUser()
                 if (user) {
                     const effectivePlan = await subscriptionService.getEffectivePlan(user.id)
                     setPlan(effectivePlan)
+
+                    const analyticsData = await analyticsService.getUserStats()
+                    if (analyticsData) {
+                        setStats(analyticsData.stats)
+                    }
                 }
             } catch (e) {
-                console.error("Error checking plan", e)
+                console.error("Error fetching analytics", e)
             } finally {
                 setLoading(false)
             }
         }
-        checkPlan()
+        fetchData()
     }, [])
 
     if (loading) {
@@ -59,7 +67,7 @@ export default function DashboardAnalyticsPage() {
         )
     }
 
-    const isPremium = ['pro', 'featured', 'sponsor'].includes(plan)
+    const isPremium = ['pro', 'featured', 'sponsor'].includes(plan.toLowerCase())
 
     return (
         <div className="flex flex-col gap-6">
@@ -82,12 +90,12 @@ export default function DashboardAnalyticsPage() {
                         Detailed analytics with views, clicks, referrers, and conversion tracking will be available here.
                     </p>
 
-                    {/* Preview Stats */}
+                    {/* Real Stats Preview */}
                     <div className="grid gap-4 md:grid-cols-3 max-w-2xl mx-auto mb-6">
                         {[
-                            { title: 'Total Views', value: '0', icon: Eye, trend: '+0%' },
-                            { title: 'Total Clicks', value: '0', icon: MousePointer, trend: '+0%' },
-                            { title: 'Conversion Rate', value: '0%', icon: TrendingUp, trend: '+0%' },
+                            { title: 'Total Views', value: stats?.totalViews || '0', icon: Eye, trend: '+0%' },
+                            { title: 'Total Favorites', value: stats?.totalFavorites || '0', icon: MousePointer, trend: '+0%' },
+                            { title: 'Listed Tools', value: stats?.totalTools || '0', icon: Sparkles, trend: '+0%' },
                         ].map((stat) => (
                             <div key={stat.title} className="p-4 rounded-xl bg-muted/50">
                                 <stat.icon className="w-5 h-5 text-muted-foreground mb-2" />

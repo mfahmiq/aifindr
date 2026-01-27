@@ -282,6 +282,7 @@ export default function ProfilePage() {
                                 <input
                                     type="text"
                                     defaultValue={user.name || ''}
+                                    onChange={(e) => setUser({ ...user, name: e.target.value })}
                                     className="w-full p-2 border rounded-md bg-background"
                                 />
                             </div>
@@ -298,13 +299,25 @@ export default function ProfilePage() {
                                 <label className="text-sm font-medium">Bio</label>
                                 <textarea
                                     defaultValue={user.bio || ''}
+                                    onChange={(e) => setUser({ ...user, bio: e.target.value })}
                                     className="w-full p-2 border rounded-md bg-background resize-none"
                                     rows={3}
                                 />
                             </div>
                             <div className="flex gap-4">
-                                <Button>Save Changes</Button>
-                                <Button variant="outline">Cancel</Button>
+                                <Button onClick={async () => {
+                                    try {
+                                        const { userService } = await import("@/lib/services/userService")
+                                        await userService.updateProfile({
+                                            name: user.name,
+                                            bio: user.bio
+                                        })
+                                        alert("Profile updated!")
+                                    } catch (e) {
+                                        alert("Failed to update profile")
+                                    }
+                                }}>Save Changes</Button>
+                                <Button variant="outline" onClick={() => window.location.reload()}>Cancel</Button>
                             </div>
                         </CardContent>
                     </Card>

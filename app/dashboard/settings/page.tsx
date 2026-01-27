@@ -29,13 +29,64 @@ import { motion } from "framer-motion"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 
+import { userService } from "@/lib/services/userService"
+import { toast } from "sonner"
+
 export default function DashboardSettingsPage() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [profile, setProfile] = useState<any>(null)
 
     useEffect(() => {
-        setLoading(false)
+        const fetchProfile = async () => {
+            try {
+                const data = await userService.getCurrentProfile()
+                setProfile(data)
+            } catch (error) {
+                console.error("Error fetching profile:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchProfile()
     }, [])
+
+    const handleSaveProfile = async () => {
+        if (!profile) return
+        setSaving(true)
+        try {
+            await userService.updateProfile({
+                name: profile.name,
+                company: profile.company,
+                bio: profile.bio
+            })
+            toast.success("Profile updated successfully")
+        } catch (error) {
+            console.error("Error saving profile:", error)
+            toast.error("Failed to save profile")
+        } finally {
+            setSaving(false)
+        }
+    }
+
+    const handleNotificationChange = async (key: string, value: boolean) => {
+        if (!profile) return
+        const newPrefs = {
+            ...(profile.notification_preferences || { email: true, reviews: true, reports: true, marketing: false }),
+            [key]: value
+        }
+
+        try {
+            const updated = await userService.updateProfile({
+                notification_preferences: newPrefs
+            })
+            setProfile(updated)
+            toast.success("Notification preferences updated")
+        } catch (error) {
+            console.error("Error updating notifications:", error)
+            toast.error("Failed to update preferences")
+        }
+    }
 
     if (loading) {
         return (
@@ -84,18 +135,37 @@ export default function DashboardSettingsPage() {
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Full Name</Label>
-                                    <Input id="name" placeholder="Your name" />
+                                    <Input
+                                        id="name"
+                                        placeholder="Your name"
+                                        value={profile?.name || ''}
+                                        onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input id="email" type="email" placeholder="your@email.com" />
+                                    <Input id="email" type="email" value={profile?.email || ''} disabled />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="company">Company / Organization</Label>
-                                <Input id="company" placeholder="Company name" />
+                                <Input
+                                    id="company"
+                                    placeholder="Company name"
+                                    value={profile?.company || ''}
+                                    onChange={(e) => setProfile({ ...profile, company: e.target.value })}
+                                />
                             </div>
-                            <Button disabled={saving}>
+                            <div className="space-y-2">
+                                <Label htmlFor="bio">Bio</Label>
+                                <Input
+                                    id="bio"
+                                    placeholder="Brief description about you"
+                                    value={profile?.bio || ''}
+                                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                                />
+                            </div>
+                            <Button onClick={handleSaveProfile} disabled={saving}>
                                 {saving ? (
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                 ) : (
@@ -116,17 +186,20 @@ export default function DashboardSettingsPage() {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {[
-                                { title: 'Email Notifications', description: 'Receive email updates about your tools' },
-                                { title: 'New Reviews', description: 'Get notified when someone reviews your tool' },
-                                { title: 'Weekly Reports', description: 'Receive weekly analytics summary' },
-                                { title: 'Marketing Emails', description: 'Tips, offers, and product updates' },
+                                { id: 'email', title: 'Email Notifications', description: 'Receive email updates about your tools' },
+                                { id: 'reviews', title: 'New Reviews', description: 'Get notified when someone reviews your tool' },
+                                { id: 'reports', title: 'Weekly Reports', description: 'Receive weekly analytics summary' },
+                                { id: 'marketing', title: 'Marketing Emails', description: 'Tips, offers, and product updates' },
                             ].map((item) => (
-                                <div key={item.title} className="flex items-center justify-between">
+                                <div key={item.id} className="flex items-center justify-between">
                                     <div>
                                         <p className="font-medium">{item.title}</p>
                                         <p className="text-sm text-muted-foreground">{item.description}</p>
                                     </div>
-                                    <Switch />
+                                    <Switch
+                                        checked={profile?.notification_preferences?.[item.id] ?? (item.id === 'marketing' ? false : true)}
+                                        onCheckedChange={(checked) => handleNotificationChange(item.id, checked)}
+                                    />
                                 </div>
                             ))}
                         </CardContent>

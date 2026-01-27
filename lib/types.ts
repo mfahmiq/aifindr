@@ -682,6 +682,7 @@ export type Database = {
                     video_url: string | null
                     view_count: number | null
                     website_url: string
+                    ad_placement: string | null
                 }
                 Insert: {
                     category_id?: string | null
@@ -716,6 +717,7 @@ export type Database = {
                     video_url?: string | null
                     view_count?: number | null
                     website_url: string
+                    ad_placement?: string | null
                 }
                 Update: {
                     category_id?: string | null
@@ -752,6 +754,7 @@ export type Database = {
                     website_url?: string
                     is_active?: boolean | null
                     last_checked_at?: string | null
+                    ad_placement?: string | null
                 }
                 Relationships: []
             }
@@ -764,6 +767,14 @@ export type Database = {
                     name: string
                     role: string | null
                     updated_at: string | null
+                    bio: string | null
+                    company: string | null
+                    notification_preferences: {
+                        email: boolean
+                        reviews: boolean
+                        reports: boolean
+                        marketing: boolean
+                    } | null
                 }
                 Insert: {
                     avatar_url?: string | null
@@ -773,6 +784,14 @@ export type Database = {
                     name: string
                     role?: string | null
                     updated_at?: string | null
+                    bio?: string | null
+                    company?: string | null
+                    notification_preferences?: {
+                        email: boolean
+                        reviews: boolean
+                        reports: boolean
+                        marketing: boolean
+                    } | null
                 }
                 Update: {
                     avatar_url?: string | null
@@ -782,6 +801,14 @@ export type Database = {
                     name?: string
                     role?: string | null
                     updated_at?: string | null
+                    bio?: string | null
+                    company?: string | null
+                    notification_preferences?: {
+                        email: boolean
+                        reviews: boolean
+                        reports: boolean
+                        marketing: boolean
+                    } | null
                 }
                 Relationships: []
             }
@@ -830,6 +857,33 @@ export type Database = {
                     currency?: string | null
                     auto_renew?: boolean | null
                     created_at?: string | null
+                    updated_at?: string | null
+                }
+                Relationships: []
+            }
+            site_settings: {
+                Row: {
+                    id: string
+                    site_name: string | null
+                    site_description: string | null
+                    utm_config: Json | null
+                    feature_flags: Json | null
+                    updated_at: string | null
+                }
+                Insert: {
+                    id?: string
+                    site_name?: string | null
+                    site_description?: string | null
+                    utm_config?: Json | null
+                    feature_flags?: Json | null
+                    updated_at?: string | null
+                }
+                Update: {
+                    id?: string
+                    site_name?: string | null
+                    site_description?: string | null
+                    utm_config?: Json | null
+                    feature_flags?: Json | null
                     updated_at?: string | null
                 }
                 Relationships: []

@@ -26,16 +26,17 @@ import { adsService } from "@/lib/services/adsService"
 interface AdBannerUploadProps {
     onSuccess?: () => void
     trigger?: React.ReactNode
+    fixedPlacement?: string
 }
 
-export function AdBannerUpload({ onSuccess, trigger }: AdBannerUploadProps) {
+export function AdBannerUpload({ onSuccess, trigger, fixedPlacement }: AdBannerUploadProps) {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
         link_url: '',
         image_url: '',
-        placement: 'sidebar',
+        placement: fixedPlacement || 'sidebar',
         title: '',
         description: ''
     })
@@ -54,7 +55,7 @@ export function AdBannerUpload({ onSuccess, trigger }: AdBannerUploadProps) {
                 name: '',
                 link_url: '',
                 image_url: '',
-                placement: 'sidebar',
+                placement: fixedPlacement || 'sidebar',
                 title: '',
                 description: ''
             })
@@ -92,24 +93,26 @@ export function AdBannerUpload({ onSuccess, trigger }: AdBannerUploadProps) {
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="placement">Placement</Label>
-                            <Select
-                                value={formData.placement}
-                                onValueChange={(val) => setFormData({ ...formData, placement: val })}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select placement" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="sidebar">Sidebar</SelectItem>
-                                    <SelectItem value="banner">Top Banner</SelectItem>
-                                    <SelectItem value="navbar">Navbar</SelectItem>
-                                    <SelectItem value="inline">Inline (Feed)</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                    <div className={`grid ${fixedPlacement ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
+                        {!fixedPlacement && (
+                            <div className="space-y-2">
+                                <Label htmlFor="placement">Placement</Label>
+                                <Select
+                                    value={formData.placement}
+                                    onValueChange={(val) => setFormData({ ...formData, placement: val })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select placement" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="sidebar">Sidebar</SelectItem>
+                                        <SelectItem value="banner">Top Banner</SelectItem>
+                                        <SelectItem value="navbar">Navbar</SelectItem>
+                                        <SelectItem value="inline">Inline (Feed)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
                         <div className="space-y-2">
                             <Label htmlFor="link_url">Target URL</Label>
                             <Input

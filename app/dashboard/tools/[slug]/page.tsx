@@ -31,7 +31,11 @@ import {
     MessageSquare,
     Settings,
     Gift,
-    Sparkles
+    Image as ImageIcon,
+    Trash2,
+    X,
+    Sparkles,
+    Video
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { toolsService } from "@/lib/services/toolsService"
@@ -51,12 +55,23 @@ export default function ToolManagePage() {
     const [isSponsor, setIsSponsor] = useState(false)
     const [ads, setAds] = useState<ActiveAd[]>([])
 
+    // File Upload State
+    const [logoFile, setLogoFile] = useState<File | null>(null)
+    const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
+    const [videoFile, setVideoFile] = useState<File | null>(null)
+
+    // Previews
+    const [logoPreview, setLogoPreview] = useState<string | null>(null)
+    const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
+
     // Form state
     const [formData, setFormData] = useState({
         short_description: '',
         long_description: '',
         website_url: '',
-        video_url: ''
+        video_url: '',
+        logo_url: '',
+        image_url: '' // For screenshot
     })
 
     useEffect(() => {
@@ -70,8 +85,13 @@ export default function ToolManagePage() {
                         short_description: data.short_description || '',
                         long_description: data.long_description || '',
                         website_url: data.website_url || '',
-                        video_url: data.video_url || ''
+                        video_url: data.video_url || '',
+                        logo_url: data.logo_url || '',
+                        image_url: data.image_url || ''
                     })
+                    // Initialize previews
+                    setLogoPreview(data.logo_url || null)
+                    setScreenshotPreview(data.image_url || null)
                 }
 
                 // 2. Check Subscription & Ads (Sponsor only)
@@ -88,14 +108,6 @@ export default function ToolManagePage() {
 
                     if (isSponsorPlan) {
                         // Fetch ads
-                        // Note: adsService.getUserAds doesn't exist in the file view I saw, 
-                        // but I saw getAllAds (admin) and getSidebarAds (public).
-                        // I will assume for now I can't fetch "my ads" easily without specific API, 
-                        // so I'll leave the list empty or just mock it for now until I add that method to service.
-                        // Actually, looking at adsService.ts, I don't see `getUserAds`.
-                        // I will implement a placeholder or try to filter active ads by advertiser_name if matches? 
-                        // But ad doesn't link to user_id directly in the types I saw (it has advertiser_email).
-                        // I'll skip fetching for now and just show the "Create Ad" UI as coming soon or placeholder.
                     }
                 }
 
@@ -108,14 +120,149 @@ export default function ToolManagePage() {
         fetchToolAndAccess()
     }, [slug])
 
+    const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Logo must be less than 2MB")
+                return
+            }
+            setLogoFile(file)
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setLogoPreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Screenshot must be less than 2MB")
+                return
+            }
+            setScreenshotFile(file)
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setScreenshotPreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 50 * 1024 * 1024) {
+                alert("Video must be less than 50MB")
+                return
+            }
+            setVideoFile(file)
+        }
+    }
+
+    const deleteFileFromStorage = async (url: string) => {
+        if (!url) return
+        try {
+            // Extract path from URL
+            // URL format: https://[project].supabase.co/storage/v1/object/public/[bucket]/[path]
+            const urlObj = new URL(url)
+            const pathParts = urlObj.pathname.split('/public/')
+            if (pathParts.length < 2) return
+
+            const fullPath = pathParts[1] // images/tools/user/file.jpg
+            const bucket = fullPath.split('/')[0] // 'images'
+            const filePath = fullPath.substring(bucket.length + 1) // tools/user/file.jpg
+
+            const supabase = createBrowserClient(
+                process.env.NEXT_PUBLIC_SUPABASE_URL!,
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+            )
+
+            const { error } = await supabase.storage
+                .from(bucket)
+                .remove([filePath])
+
+            if (error) {
+                console.error("Error deleting file:", error)
+            } else {
+                console.log("Deleted old file:", filePath)
+            }
+        } catch (e) {
+            console.error("Failed to parse URL for deletion", e)
+        }
+    }
+
+    const uploadFile = async (file: File, bucket: string, path: string) => {
+        const supabase = createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+        const { data, error } = await supabase.storage
+            .from(bucket)
+            .upload(path, file, { upsert: true })
+
+        if (error) throw error
+
+        const { data: { publicUrl } } = supabase.storage
+            .from(bucket)
+            .getPublicUrl(path)
+
+        return publicUrl
+    }
+
     const handleSave = async () => {
         if (!tool) return
         setSaving(true)
         try {
-            await toolsService.updateTool(tool.id, formData)
-            // Show success message
+            const updatedData = { ...formData }
+            const userId = (tool as any).owner_id || (tool as any).submitted_by
+
+            // 1. Handle Logo Upload
+            if (logoFile && userId) {
+                if (tool.logo_url) {
+                    await deleteFileFromStorage(tool.logo_url)
+                }
+                const logoPath = `tools/${userId}/${Date.now()}_${logoFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`
+                updatedData.logo_url = await uploadFile(logoFile, 'images', logoPath)
+            }
+
+            // 2. Handle Screenshot Upload
+            if (screenshotFile && userId) {
+                if (tool.image_url) { // image_url is screenshot
+                    await deleteFileFromStorage(tool.image_url)
+                }
+                const screenshotPath = `tool-images/${userId}/${Date.now()}_scr_${screenshotFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`
+                updatedData.image_url = await uploadFile(screenshotFile, 'images', screenshotPath)
+            }
+
+            // 3. Handle Video Upload
+            if (videoFile && userId) {
+                if (tool.video_url && tool.video_url.includes('supabase.co')) {
+                    await deleteFileFromStorage(tool.video_url)
+                }
+                const videoPath = `tools/${userId}/${Date.now()}_${videoFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`
+                updatedData.video_url = await uploadFile(videoFile, 'videos', videoPath)
+            }
+
+            await toolsService.updateTool(tool.id, updatedData)
+
+            // Refresh tool data to update state completely
+            const refreshedTool = await toolsService.getToolBySlug(slug)
+            if (refreshedTool) {
+                setTool(refreshedTool)
+                // No need to reset files/previews manually as they should match now, 
+                // but let's clear file inputs
+                setLogoFile(null)
+                setScreenshotFile(null)
+                setVideoFile(null)
+            }
+            alert("Tool updated successfully!")
         } catch (error) {
             console.error('Error saving:', error)
+            alert("Failed to save changes.")
         } finally {
             setSaving(false)
         }
@@ -242,6 +389,116 @@ export default function ToolManagePage() {
                             <CardDescription>Update your tool's details and description</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                            <div className="grid gap-6 md:grid-cols-2">
+                                {/* Logo Upload */}
+                                <div className="space-y-4">
+                                    <Label>Tool Logo</Label>
+                                    <div className="flex items-center gap-4">
+                                        <div className="relative w-24 h-24 rounded-xl border overflow-hidden bg-muted flex items-center justify-center group">
+                                            {logoPreview ? (
+                                                <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <span className="text-4xl font-bold text-muted-foreground">
+                                                    {tool.name[0]}
+                                                </span>
+                                            )}
+                                            <div
+                                                className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                                onClick={() => document.getElementById('logo-upload')?.click()}
+                                            >
+                                                <Settings className="w-6 h-6 text-white" />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Button variant="outline" size="sm" onClick={() => document.getElementById('logo-upload')?.click()}>
+                                                Change Logo
+                                            </Button>
+                                            <p className="text-xs text-muted-foreground">
+                                                Recommended: 512x512px (Max 2MB)
+                                            </p>
+                                            <input
+                                                id="logo-upload"
+                                                type="file"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={handleLogoChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Screenshot Upload */}
+                                <div className="space-y-4">
+                                    <Label>Tool Screenshot</Label>
+                                    <div
+                                        className="relative aspect-video rounded-xl border-2 border-dashed overflow-hidden bg-muted/30 flex items-center justify-center group cursor-pointer hover:bg-muted/50 transition-colors"
+                                        onClick={() => document.getElementById('screenshot-upload')?.click()}
+                                    >
+                                        {screenshotPreview ? (
+                                            <>
+                                                <img src={screenshotPreview} alt="Screenshot preview" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <p className="text-white font-medium">Click to change</p>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="text-center p-4">
+                                                <ImageIcon className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                                                <p className="text-sm font-medium text-muted-foreground">Upload Screenshot</p>
+                                            </div>
+                                        )}
+                                        <input
+                                            id="screenshot-upload"
+                                            type="file"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={handleScreenshotChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Video Upload & URL */}
+                                <div className="space-y-4 md:col-span-2">
+                                    <Label>Demo Video</Label>
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        <div className="space-y-2">
+                                            <Label className="text-xs text-muted-foreground">Video URL (YouTube/Vimeo)</Label>
+                                            <Input
+                                                placeholder="https://youtube.com/watch?v=..."
+                                                value={formData.video_url}
+                                                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label className="text-xs text-muted-foreground">Or Upload Video File</Label>
+                                            <div
+                                                className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:bg-muted/50 transition-colors"
+                                                onClick={() => document.getElementById('video-upload')?.click()}
+                                            >
+                                                {videoFile ? (
+                                                    <div className="flex items-center justify-center gap-2 text-sm text-green-600 font-medium">
+                                                        <Video className="w-4 h-4" />
+                                                        {videoFile.name}
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                                                        <Video className="w-4 h-4" />
+                                                        <span>Upload Video (Max 50MB)</span>
+                                                    </div>
+                                                )}
+                                                <input
+                                                    id="video-upload"
+                                                    type="file"
+                                                    className="hidden"
+                                                    accept="video/*"
+                                                    onChange={handleVideoChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="space-y-2">
                                 <Label htmlFor="short_description">Short Description</Label>
                                 <Textarea

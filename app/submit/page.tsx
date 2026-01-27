@@ -481,6 +481,7 @@ const SubmitToolContent = () => {
     // Mock Ad for Preview
     const mockAd: Ad = {
         id: 'preview-ad',
+        name: mockTool.name,
         title: mockTool.name,
         description: mockTool.short_description || "Ad Description",
         link_url: mockTool.website_url,

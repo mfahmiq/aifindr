@@ -319,7 +319,7 @@ const SubmitToolContent = () => {
                         link_url: `/tool/${toolData.slug}`,
                         title: name,
                         description: description, // Short description
-                        image_url: screenshotUrl || logoUrl || '', // Fallback to logo if no screenshot
+                        image_url: logoUrl || screenshotUrl || '', // Prioritize logo for ads
                         advertiser_name: name, // Using Tool Name as advertiser name for now
                         advertiser_email: userEmail,
                         starts_at: startsAt.toISOString(),

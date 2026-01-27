@@ -623,10 +623,10 @@ const SubmitToolContent = () => {
                                                     <SelectValue placeholder="Select Pricing" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="free">Free</SelectItem>
-                                                    <SelectItem value="freemium">Freemium</SelectItem>
-                                                    <SelectItem value="paid">Paid</SelectItem>
-                                                    <SelectItem value="free_trial">Free Trial</SelectItem>
+                                                    <SelectItem value="Free">Free</SelectItem>
+                                                    <SelectItem value="Freemium">Freemium</SelectItem>
+                                                    <SelectItem value="Paid">Paid</SelectItem>
+                                                    <SelectItem value="Trial">Free Trial</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>

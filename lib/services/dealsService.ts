@@ -33,6 +33,18 @@ export const dealsService = {
         return data as unknown as DealWithTool[]
     },
 
+    async getDealsByToolId(toolId: string) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('deals')
+            .select('*')
+            .eq('tool_id', toolId)
+            .order('created_at', { ascending: false })
+
+        if (error) throw error
+        return data as Deal[]
+    },
+
     // Get ALL deals for admin
     async getAllDeals() {
         const supabase = createClient()

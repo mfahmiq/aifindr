@@ -19,6 +19,21 @@ export const reviewsService = {
         return data as ReviewWithUser[]
     },
 
+    async getOwnerReviewsByToolId(toolId: string) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('reviews')
+            .select(`
+                *,
+                users!reviews_user_id_fkey (name, avatar_url)
+            `)
+            .eq('tool_id', toolId)
+            .order('created_at', { ascending: false })
+
+        if (error) throw error
+        return data as ReviewWithUser[]
+    },
+
     async createReview(review: {
         tool_id: string
         rating: number

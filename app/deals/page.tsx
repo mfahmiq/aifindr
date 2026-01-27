@@ -3,6 +3,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import {
     Gift,
@@ -16,7 +17,8 @@ import {
     Flame,
     ArrowRight,
     Percent,
-    Loader2
+    Loader2,
+    Mail
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -27,6 +29,9 @@ export default function DealsPage() {
     const [deals, setDeals] = useState<DealWithTool[]>([])
     const [loading, setLoading] = useState(true)
     const [copiedCode, setCopiedCode] = useState<string | null>(null)
+    const [email, setEmail] = useState("")
+    const [subscribing, setSubscribing] = useState(false)
+    const [subscribedSuccess, setSubscribedSuccess] = useState(false)
 
     useEffect(() => {
         const fetchDeals = async () => {
@@ -46,6 +51,33 @@ export default function DealsPage() {
         navigator.clipboard.writeText(code)
         setCopiedCode(code)
         setTimeout(() => setCopiedCode(null), 2000)
+    }
+
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!email) return
+
+        setSubscribing(true)
+        try {
+            const res = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+
+            if (res.ok) {
+                setSubscribedSuccess(true)
+                setEmail("")
+            } else {
+                const data = await res.json()
+                alert(data.error || "Failed to subscribe")
+            }
+        } catch (error) {
+            console.error("Newsletter error:", error)
+            alert("Something went wrong. Please try again.")
+        } finally {
+            setSubscribing(false)
+        }
     }
 
     // Calculate days until expiry
@@ -177,7 +209,7 @@ export default function DealsPage() {
 
                                         <CardHeader className="pb-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-16 h-16 rounded-2xl bg-[#1a1a1a] flex items-center justify-center shadow-inner overflow-hidden border border-white/5 group-hover:border-white/10 transition-colors">
+                                                <div className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-inner overflow-hidden border border-white/5 group-hover:border-white/10 transition-colors">
                                                     {tool?.logo_url ? (
                                                         <img
                                                             src={tool.logo_url}
@@ -194,10 +226,10 @@ export default function DealsPage() {
                                                     </div>
                                                 </div>
                                                 <div className="flex-1">
-                                                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                                                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors text-foreground">
                                                         {tool?.name || 'AI Tool'}
                                                     </CardTitle>
-                                                    <Badge variant="secondary" className="mt-1 bg-white/5 hover:bg-white/10 border-white/10 text-[10px] uppercase tracking-wider">
+                                                    <Badge variant="secondary" className="mt-1 bg-primary/10 hover:bg-primary/20 border-primary/10 text-primary text-[10px] uppercase tracking-wider font-bold">
                                                         Deal
                                                     </Badge>
                                                 </div>
@@ -205,9 +237,9 @@ export default function DealsPage() {
                                         </CardHeader>
 
                                         <CardContent className="flex-1 space-y-4">
-                                            <div className="space-y-2">
-                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] block">
-                                                    Discount
+                                            <div className="space-y-1.5">
+                                                <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] block">
+                                                    Discount Detail
                                                 </span>
                                                 <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
                                                     {deal.description}
@@ -215,10 +247,10 @@ export default function DealsPage() {
                                             </div>
 
                                             {deal.code && (
-                                                <div className="relative mt-4 p-4 rounded-xl bg-black/40 border border-dashed border-white/10 group-hover:border-primary/30 transition-colors">
+                                                <div className="relative mt-4 p-4 rounded-xl bg-zinc-900 border border-dashed border-white/20 group-hover:border-primary/40 transition-colors shadow-inner">
                                                     <div className="flex items-center justify-between">
                                                         <div className="space-y-1">
-                                                            <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-widest block">
+                                                            <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest block">
                                                                 Promo Code
                                                             </span>
                                                             <code className="font-mono font-black text-xl text-white tracking-widest">{deal.code}</code>
@@ -231,8 +263,8 @@ export default function DealsPage() {
                                                                 copyCode(deal.code!);
                                                             }}
                                                             className={cn(
-                                                                "h-9 px-4 bg-white/5 hover:bg-white/10 transition-all",
-                                                                copiedCode === deal.code && "bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                                                                "h-9 px-4 bg-white/10 hover:bg-white/20 transition-all text-white border border-white/10",
+                                                                copiedCode === deal.code && "bg-green-500 text-white hover:bg-green-600 border-0"
                                                             )}
                                                         >
                                                             {copiedCode === deal.code ? (
@@ -292,18 +324,66 @@ export default function DealsPage() {
                     transition={{ delay: 0.5 }}
                     className="mt-16"
                 >
-                    <Card className="bg-gradient-to-r from-primary/5 via-purple-500/5 to-pink-500/5 border-2 border-primary/20 overflow-hidden">
-                        <CardContent className="py-12 text-center relative">
-                            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-full blur-2xl" />
-                            <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary" />
-                            <h2 className="text-3xl font-bold mb-3">Want More Deals?</h2>
-                            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                                Subscribe to our newsletter and get exclusive deals delivered to your inbox.
+                    <Card className="bg-zinc-900 text-white border-0 overflow-hidden relative shadow-2xl">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] -ml-32 -mb-32" />
+
+                        <CardContent className="py-16 text-center relative z-10">
+                            <motion.div
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ duration: 4, repeat: Infinity }}
+                            >
+                                <Sparkles className="w-16 h-16 mx-auto mb-6 text-primary" />
+                            </motion.div>
+                            <h2 className="text-4xl font-black mb-4 tracking-tight">Want More Deals?</h2>
+                            <p className="text-gray-400 mb-10 max-w-lg mx-auto text-lg">
+                                Subscribe to our newsletter and get exclusive, limited-time deals delivered straight to your inbox.
                             </p>
-                            <Button size="lg" className="bg-gradient-to-r from-primary to-purple-500">
-                                <Gift className="w-5 h-5 mr-2" />
-                                Subscribe for Deals
-                            </Button>
+
+                            {subscribedSuccess ? (
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="bg-primary/20 border border-primary/30 rounded-2xl p-6 max-w-md mx-auto"
+                                >
+                                    <div className="flex items-center justify-center gap-3 text-primary font-bold text-xl mb-2">
+                                        <CheckCircle className="w-6 h-6" />
+                                        Success!
+                                    </div>
+                                    <p className="text-gray-300">You're now on the list. Keep an eye on your inbox!</p>
+                                </motion.div>
+                            ) : (
+                                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                                    <div className="flex-1 relative group">
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                        <Input
+                                            type="email"
+                                            placeholder="Enter your email address"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="h-14 pl-12 bg-white/5 border-white/10 focus:border-primary/50 text-white rounded-2xl text-lg transition-all"
+                                            required
+                                        />
+                                    </div>
+                                    <Button
+                                        type="submit"
+                                        disabled={subscribing}
+                                        className="h-14 px-10 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(hsl(var(--primary)),0.3)] hover:shadow-[0_0_30px_rgba(hsl(var(--primary)),0.5)] transition-all shrink-0"
+                                    >
+                                        {subscribing ? (
+                                            <Loader2 className="w-6 h-6 animate-spin" />
+                                        ) : (
+                                            <>
+                                                Subscribe Now
+                                                <ArrowRight className="w-5 h-5 ml-2" />
+                                            </>
+                                        )}
+                                    </Button>
+                                </form>
+                            )}
+                            <p className="text-xs text-gray-500 mt-6">
+                                Join 1,000+ AI hunters. No spam, ever. Unsubscribe at any time.
+                            </p>
                         </CardContent>
                     </Card>
                 </motion.div>

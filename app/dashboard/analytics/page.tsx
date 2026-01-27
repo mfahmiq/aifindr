@@ -19,15 +19,36 @@ import {
     Loader2,
     BarChart3,
     TrendingUp,
-    MousePointer
+    MousePointer,
+    Sparkles
 } from "lucide-react"
 import { motion } from "framer-motion"
 
+import { createClient } from "@/lib/supabase/client"
+// Dynamically import subscriptionService or just import types if possible, but here we need logic.
+// Accessing subscriptionService directly.
+import { subscriptionService } from "@/lib/services/subscriptionService"
+
 export default function DashboardAnalyticsPage() {
     const [loading, setLoading] = useState(true)
+    const [plan, setPlan] = useState('free')
 
     useEffect(() => {
-        setLoading(false)
+        const checkPlan = async () => {
+            try {
+                const supabase = createClient()
+                const { data: { user } } = await supabase.auth.getUser()
+                if (user) {
+                    const effectivePlan = await subscriptionService.getEffectivePlan(user.id)
+                    setPlan(effectivePlan)
+                }
+            } catch (e) {
+                console.error("Error checking plan", e)
+            } finally {
+                setLoading(false)
+            }
+        }
+        checkPlan()
     }, [])
 
     if (loading) {
@@ -37,6 +58,8 @@ export default function DashboardAnalyticsPage() {
             </div>
         )
     }
+
+    const isPremium = ['pro', 'featured', 'sponsor'].includes(plan)
 
     return (
         <div className="flex flex-col gap-6">
@@ -52,7 +75,9 @@ export default function DashboardAnalyticsPage() {
                     <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-6">
                         <BarChart3 className="w-10 h-10 text-blue-500" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">Analytics Dashboard</h3>
+                    <h3 className="text-xl font-semibold mb-2">
+                        {isPremium ? 'Analytics Dashboard (Coming Soon)' : 'Analytics Dashboard'}
+                    </h3>
                     <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                         Detailed analytics with views, clicks, referrers, and conversion tracking will be available here.
                     </p>
@@ -72,15 +97,25 @@ export default function DashboardAnalyticsPage() {
                         ))}
                     </div>
 
-                    <p className="text-sm text-muted-foreground mb-4">
-                        Upgrade to Pro to unlock detailed analytics
-                    </p>
-                    <Link href="/pricing">
-                        <Button>
-                            Upgrade to Pro
-                            <ArrowUpRight className="w-4 h-4 ml-2" />
-                        </Button>
-                    </Link>
+                    {!isPremium && (
+                        <>
+                            <p className="text-sm text-muted-foreground mb-4">
+                                Upgrade to Pro to unlock detailed analytics
+                            </p>
+                            <Link href="/pricing">
+                                <Button>
+                                    Upgrade to Pro
+                                    <ArrowUpRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+                    {isPremium && (
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-sm font-medium">
+                            <Sparkles className="w-4 h-4" />
+                            <span>Included in your plan</span>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </div>

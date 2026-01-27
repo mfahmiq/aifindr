@@ -45,6 +45,7 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     const [userProfile, setUserProfile] = useState<{ name: string; avatar_url: string | null; email?: string } | null>(null)
+    const [userPlan, setUserPlan] = useState<string>('free')
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -62,6 +63,17 @@ export default function DashboardLayout({
                     avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
                     email: user.email
                 })
+
+                // Get effective plan to check if we should show upgrade CTA
+                try {
+                    // Import dynamically or use the service if available globally/imported
+                    // Assuming subscriptionService is imported in the file (I need to add import)
+                    const { subscriptionService } = await import("@/lib/services/subscriptionService")
+                    const plan = await subscriptionService.getEffectivePlan(user.id)
+                    setUserPlan(plan)
+                } catch (e) {
+                    console.error("Failed to fetch plan", e)
+                }
             }
         }
         fetchUser()
@@ -110,22 +122,24 @@ export default function DashboardLayout({
                             ))}
                         </nav>
 
-                        {/* Upgrade CTA */}
-                        <div className="mx-3 mt-6 p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
-                            <div className="flex items-center gap-2 mb-2">
-                                <Sparkles className="w-4 h-4 text-purple-500" />
-                                <span className="font-semibold text-sm">Upgrade Plan</span>
+                        {/* Upgrade CTA - Only show if not on max plan (Sponsor) */}
+                        {userPlan !== 'sponsor' && (
+                            <div className="mx-3 mt-6 p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <Sparkles className="w-4 h-4 text-purple-500" />
+                                    <span className="font-semibold text-sm">Upgrade Plan</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground mb-3">
+                                    Get more visibility and features for your tools.
+                                </p>
+                                <Link href="/pricing">
+                                    <Button size="sm" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                                        View Plans
+                                        <ChevronRight className="w-3 h-3 ml-1" />
+                                    </Button>
+                                </Link>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-3">
-                                Get more visibility and features for your tools.
-                            </p>
-                            <Link href="/pricing">
-                                <Button size="sm" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                                    View Plans
-                                    <ChevronRight className="w-3 h-3 ml-1" />
-                                </Button>
-                            </Link>
-                        </div>
+                        )}
                     </ScrollArea>
                 </div>
             </div>
@@ -172,6 +186,17 @@ export default function DashboardLayout({
                                     </Link>
                                 ))}
                             </nav>
+                            {/* Mobile Upgrade CTA - Also conditional */}
+                            {userPlan !== 'sponsor' && (
+                                <div className="mt-auto p-4 border-t">
+                                    <Link href="/pricing">
+                                        <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                                            <Sparkles className="w-4 h-4 mr-2" />
+                                            Upgrade Plan
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )}
                         </SheetContent>
                     </Sheet>
 

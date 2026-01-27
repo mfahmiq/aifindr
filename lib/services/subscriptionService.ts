@@ -138,12 +138,69 @@ export const subscriptionService = {
         return data as Subscription[]
     },
 
-    /**
-     * Get user's current plan
-     */
     async getUserPlan(userId: string): Promise<SubscriptionPlan> {
         const subscription = await this.getActiveSubscription(userId)
         return subscription?.plan || 'free'
+    },
+
+    /**
+     * Get user's effective plan (highest of subscription or any tool plan)
+     */
+    async getEffectivePlan(userId: string): Promise<SubscriptionPlan> {
+        const supabase = createClient()
+
+        // 1. Get Active Subscription
+        const activeSub = await this.getActiveSubscription(userId)
+        let effectivePlan: SubscriptionPlan = (activeSub?.plan as SubscriptionPlan) || 'free'
+
+        // Plan hierarchy weights
+        const planWeight: Record<string, number> = {
+            'free': 0,
+            'pro': 1,
+            'featured': 2,
+            'sponsor': 3
+        }
+
+        // 2. Check Owned Tools
+        // Note: We avoid importing toolClaimsService to prevent potential circular deps if it ever imports this.
+        // Instead we query directly or use the imported service if safe.
+        // Checking imports: toolClaimsService does NOT import subscriptionService. Safe to import.
+
+        // Using direct queries for speed and to avoid extra deps if possible, 
+        // but let's use the service if we can import it. 
+        // Ideally we should import it at the top. 
+        // For now, I'll allow the import at top of file.
+
+        const { data: ownedTools } = await supabase
+            .from('tools')
+            .select('plan')
+            .eq('owner_id', userId)
+
+        ownedTools?.forEach(tool => {
+            const toolPlan = (tool.plan || 'free').toLowerCase()
+            if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {
+                if (['free', 'pro', 'featured', 'sponsor'].includes(toolPlan)) {
+                    effectivePlan = toolPlan as SubscriptionPlan
+                }
+            }
+        })
+
+        // 3. Check Submitted Tools
+        const { data: submittedTools } = await supabase
+            .from('tools')
+            .select('plan')
+            .eq('submitted_by', userId)
+
+        submittedTools?.forEach(tool => {
+            const toolPlan = (tool.plan || 'free').toLowerCase()
+            if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {
+                if (['free', 'pro', 'featured', 'sponsor'].includes(toolPlan)) {
+                    effectivePlan = toolPlan as SubscriptionPlan
+                }
+            }
+        })
+
+        return effectivePlan
     },
 
     /**

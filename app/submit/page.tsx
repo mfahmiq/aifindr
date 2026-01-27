@@ -70,7 +70,9 @@ const SubmitToolContent = () => {
     const [selectedPlan, setSelectedPlan] = useState(initialPlan)
     const [logoFile, setLogoFile] = useState<File | null>(null)
     const [videoFile, setVideoFile] = useState<File | null>(null)
+    const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
     const [logoPreview, setLogoPreview] = useState<string | null>(null)
+    const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
     const [dominantColor, setDominantColor] = useState<string | null>(null)
     const [categories, setCategories] = useState<Category[]>([])
     const [adPlacement, setAdPlacement] = useState("sidebar")
@@ -86,6 +88,7 @@ const SubmitToolContent = () => {
     const formRef = useRef<HTMLFormElement>(null)
     const logoInputRef = useRef<HTMLInputElement>(null)
     const videoInputRef = useRef<HTMLInputElement>(null)
+    const screenshotInputRef = useRef<HTMLInputElement>(null)
 
     // Ad slots state
     const [remainingSlots, setRemainingSlots] = useState({
@@ -176,6 +179,23 @@ const SubmitToolContent = () => {
         }
     }
 
+    const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Screenshot must be less than 2MB")
+                return
+            }
+            setScreenshotFile(file)
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                const result = reader.result as string
+                setScreenshotPreview(result)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
     const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (file) {
@@ -231,6 +251,14 @@ const SubmitToolContent = () => {
             const logoPath = `tools/${userId}/${Date.now()}_${logoFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`
             const logoUrl = await uploadFile(logoFile, 'images', logoPath)
 
+            // Upload Screenshot if exists
+            let screenshotUrl = null
+            if (screenshotFile) {
+                // Using tool-images folder as requested
+                const screenshotPath = `tool-images/${userId}/${Date.now()}_scr_${screenshotFile.name.replace(/[^a-zA-Z0-9.]/g, '_')}`
+                screenshotUrl = await uploadFile(screenshotFile, 'images', screenshotPath)
+            }
+
             // Upload Video if exists
             let videoUrl = null
             if (videoFile) {
@@ -254,6 +282,7 @@ const SubmitToolContent = () => {
                     pricing_type: pricingModel,
                     plan: selectedPlan === 'free' ? null : selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1),
                     logo_url: logoUrl,
+                    image_url: screenshotUrl, // Save screenshot URL to image_url
                     dominant_color: dominantColor, // Save extracted color
                     video_url: videoUrl,
                     submitted_by: userId,
@@ -629,6 +658,43 @@ const SubmitToolContent = () => {
                                                     <SelectItem value="Trial">Free Trial</SelectItem>
                                                 </SelectContent>
                                             </Select>
+                                        </div>
+                                    </div>
+
+                                    {/* Screenshot Upload */}
+                                    <div className="grid gap-2">
+                                        <Label className="flex items-center gap-2">
+                                            <ImageIcon className="w-4 h-4 text-purple-500" />
+                                            Tool Screenshot
+                                            <Badge variant="secondary" className="text-xs">Recommended</Badge>
+                                        </Label>
+                                        <div
+                                            className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                                            onClick={() => screenshotInputRef.current?.click()}
+                                        >
+                                            <input
+                                                type="file"
+                                                ref={screenshotInputRef}
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={handleScreenshotChange}
+                                            />
+                                            {screenshotPreview ? (
+                                                <div className="relative aspect-video w-full max-w-sm mx-auto rounded-xl overflow-hidden shadow-sm">
+                                                    <img src={screenshotPreview} alt="Screenshot preview" className="w-full h-full object-cover" />
+                                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <p className="text-white font-medium">Click to change</p>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                                        <ImageIcon className="w-6 h-6 text-purple-500" />
+                                                    </div>
+                                                    <p className="font-medium">Upload a screenshot</p>
+                                                    <p className="text-sm text-muted-foreground">Showcase your tool's interface (Max 2MB)</p>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
 

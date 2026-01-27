@@ -207,7 +207,43 @@ export const adsService = {
             .limit(limit)
 
         if (error) return []
-        return data as ActiveAd[]
+
+        // Enrich with tool logos
+        const ads = data as ActiveAd[]
+        return this.enrichAdsWithLogos(ads)
+    },
+
+    /**
+     * Helper to enrich ads with tool logos based on slug in link_url
+     */
+    async enrichAdsWithLogos(ads: any[]) {
+        if (!ads.length) return ads
+
+        const supabase = createClient()
+        const slugs = ads.map(ad => {
+            const matches = ad.link_url?.match(/\/tool\/([^/?#]+)/)
+            return matches ? matches[1] : null
+        }).filter(Boolean)
+
+        if (!slugs.length) return ads
+
+        const { data: tools } = await supabase
+            .from('tools')
+            .select('slug, logo_url')
+            .in('slug', slugs)
+
+        if (!tools) return ads
+
+        const toolMap = Object.fromEntries(tools.map(t => [t.slug, t.logo_url]))
+
+        return ads.map(ad => {
+            const matches = ad.link_url?.match(/\/tool\/([^/?#]+)/)
+            const slug = matches ? matches[1] : null
+            return {
+                ...ad,
+                tool_logo_url: slug ? toolMap[slug] : null
+            }
+        })
     },
 
     /**
@@ -319,7 +355,9 @@ export const adsService = {
         const maxSlots = setting?.max_slots || (placement === 'sidebar' ? 5 : placement === 'navbar' ? 2 : 1)
 
         const ads = await this.getActiveAds(placement)
-        return ads.slice(0, maxSlots)
+        const slicedAds = ads.slice(0, maxSlots)
+
+        return this.enrichAdsWithLogos(slicedAds)
     },
 
     /**

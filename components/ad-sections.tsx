@@ -3,12 +3,12 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Sparkles, Zap, ArrowRight, Crown, Star } from "lucide-react"
+import { ExternalLink, Sparkles, Zap, ArrowRight, ChevronRight, LayoutGrid, Globe, Shield, Star, Crown } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
-import { adsService, Ad } from "@/lib/services/adsService"
+import { adsService } from "@/lib/services/adsService"
 import Link from "next/link"
-import { ToolWithRelations } from "@/lib/types"
+import { Ad, AdWithLogo, ToolWithRelations } from "@/lib/types"
 
 // Sponsor Tool Banner - Displays tools with Sponsor plan as promotional banners
 export function SponsorToolBanner({ excludeToolId }: { excludeToolId?: string }) {
@@ -201,29 +201,29 @@ export function TopBannerAd() {
                 className="block group"
                 onClick={() => adsService.trackClick(ad.id)}
             >
-                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-3.5 px-4 relative overflow-hidden shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-3.5 px-4 relative overflow-hidden shadow-[0_0_20px_rgba(139,92,246,0.4)] ring-1 ring-white/20">
                     {/* Pulsing light effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-200%] group-hover:animate-shimmer" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-200%] group-hover:animate-shimmer" />
 
                     <div className="container mx-auto flex items-center justify-center gap-6 text-sm relative">
-                        <Badge variant="secondary" className="bg-white/20 text-white border-0 text-[10px] shrink-0 font-bold tracking-widest uppercase px-2 py-0.5">
+                        <Badge variant="secondary" className="bg-white/30 text-white border-0 text-[10px] shrink-0 font-black tracking-widest uppercase px-2 py-0.5 animate-pulse shadow-sm">
                             ⚡ PROMOTED
                         </Badge>
                         <div className="flex items-center gap-4">
-                            <h3 className="font-black text-lg tracking-tight group-hover:scale-105 transition-transform">
+                            <h3 className="font-black text-lg tracking-tight group-hover:scale-105 transition-transform drop-shadow-md">
                                 {ad.title}
                             </h3>
                             <div className="w-1.5 h-1.5 rounded-full bg-white/40 hidden sm:block" />
-                            <span className="opacity-90 font-medium hidden sm:inline truncate max-w-sm">
+                            <span className="opacity-95 font-bold hidden sm:inline truncate max-w-sm tracking-tight">
                                 {ad.description}
                             </span>
                         </div>
                         <Button
                             size="sm"
                             variant="secondary"
-                            className="bg-white text-purple-700 hover:bg-white/90 font-black shrink-0 px-6 h-9 rounded-full shadow-lg group-hover:shadow-purple-400/50 transition-all border-0 uppercase text-xs"
+                            className="bg-white text-purple-700 hover:bg-white/90 font-black shrink-0 px-8 h-10 rounded-full shadow-2xl group-hover:shadow-purple-400/50 transition-all border-0 uppercase text-xs ring-2 ring-purple-100/50"
                         >
-                            {ad.cta_text || 'LEARN MORE'}
+                            {ad.cta_text || 'TRY FREE'}
                             <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </div>
@@ -254,7 +254,7 @@ export function SidebarAd() {
 
     return (
         <div className="space-y-6">
-            {ads.map((ad, index) => (
+            {(ads as AdWithLogo[]).map((ad, index) => (
                 <motion.div
                     key={ad.id}
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -289,11 +289,11 @@ export function SidebarAd() {
                                 onClick={() => adsService.trackClick(ad.id)}
                             >
                                 <div className="flex items-start gap-4 mb-4">
-                                    <div className="w-16 h-16 rounded-2xl bg-white shadow-lg border border-primary/10 p-2 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 overflow-hidden shrink-0">
-                                        {ad.image_url ? (
-                                            <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-contain" />
+                                    <div className="w-16 h-16 rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-primary/20 p-2 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 overflow-hidden shrink-0 ring-4 ring-primary/5">
+                                        {ad.tool_logo_url || ad.image_url ? (
+                                            <img src={ad.tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-contain" />
                                         ) : (
-                                            <div className="w-full h-full bg-primary/5 flex items-center justify-center font-bold text-primary text-xl">
+                                            <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
                                                 {ad.title?.substring(0, 2) || 'AD'}
                                             </div>
                                         )}
@@ -302,17 +302,18 @@ export function SidebarAd() {
                                         <h3 className="font-black text-xl leading-tight group-hover:text-primary transition-colors decoration-primary/30 group-hover:underline underline-offset-4 decoration-2">
                                             {ad.title}
                                         </h3>
-                                        <div className="text-xs text-primary/70 font-bold mt-1 uppercase tracking-tighter">
-                                            AI Selection
+                                        <div className="text-xs text-primary/80 font-black mt-1 uppercase tracking-tighter flex items-center gap-1.5">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                            EDITOR'S PICK
                                         </div>
                                     </div>
                                 </div>
-                                <p className="text-sm text-muted-foreground mb-6 leading-relaxed line-clamp-3 italic">
-                                    "{ad.description}"
+                                <p className="text-sm text-muted-foreground mb-6 leading-relaxed line-clamp-3 font-medium opacity-90">
+                                    {ad.description}
                                 </p>
-                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black h-12 shadow-lg shadow-primary/20 group-hover:shadow-primary/40 group-hover:-translate-y-0.5 transition-all text-base" size="lg">
+                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-black h-12 shadow-xl shadow-primary/30 group-hover:shadow-primary/50 group-hover:-translate-y-1 transition-all text-base border-b-4 border-primary-foreground/20 active:translate-y-0 active:border-b-0" size="lg">
                                     <Zap className="w-4 h-4 mr-2 fill-current" />
-                                    {ad.cta_text || 'Access Now'}
+                                    {ad.cta_text || 'ACCESS NOW'}
                                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </a>
@@ -425,49 +426,49 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
                 className="block h-full"
                 onClick={() => adsService.trackClick(ad.id)}
             >
-                <Card className="h-full border-2 border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background hover:shadow-2xl transition-all group overflow-hidden relative group">
+                <Card className="h-full border-2 border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all group overflow-hidden relative group">
                     {/* Glowing background effect */}
                     <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                     {/* Animated shine */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500" />
 
                     <CardContent className="p-5 h-full flex flex-col relative z-20">
                         <div className="flex items-center justify-between mb-4">
-                            <Badge className="bg-primary text-primary-foreground font-bold text-[10px] tracking-widest px-2 py-0.5">
-                                PROMOTED
+                            <Badge className="bg-primary text-primary-foreground font-black text-[10px] tracking-widest px-2.5 py-1 shadow-lg ring-1 ring-white/20">
+                                ⭐ PROMOTED
                             </Badge>
-                            <Sparkles className="w-3.5 h-3.5 text-primary/50 group-hover:text-primary transition-colors" />
+                            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
                         </div>
 
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-14 h-14 rounded-2xl bg-white shadow-md p-1.5 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 overflow-hidden ring-1 ring-primary/10">
-                                {ad.image_url ? (
-                                    <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-contain" />
+                        <div className="flex items-center gap-4 mb-5">
+                            <div className="w-15 h-15 rounded-2xl bg-white shadow-xl border border-primary/10 p-2 flex items-center justify-center group-hover:scale-115 group-hover:-rotate-6 transition-transform duration-500 overflow-hidden ring-4 ring-primary/5 shrink-0">
+                                {(ad as AdWithLogo).tool_logo_url || ad.image_url ? (
+                                    <img src={(ad as AdWithLogo).tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-contain" />
                                 ) : (
-                                    <div className="w-full h-full bg-primary/5 flex items-center justify-center font-black text-primary text-lg">
+                                    <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-lg">
                                         {ad.title?.substring(0, 2) || 'AD'}
                                     </div>
                                 )}
                             </div>
                             <div className="min-w-0">
-                                <h3 className="font-bold text-lg group-hover:text-primary transition-colors truncate">
+                                <h3 className="font-black text-xl group-hover:text-primary transition-colors truncate tracking-tight">
                                     {ad.title}
                                 </h3>
-                                <div className="text-[10px] text-muted-foreground ring-1 ring-muted-foreground/20 rounded px-1.5 py-0.5 w-fit mt-0.5 bg-muted/30 font-medium">
-                                    AI Selection
+                                <div className="text-[10px] text-primary/80 border border-primary/20 rounded-full px-2 py-0.5 w-fit mt-1 bg-primary/5 font-black uppercase tracking-widest shadow-sm">
+                                    Sponsor
                                 </div>
                             </div>
                         </div>
 
-                        <p className="text-sm text-muted-foreground flex-1 line-clamp-3 mb-5 leading-snug">
+                        <p className="text-sm text-muted-foreground flex-1 line-clamp-3 mb-6 leading-relaxed font-medium">
                             {ad.description}
                         </p>
 
-                        <Button className="w-full bg-background border-2 border-primary/20 hover:bg-primary hover:text-primary-foreground text-primary font-black py-5 shadow-sm group-hover:shadow-md transition-all rounded-xl" variant="outline" size="sm">
-                            <Zap className="w-3.5 h-3.5 mr-2" />
-                            {ad.cta_text || 'Get Access'}
-                            <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
+                        <Button className="w-full bg-background border-2 border-primary/30 hover:bg-primary hover:text-primary-foreground text-primary font-black py-6 shadow-md group-hover:shadow-xl group-hover:shadow-primary/20 transition-all rounded-2xl text-base tracking-tight" variant="outline" size="sm">
+                            <Zap className="w-4 h-4 mr-2" />
+                            {ad.cta_text || 'GET ACCESS'}
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </CardContent>
                 </Card>

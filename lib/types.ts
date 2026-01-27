@@ -1018,6 +1018,10 @@ export interface SubscriptionWithUser extends Subscription {
     users?: User | null
 }
 
+export interface AdWithLogo extends Ad {
+    tool_logo_url?: string | null
+}
+
 export interface ToolClaimWithRelations extends ToolClaim {
     tools?: Tool | null
     users?: User | null

@@ -213,13 +213,17 @@ export function AdManagement({ tool }: AdManagementProps) {
         return !hasActiveAd
     }
 
+    // Check if placement already has an active ad (to disable selection)
+    const isPlacementActive = (placementId: string) => {
+        return ads.some(a =>
+            a.placement === placementId &&
+            a.is_active &&
+            (new Date(a.ends_at || '') > new Date())
+        )
+    }
+
     // Calculate total price
     const totalPrice = calculateTotal()
-
-    // Calculate total price
-
-
-
 
     if (loading) {
         return (
@@ -350,25 +354,31 @@ export function AdManagement({ tool }: AdManagementProps) {
                         {PLACEMENTS.map((placement) => {
                             const remaining = stats ? (stats[placement.id] || 0) : placement.maxSlots
                             const isSelected = selectedPlacement === placement.id
+                            const isActive = isPlacementActive(placement.id)
 
                             return (
                                 <Label
                                     key={placement.id}
                                     className={cn(
-                                        "relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 bg-gray-900/50 hover:bg-gray-800/80",
-                                        isSelected
+                                        "relative flex flex-col p-4 rounded-xl border-2 transition-all duration-200",
+                                        isActive
+                                            ? "opacity-60 cursor-not-allowed bg-gray-900/30 border-gray-800"
+                                            : "cursor-pointer bg-gray-900/50 hover:bg-gray-800/80",
+                                        isSelected && !isActive
                                             ? "border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.15)]"
-                                            : "border-gray-800 hover:border-gray-700"
+                                            : !isActive ? "border-gray-800 hover:border-gray-700" : ""
                                     )}
                                 >
-                                    <RadioGroupItem value={placement.id} className="sr-only" />
+                                    <RadioGroupItem value={placement.id} className="sr-only" disabled={isActive} />
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex items-center gap-2 font-bold text-white">
-                                            <placement.icon className={cn("w-4 h-4", isSelected ? "text-yellow-500" : "text-gray-400")} />
+                                            <placement.icon className={cn("w-4 h-4", isSelected && !isActive ? "text-yellow-500" : "text-gray-400")} />
                                             {placement.title}
                                         </div>
                                         <div className="text-right">
-                                            {isIncluded(placement.id) ? (
+                                            {isActive ? (
+                                                <Badge variant="outline" className="border-green-500 text-green-500 bg-green-500/10">Running</Badge>
+                                            ) : isIncluded(placement.id) ? (
                                                 <>
                                                     <div className="text-xs text-gray-400 line-through decoration-gray-600">Rp {placement.price.toLocaleString()}</div>
                                                     <div className="text-xs font-bold text-green-500">Included</div>
@@ -396,9 +406,10 @@ export function AdManagement({ tool }: AdManagementProps) {
                                     {/* Selection Circle indicator */}
                                     <div className={cn(
                                         "absolute top-4 right-16 w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center transition-all",
-                                        isSelected ? "border-yellow-500 bg-yellow-500" : "bg-transparent"
+                                        isSelected && !isActive ? "border-yellow-500 bg-yellow-500" : "bg-transparent",
+                                        isActive && "hidden"
                                     )}>
-                                        {isSelected && <Check className="w-3 h-3 text-black" />}
+                                        {isSelected && !isActive && <Check className="w-3 h-3 text-black" />}
                                     </div>
                                 </Label>
                             )

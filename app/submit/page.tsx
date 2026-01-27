@@ -240,7 +240,7 @@ const SubmitToolContent = () => {
 
             // Insert into DB
             const isPaidPlan = selectedPlan !== 'free'
-            const initialStatus = isPaidPlan ? 'pending_payment' : 'pending'
+            const initialStatus = 'pending'
 
             const { data: toolData, error } = await supabase
                 .from('tools')

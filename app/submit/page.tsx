@@ -353,7 +353,7 @@ const SubmitToolContent = () => {
             id: "sponsor",
             name: "Sponsor",
             price: "Rp 299rb",
-            period: "/week",
+            period: "/month",
             description: "Exclusive promotion",
             features: ["Everything in Featured", "Banner ads", "No competitor ads", "Dedicated support"],
             color: "from-yellow-500 to-orange-500"
@@ -378,11 +378,14 @@ const SubmitToolContent = () => {
             const days = Math.ceil((date.to.getTime() - date.from.getTime()) / (1000 * 60 * 60 * 24))
             const extraDays = Math.max(0, days - 30)
             const extraWeeks = Math.ceil(extraDays / 7)
-            // Base price for 30 days is roughly 4 weeks
-            const weeklyPrice = adPrices[adPlacement]
-            total = weeklyPrice * 4
 
-            if (extraWeeks > 0) total += extraWeeks * weeklyPrice
+            // Base price for Sponsor includes first 30 days
+            total = 299000
+
+            if (extraWeeks > 0) {
+                const weeklyPrice = adPrices[adPlacement]
+                total += extraWeeks * weeklyPrice
+            }
         }
         return total
     }
@@ -750,9 +753,9 @@ const SubmitToolContent = () => {
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
                                                                 <span className="text-xs text-muted-foreground line-through">Rp 150,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['sidebar'] || 49000).toLocaleString()}</p>
+                                                                <p className="font-semibold text-green-600">Included</p>
                                                             </div>
-                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <p className="text-xs text-muted-foreground">Extension: Rp {(adPrices['sidebar'] || 49000).toLocaleString()}/wk</p>
                                                             <Badge variant={remainingSlots.sidebar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.sidebar} slots left
                                                             </Badge>
@@ -775,9 +778,9 @@ const SubmitToolContent = () => {
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
                                                                 <span className="text-xs text-muted-foreground line-through">Rp 250,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['navbar'] || 99000).toLocaleString()}</p>
+                                                                <p className="font-semibold text-green-600">Included</p>
                                                             </div>
-                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <p className="text-xs text-muted-foreground">Extension: Rp {(adPrices['navbar'] || 99000).toLocaleString()}/wk</p>
                                                             <Badge variant={remainingSlots.navbar > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.navbar > 0 ? `${remainingSlots.navbar} slots left` : 'Sold out'}
                                                             </Badge>
@@ -800,9 +803,9 @@ const SubmitToolContent = () => {
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
                                                                 <span className="text-xs text-muted-foreground line-through">Rp 1,000,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['banner'] || 299000).toLocaleString()}</p>
+                                                                <p className="font-semibold text-green-600">Included</p>
                                                             </div>
-                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <p className="text-xs text-muted-foreground">Extension: Rp {(adPrices['banner'] || 299000).toLocaleString()}/wk</p>
                                                             <Badge variant={remainingSlots.banner > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.banner > 0 ? `${remainingSlots.banner} slots left` : 'Sold out'}
                                                             </Badge>
@@ -825,9 +828,9 @@ const SubmitToolContent = () => {
                                                         <div className="text-right">
                                                             <div className="flex flex-col items-end">
                                                                 <span className="text-xs text-muted-foreground line-through">Rp 75,000</span>
-                                                                <p className="font-semibold text-yellow-600">Rp {(adPrices['inline'] || 29000).toLocaleString()}</p>
+                                                                <p className="font-semibold text-green-600">Included</p>
                                                             </div>
-                                                            <p className="text-xs text-muted-foreground">/week</p>
+                                                            <p className="text-xs text-muted-foreground">Extension: Rp {(adPrices['inline'] || 29000).toLocaleString()}/wk</p>
                                                             <Badge variant={remainingSlots.inline > 0 ? "outline" : "destructive"} className="text-xs mt-1">
                                                                 {remainingSlots.inline} slots left
                                                             </Badge>
@@ -917,8 +920,8 @@ const SubmitToolContent = () => {
                                             {/* Price Breakdown */}
                                             <div className="bg-background/80 rounded-xl p-4 space-y-2">
                                                 <div className="flex justify-between text-sm">
-                                                    <span className="text-muted-foreground">Ad Placement ({adPlacement})</span>
-                                                    <span>Rp {(adPrices[adPlacement] || 0).toLocaleString()} x 4 weeks</span>
+                                                    <span className="text-muted-foreground">Sponsor Plan (Base)</span>
+                                                    <span>Rp 299,000 (First 30 days)</span>
                                                 </div>
                                                 <div className="flex justify-between font-bold pt-2 border-t">
                                                     <span>Total (30 Days)</span>

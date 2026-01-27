@@ -84,10 +84,6 @@ export default function DashboardPage() {
                 const activeSub = await subscriptionService.getActiveSubscription(user.id)
                 setSubscription(activeSub)
 
-                const plan = activeSub?.plan || 'free'
-                setCurrentPlan(plan)
-                setFeatures(PLAN_FEATURES[plan])
-
                 // Get owned tools
                 const ownedTools = await toolClaimsService.getOwnedTools(user.id)
                 setTools(ownedTools || [])
@@ -100,6 +96,43 @@ export default function DashboardPage() {
                     .order('created_at', { ascending: false })
 
                 setSubmissions(submittedTools || [])
+
+                // Determine effective plan (highest of subscription or any tool plan)
+                let effectivePlan: SubscriptionPlan = (activeSub?.plan as SubscriptionPlan) || 'free'
+
+                const planWeight: Record<string, number> = {
+                    'free': 0,
+                    'pro': 1,
+                    'featured': 2,
+                    'sponsor': 3
+                }
+
+                // Check owned tools
+                ownedTools?.forEach(tool => {
+                    const toolPlan = (tool.plan || 'free').toLowerCase()
+                    if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {
+                        // Cast back to SubscriptionPlan is safe because we only check against known plan keys
+                        // If toolPlan is 'sponsor', it effectively upgrades the user view
+                        if (['free', 'pro', 'featured', 'sponsor'].includes(toolPlan)) {
+                            effectivePlan = toolPlan as SubscriptionPlan
+                        }
+                    }
+                })
+
+                // Check submitted tools (even pending ones, for now, or maybe just approved? 
+                // User asked to see dashboard reflect the submit. Since we bypass payment, 
+                // the tool exists but might be pending. Let's count it.)
+                submittedTools?.forEach((tool: any) => {
+                    const toolPlan = (tool.plan || 'free').toLowerCase()
+                    if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {
+                        if (['free', 'pro', 'featured', 'sponsor'].includes(toolPlan)) {
+                            effectivePlan = toolPlan as SubscriptionPlan
+                        }
+                    }
+                })
+
+                setCurrentPlan(effectivePlan)
+                setFeatures(PLAN_FEATURES[effectivePlan])
 
                 // Calculate real stats from tools
                 const totalViews = ownedTools?.reduce((sum, tool) => sum + (tool.view_count || 0), 0) || 0

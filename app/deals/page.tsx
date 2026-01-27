@@ -3,6 +3,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import {
     Gift,
     Clock,
@@ -157,52 +158,91 @@ export default function DealsPage() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
-                                    whileHover={{ y: -5 }}
+                                    className="group"
                                 >
-                                    <Card className="h-full flex flex-col overflow-hidden border-2 hover:border-red-500/30 transition-all hover:shadow-xl group">
-                                        {/* Discount Banner */}
-                                        <div className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white px-4 py-3 text-center relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                                            <span className="font-bold text-lg relative flex items-center justify-center gap-2">
-                                                <Zap className="w-5 h-5" />
+                                    <Card className="h-full flex flex-col overflow-hidden border-0 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 relative">
+                                        {/* Discount Header Banner */}
+                                        <div className="bg-gradient-to-r from-[#ff4d4d] via-[#f97316] to-[#fbbf24] text-white px-4 py-3 text-center relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                                            <div className="font-bold text-lg relative flex items-center justify-center gap-2 drop-shadow-sm">
+                                                <motion.div
+                                                    animate={{ scale: [1, 1.2, 1] }}
+                                                    transition={{ duration: 2, repeat: Infinity }}
+                                                >
+                                                    <Zap className="w-5 h-5 fill-current" />
+                                                </motion.div>
                                                 {deal.discount || 'Special Offer'}
-                                            </span>
+                                            </div>
                                         </div>
-                                        <CardHeader>
+
+                                        <CardHeader className="pb-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center font-bold text-primary text-lg shadow-lg">
-                                                    {tool?.name?.substring(0, 2) || '??'}
+                                                <div className="w-16 h-16 rounded-2xl bg-[#1a1a1a] flex items-center justify-center shadow-inner overflow-hidden border border-white/5 group-hover:border-white/10 transition-colors">
+                                                    {tool?.logo_url ? (
+                                                        <img
+                                                            src={tool.logo_url}
+                                                            alt={tool.name}
+                                                            className="w-full h-full object-contain p-2"
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).style.display = 'none';
+                                                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                                                            }}
+                                                        />
+                                                    ) : null}
+                                                    <div className={`w-full h-full flex items-center justify-center font-bold text-xl text-white/90 bg-gradient-to-br from-gray-700 to-gray-900 ${tool?.logo_url ? 'hidden' : ''}`}>
+                                                        {tool?.name?.substring(0, 2).toUpperCase() || '??'}
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <CardTitle className="text-xl">{tool?.name || 'AI Tool'}</CardTitle>
-                                                    <Badge variant="outline" className="mt-1">Deal</Badge>
+                                                <div className="flex-1">
+                                                    <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                                                        {tool?.name || 'AI Tool'}
+                                                    </CardTitle>
+                                                    <Badge variant="secondary" className="mt-1 bg-white/5 hover:bg-white/10 border-white/10 text-[10px] uppercase tracking-wider">
+                                                        Deal
+                                                    </Badge>
                                                 </div>
                                             </div>
                                         </CardHeader>
-                                        <CardContent className="flex-1">
-                                            <p className="text-muted-foreground">{deal.description}</p>
+
+                                        <CardContent className="flex-1 space-y-4">
+                                            <div className="space-y-2">
+                                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] block">
+                                                    Discount
+                                                </span>
+                                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                                    {deal.description}
+                                                </p>
+                                            </div>
 
                                             {deal.code && (
-                                                <div className="mt-4 p-4 bg-gradient-to-r from-muted to-muted/50 rounded-xl border-2 border-dashed border-muted-foreground/20">
+                                                <div className="relative mt-4 p-4 rounded-xl bg-black/40 border border-dashed border-white/10 group-hover:border-primary/30 transition-colors">
                                                     <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <span className="text-xs text-muted-foreground block mb-1">Promo Code</span>
-                                                            <code className="font-mono font-bold text-lg">{deal.code}</code>
+                                                        <div className="space-y-1">
+                                                            <span className="text-[10px] font-bold text-[#f97316] uppercase tracking-widest block">
+                                                                Promo Code
+                                                            </span>
+                                                            <code className="font-mono font-black text-xl text-white tracking-widest">{deal.code}</code>
                                                         </div>
                                                         <Button
                                                             size="sm"
-                                                            variant={copiedCode === deal.code ? "default" : "outline"}
-                                                            onClick={() => copyCode(deal.code!)}
-                                                            className={copiedCode === deal.code ? "bg-green-500 hover:bg-green-600" : ""}
+                                                            variant="ghost"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                copyCode(deal.code!);
+                                                            }}
+                                                            className={cn(
+                                                                "h-9 px-4 bg-white/5 hover:bg-white/10 transition-all",
+                                                                copiedCode === deal.code && "bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                                                            )}
                                                         >
                                                             {copiedCode === deal.code ? (
                                                                 <>
-                                                                    <CheckCircle className="w-4 h-4 mr-1" />
-                                                                    Copied!
+                                                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                                                    Copied
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <Copy className="w-4 h-4 mr-1" />
+                                                                    <Copy className="w-4 h-4 mr-2" />
                                                                     Copy
                                                                 </>
                                                             )}
@@ -211,22 +251,30 @@ export default function DealsPage() {
                                                 </div>
                                             )}
                                         </CardContent>
-                                        <CardFooter className="flex-col gap-3 bg-muted/30 pt-4">
+
+                                        <CardFooter className="flex-col gap-4 pt-2">
                                             {daysLeft && daysLeft > 0 && (
-                                                <div className={`flex items-center gap-2 text-sm w-full px-3 py-2 rounded-lg ${daysLeft <= 3 ? 'bg-red-500/10 text-red-500' : 'bg-muted text-muted-foreground'
-                                                    }`}>
-                                                    <Clock className="w-4 h-4" />
-                                                    <span className="font-medium">
-                                                        {daysLeft <= 3 ? '🔥 Hurry! ' : ''}
+                                                <div className={cn(
+                                                    "flex items-center gap-2 text-xs w-full px-4 py-2.5 rounded-full font-medium transition-colors",
+                                                    daysLeft <= 3
+                                                        ? "bg-red-500/10 text-red-500 border border-red-500/20"
+                                                        : "bg-white/5 text-muted-foreground border border-white/5"
+                                                )}>
+                                                    <Clock className="w-3.5 h-3.5" />
+                                                    <span>
+                                                        {daysLeft <= 3 ? 'ENDING SOON: ' : ''}
                                                         Expires in {daysLeft} days
                                                     </span>
                                                 </div>
                                             )}
-                                            <Button className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600" asChild>
+                                            <Button
+                                                className="w-full h-12 rounded-xl bg-gradient-to-r from-[#ff4d4d] to-[#f97316] hover:opacity-90 transition-all text-white font-bold group/btn shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] border-0"
+                                                asChild
+                                            >
                                                 <Link href={deal.affiliate_url || (tool?.slug ? `/tool/${tool.slug}` : '#')} target="_blank">
-                                                    <ExternalLink className="w-4 h-4 mr-2" />
+                                                    <ExternalLink className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
                                                     Claim Deal
-                                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                                    <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                                                 </Link>
                                             </Button>
                                         </CardFooter>

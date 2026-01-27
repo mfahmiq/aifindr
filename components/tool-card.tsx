@@ -177,8 +177,8 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                                 unoptimized={true} // Use unoptimized to avoid "hostname not configured" generic errors if wildcard fails or for faster testing
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400">
-                                <Zap className="w-8 h-8" />
+                            <div className="w-full h-full bg-white dark:bg-gray-700 flex items-center justify-center text-4xl font-extrabold text-gray-400 uppercase">
+                                {tool.name?.charAt(0) || <Zap className="w-12 h-12 text-gray-400" />}
                             </div>
                         )}
                     </div>

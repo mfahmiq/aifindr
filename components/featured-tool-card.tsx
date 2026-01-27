@@ -86,8 +86,8 @@ export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlo
                                     unoptimized={true}
                                 />
                             ) : (
-                                <div className="w-full h-full bg-white dark:bg-gray-700 flex items-center justify-center">
-                                    <Zap className="w-12 h-12 text-gray-400" />
+                                <div className="w-full h-full bg-white dark:bg-gray-700 flex items-center justify-center text-5xl font-extrabold text-gray-400 uppercase">
+                                    {tool.name?.charAt(0) || <Zap className="w-12 h-12 text-gray-400" />}
                                 </div>
                             )}
                         </div>

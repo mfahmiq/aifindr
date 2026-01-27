@@ -117,7 +117,7 @@ export const subscriptionService = {
             .or('ends_at.is.null,ends_at.gt.' + new Date().toISOString())
             .order('created_at', { ascending: false })
             .limit(1)
-            .single()
+            .maybeSingle()
 
         if (error && error.code !== 'PGRST116') throw error
         return data as Subscription | null

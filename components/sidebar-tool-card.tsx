@@ -43,8 +43,8 @@ export function SidebarToolCard({ tool, index = 0, isFeatured = false }: Sidebar
                                 className="w-full h-full object-cover"
                             />
                         ) : (
-                            <div className="text-xs font-bold text-muted-foreground">
-                                {tool.name.slice(0, 2)}
+                            <div className="w-full h-full bg-white dark:bg-gray-800 flex items-center justify-center text-xl font-bold text-gray-400 uppercase">
+                                {tool.name?.charAt(0)}
                             </div>
                         )}
                     </div>

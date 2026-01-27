@@ -29,24 +29,13 @@ import {
     ArrowRight,
     Megaphone,
     Calendar as CalendarIcon,
-    Loader2,
-    Eye,
-    LayoutGrid,
-    Sidebar as SidebarIcon,
-    Monitor
+    Loader2
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { createBrowserClient } from "@supabase/ssr"
 import { useRouter } from "next/navigation"
-
-import { ToolCard } from "@/components/tool-card"
-import { FeaturedToolCard } from "@/components/featured-tool-card"
-import { TopBannerAd, SidebarAd, InlineToolAd, SponsorToolBanner } from "@/components/ad-sections"
-import { ToolWithRelations } from "@/lib/types"
-import { Ad } from "@/lib/services/adsService"
-
 
 interface Category {
     id: string
@@ -402,107 +391,6 @@ const SubmitToolContent = () => {
     const isPaidPlan = selectedPlan !== 'free'
     const canUploadVideo = ['pro', 'featured', 'sponsor'].includes(selectedPlan)
 
-    // Construct mock tool for preview
-    const mockTool: ToolWithRelations = {
-        id: 'preview',
-        name: (formRef.current?.elements.namedItem('name') as HTMLInputElement)?.value || "Your Tool Name",
-        slug: 'preview-tool',
-        short_description: (formRef.current?.elements.namedItem('description') as HTMLTextAreaElement)?.value || "Your tool's short description will appear here. Capture the essence of your tool in a few sentences.",
-        long_description: null,
-        website_url: (formRef.current?.elements.namedItem('url') as HTMLInputElement)?.value || "https://example.com",
-        logo_url: logoPreview,
-        video_url: null,
-        dominant_color: dominantColor,
-        pricing_type: (formRef.current?.elements.namedItem('pricing_type') as HTMLSelectElement)?.value || "Freemium",
-        plan: selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        status: 'pending',
-        is_verified: selectedPlan !== 'free',
-        is_priority: ['pro', 'featured', 'sponsor'].includes(selectedPlan),
-        has_backlink: false,
-        category_id: (formRef.current?.elements.namedItem('category') as HTMLSelectElement)?.value || null,
-        submitted_by: userId,
-        owner_id: userId,
-        submitted_email: userEmail,
-        view_count: 1250,
-        favorite_count: 42,
-        rating: 4.9,
-        review_count: 12,
-        has_api: false,
-        has_premium_support: false,
-        has_free_trial: false,
-        is_open_source: false,
-        image_url: null,
-        rejection_reason: null,
-        subscription_ends_at: null,
-        subscription_starts_at: null,
-        category: categories.find(c => c.id === ((formRef.current?.elements.namedItem('category') as HTMLSelectElement)?.value)) as any || { name: "Category" },
-        reviews: [
-            {
-                id: 'mock-review',
-                tool_id: 'preview',
-                user_id: 'mock-user',
-                rating: 5,
-                comment: "This is a preview of how a review might look.",
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                status: 'approved',
-                title: 'Great tool!',
-                guest_name: 'John Doe',
-                guest_email: null,
-                helpful_count: 5
-            }
-        ]
-    }
-
-    // Force update when form values change (handled by native onChange in form inputs but we need React state for these to trigger re-renders if we want real-time preview)
-    // Actually, for the preview to be "live", we need state for name, description, url, pricing_type.
-    // Currently, they are unregulated inputs. I should create state for them.
-
-    // NOTE: To avoid refactoring the entire form to controlled components right now (which is safer but bigger change),
-    // I will add state variables just for capturing the input for preview purposes, or switch the inputs to be controlled.
-    // Switching to controlled inputs is cleaner.
-
-    const [previewName, setPreviewName] = useState("Your Tool Name")
-    const [previewDesc, setPreviewDesc] = useState("Your tool's short description will appear here.")
-    const [previewPricing, setPreviewPricing] = useState("Freemium")
-    const [previewCategory, setPreviewCategory] = useState<string>("")
-    const [previewPlacement, setPreviewPlacement] = useState<string>("sidebar")
-
-    // Update mockTool with state values
-    mockTool.name = previewName || "Your Tool Name"
-    mockTool.short_description = previewDesc || "Your tool's short description will appear here."
-    mockTool.pricing_type = previewPricing
-    const selectedCategoryObj = categories.find(c => c.id === previewCategory)
-    // @ts-ignore
-    mockTool.category = selectedCategoryObj ? { name: selectedCategoryObj.name } : { name: "Category" }
-
-    // Mock Ad for Preview
-    const mockAd: Ad = {
-        id: 'preview-ad',
-        name: mockTool.name,
-        title: mockTool.name,
-        description: mockTool.short_description || "Ad Description",
-        link_url: mockTool.website_url,
-        cta_text: "View Tool",
-        image_url: mockTool.logo_url,
-        placement: previewPlacement as any,
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        starts_at: new Date().toISOString(),
-        ends_at: new Date().toISOString(),
-        impressions: 0,
-        clicks: 0,
-        advertiser_name: 'Preview User',
-        advertiser_email: 'preview@example.com',
-        gradient_from: null,
-        gradient_to: null,
-        price_paid: 0,
-        target_categories: []
-    }
-
     if (submitted) {
         return (
             <div className="min-h-screen flex items-center justify-center px-4">
@@ -539,11 +427,6 @@ const SubmitToolContent = () => {
                 data-client-key={clientKey}
                 strategy="lazyOnload"
             />
-
-            {/* Live Preview Mobile (Floating or Bottom?) - Optional, for now just hiding on mobile or showing at bottom. 
-                The sidebar is hidden on small screens in grid layout? No, it's just stacked.
-            */}
-
             {/* Hero Section */}
             <div className="relative bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 overflow-hidden">
                 <div className="absolute inset-0">
@@ -676,74 +559,6 @@ const SubmitToolContent = () => {
                                 )
                             })}
                         </div>
-
-                        {/* Live Preview Section */}
-                        <div className="mt-8 sticky top-4">
-                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                <Eye className="w-5 h-5 text-primary" />
-                                Live Preview
-                            </h2>
-                            <div className="transform origin-top-left transition-all duration-300">
-                                {selectedPlan === 'sponsor' ? (
-                                    <div className="bg-muted/30 p-4 rounded-xl border border-dashed border-primary/20">
-                                        <p className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wider">
-                                            {previewPlacement === 'sidebar' && "Sidebar Banner Preview"}
-                                            {previewPlacement === 'navbar' && "Navbar Premium Preview"}
-                                            {previewPlacement === 'hero' && "Hero Banner Preview"}
-                                            {previewPlacement === 'inline' && "Inline Feed Preview"}
-                                        </p>
-
-                                        {/* Context Wrappers */}
-                                        {previewPlacement === 'sidebar' && (
-                                            <div className="flex gap-4">
-                                                <div className="hidden sm:block flex-1 bg-muted/20 rounded h-64 animate-pulse opacity-20" />
-                                                <div className="w-64 shrink-0">
-                                                    <SidebarAd adData={mockAd} />
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {previewPlacement === 'navbar' && (
-                                            <div className="w-full space-y-2">
-                                                <div className="w-full h-12 bg-muted/20 rounded-t-lg opacity-20" />
-                                                <TopBannerAd adData={mockAd} />
-                                                <div className="w-full h-32 bg-muted/20 rounded-b-lg opacity-20" />
-                                            </div>
-                                        )}
-
-                                        {previewPlacement === 'hero' && (
-                                            <div className="w-full">
-                                                <div className="w-full h-24 bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-lg mb-2 opacity-20" />
-                                                <SponsorToolBanner tool={mockTool} />
-                                                <div className="w-full h-24 bg-muted/20 rounded-b-lg mt-2 opacity-20" />
-                                            </div>
-                                        )}
-
-                                        {previewPlacement === 'inline' && (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="h-64 bg-muted/20 rounded-xl animate-pulse opacity-20" />
-                                                <InlineToolAd adData={mockAd} />
-                                                <div className="h-64 bg-muted/20 rounded-xl animate-pulse opacity-20" />
-                                            </div>
-                                        )}
-                                    </div>
-                                ) : (selectedPlan === 'featured') ? (
-                                    <div className="w-full">
-                                        <FeaturedToolCard
-                                            tool={mockTool}
-                                            remainingSlots={featuredSlots.remaining}
-                                            totalSlots={featuredSlots.total}
-                                            forceVertical={true}
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-2 text-center">
-                                            * Featured layout may vary based on screen size
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <ToolCard tool={mockTool} />
-                                )}
-                            </div>
-                        </div>
                     </motion.div>
 
                     {/* Form */}
@@ -768,14 +583,7 @@ const SubmitToolContent = () => {
                                     <div className="grid gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="name">Tool Name <span className="text-red-500">*</span></Label>
-                                            <Input
-                                                name="name"
-                                                id="name"
-                                                placeholder="e.g. Magic Writer AI"
-                                                required
-                                                className="h-12"
-                                                onChange={(e) => setPreviewName(e.target.value)}
-                                            />
+                                            <Input name="name" id="name" placeholder="e.g. Magic Writer AI" required className="h-12" />
                                         </div>
 
                                         <div className="grid gap-2">
@@ -785,22 +593,14 @@ const SubmitToolContent = () => {
 
                                         <div className="grid gap-2">
                                             <Label htmlFor="description">Short Description <span className="text-red-500">*</span></Label>
-                                            <Textarea
-                                                name="description"
-                                                id="description"
-                                                placeholder="Briefly describe what your tool does (Max 200 chars)"
-                                                maxLength={200}
-                                                required
-                                                className="min-h-[100px]"
-                                                onChange={(e) => setPreviewDesc(e.target.value)}
-                                            />
+                                            <Textarea name="description" id="description" placeholder="Briefly describe what your tool does (Max 200 chars)" maxLength={200} required className="min-h-[100px]" />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="category">Category <span className="text-red-500">*</span></Label>
-                                            <Select name="category" required onValueChange={setPreviewCategory}>
+                                            <Select name="category" required>
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Category" />
                                                 </SelectTrigger>
@@ -814,7 +614,7 @@ const SubmitToolContent = () => {
 
                                         <div className="grid gap-2">
                                             <Label>Pricing Model <span className="text-red-500">*</span></Label>
-                                            <Select name="pricing_type" required onValueChange={setPreviewPricing}>
+                                            <Select name="pricing_type" required>
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Pricing" />
                                                 </SelectTrigger>
@@ -827,110 +627,6 @@ const SubmitToolContent = () => {
                                             </Select>
                                         </div>
                                     </div>
-
-                                    {/* Sponsor Options */}
-                                    {selectedPlan === 'sponsor' && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            className="space-y-4 pt-4 border-t border-border"
-                                        >
-                                            <Label className="text-amber-500 font-bold flex items-center gap-2">
-                                                <Megaphone className="w-4 h-4" />
-                                                Sponsor Options <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 text-[10px] border-amber-500/20">Exclusive</Badge>
-                                            </Label>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {/* Sidebar Banner */}
-                                                <div
-                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'sidebar' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
-                                                    onClick={() => setPreviewPlacement('sidebar')}
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="font-semibold flex items-center gap-2">
-                                                            <SidebarIcon className="w-4 h-4 text-muted-foreground" />
-                                                            Sidebar Banner
-                                                        </div>
-                                                        <Badge variant="outline" className="bg-background">5 slots left</Badge>
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground mb-3">Appears on tool detail pages</p>
-                                                    <div className="text-right">
-                                                        <div className="text-xs line-through text-muted-foreground">Rp 150,000</div>
-                                                        <div className="text-sm font-bold text-amber-500">Rp 49,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
-                                                    </div>
-                                                    {previewPlacement === 'sidebar' && (
-                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
-                                                    )}
-                                                </div>
-
-                                                {/* Navbar Premium */}
-                                                <div
-                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'navbar' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
-                                                    onClick={() => setPreviewPlacement('navbar')}
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="font-semibold flex items-center gap-2">
-                                                            <Monitor className="w-4 h-4 text-muted-foreground" />
-                                                            Navbar Premium
-                                                        </div>
-                                                        <Badge variant="outline" className="bg-background">2 slots left</Badge>
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground mb-3">Top of homepage navigation</p>
-                                                    <div className="text-right">
-                                                        <div className="text-xs line-through text-muted-foreground">Rp 250,000</div>
-                                                        <div className="text-sm font-bold text-amber-500">Rp 99,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
-                                                    </div>
-                                                    {previewPlacement === 'navbar' && (
-                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
-                                                    )}
-                                                </div>
-
-                                                {/* Hero Banner */}
-                                                <div
-                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'hero' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
-                                                    onClick={() => setPreviewPlacement('hero')}
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="font-semibold flex items-center gap-2">
-                                                            <LayoutGrid className="w-4 h-4 text-muted-foreground" />
-                                                            Hero Banner
-                                                        </div>
-                                                        <Badge variant="outline" className="bg-background">1 slot left</Badge>
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground mb-3">Large banner on homepage</p>
-                                                    <div className="text-right">
-                                                        <div className="text-xs line-through text-muted-foreground">Rp 1,000,000</div>
-                                                        <div className="text-sm font-bold text-amber-500">Rp 299,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
-                                                    </div>
-                                                    {previewPlacement === 'hero' && (
-                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
-                                                    )}
-                                                </div>
-
-                                                {/* Inline Feed */}
-                                                <div
-                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'inline' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
-                                                    onClick={() => setPreviewPlacement('inline')}
-                                                >
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="font-semibold flex items-center gap-2">
-                                                            <LayoutGrid className="w-4 h-4 text-muted-foreground" />
-                                                            Inline Feed
-                                                        </div>
-                                                        <Badge variant="outline" className="bg-background">3 slots left</Badge>
-                                                    </div>
-                                                    <p className="text-xs text-muted-foreground mb-3">Within tools listing grid</p>
-                                                    <div className="text-right">
-                                                        <div className="text-xs line-through text-muted-foreground">Rp 75,000</div>
-                                                        <div className="text-sm font-bold text-amber-500">Rp 29,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
-                                                    </div>
-                                                    {previewPlacement === 'inline' && (
-                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
 
                                     {/* Logo Upload - Available for all */}
                                     <div className="grid gap-2">

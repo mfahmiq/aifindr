@@ -11,16 +11,11 @@ import Link from "next/link"
 import { ToolWithRelations } from "@/lib/types"
 
 // Sponsor Tool Banner - Displays tools with Sponsor plan as promotional banners
-export function SponsorToolBanner({ excludeToolId, tool: previewTool }: { excludeToolId?: string, tool?: ToolWithRelations }) {
+export function SponsorToolBanner({ excludeToolId }: { excludeToolId?: string }) {
     const [tools, setTools] = useState<ToolWithRelations[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
 
     useEffect(() => {
-        if (previewTool) {
-            setTools([previewTool])
-            return
-        }
-
         const fetchSponsorTools = async () => {
             try {
                 // Fetch tools with Sponsor plan
@@ -38,7 +33,7 @@ export function SponsorToolBanner({ excludeToolId, tool: previewTool }: { exclud
             }
         }
         fetchSponsorTools()
-    }, [excludeToolId, previewTool])
+    }, [excludeToolId])
 
     // Rotate through sponsor tools every 5 seconds
     useEffect(() => {
@@ -176,15 +171,10 @@ export function SponsorSidebarCard({ excludeToolId }: { excludeToolId?: string }
 }
 
 // Premium Top Banner - Highest visibility, appears below navbar on all pages
-export function TopBannerAd({ adData }: { adData?: Ad }) {
+export function TopBannerAd() {
     const [ad, setAd] = useState<Ad | null>(null)
 
     useEffect(() => {
-        if (adData) {
-            setAd(adData)
-            return
-        }
-
         const fetchAd = async () => {
             try {
                 const data = await adsService.getActiveAdByPlacement('banner')
@@ -194,7 +184,7 @@ export function TopBannerAd({ adData }: { adData?: Ad }) {
             }
         }
         fetchAd()
-    }, [adData])
+    }, [])
 
     if (!ad) return null
 
@@ -243,15 +233,10 @@ export function TopBannerAd({ adData }: { adData?: Ad }) {
 }
 
 // Sidebar Ad - High engagement, sticky position
-export function SidebarAd({ adData }: { adData?: Ad }) {
+export function SidebarAd() {
     const [ads, setAds] = useState<Ad[]>([])
 
     useEffect(() => {
-        if (adData) {
-            setAds([adData])
-            return
-        }
-
         const fetchAds = async () => {
             try {
                 // Fetch up to max slots
@@ -262,7 +247,7 @@ export function SidebarAd({ adData }: { adData?: Ad }) {
             }
         }
         fetchAds()
-    }, [adData])
+    }, [])
 
     if (ads.length === 0) return null
 

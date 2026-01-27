@@ -8,6 +8,52 @@ import { Search, Sparkles, Zap, Star, ArrowRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useEffect } from "react"
+
+function UserAvatars() {
+    const [users, setUsers] = useState<{ name: string, avatar_url: string | null }[]>([])
+
+    useEffect(() => {
+        async function fetchAvatars() {
+            try {
+                const res = await fetch('/api/public/avatars')
+                if (res.ok) {
+                    const data = await res.json()
+                    setUsers(data.users || [])
+                }
+            } catch (e) {
+                console.error("Failed to fetch avatars", e)
+            }
+        }
+        fetchAvatars()
+    }, [])
+
+    if (users.length === 0) {
+        return (
+            <div className="flex -space-x-2">
+                {[1, 2, 3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold">
+                        {String.fromCharCode(64 + i)}
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex -space-x-2">
+            {users.slice(0, 3).map((user, i) => (
+                <Avatar key={i} className="w-8 h-8 border-2 border-background">
+                    <AvatarImage src={user.avatar_url || ''} alt={user.name} className="object-cover" />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white text-[10px] font-bold">
+                        {user.name?.charAt(0).toUpperCase() || '?'}
+                    </AvatarFallback>
+                </Avatar>
+            ))}
+        </div>
+    )
+}
 
 export function HeroSection() {
 
@@ -162,13 +208,7 @@ export function HeroSection() {
                     className="mt-8 flex items-center justify-center gap-6 sm:gap-10 text-sm"
                 >
                     <div className="flex items-center gap-2">
-                        <div className="flex -space-x-2">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold">
-                                    {String.fromCharCode(64 + i)}
-                                </div>
-                            ))}
-                        </div>
+                        <UserAvatars />
                         <span className="text-muted-foreground">10K+ Users</span>
                     </div>
                     <div className="flex items-center gap-1">

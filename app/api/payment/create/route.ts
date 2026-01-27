@@ -12,7 +12,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
-        const { userId, plan, email, name } = body
+        const { userId, plan, email, name, toolId } = body
 
         // Validate plan
         if (!plan || !['pro', 'featured', 'sponsor'].includes(plan)) {
@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
             .from('payments')
             .insert({
                 user_id: userId,
+                tool_id: toolId || null,
                 order_id: orderId,
                 amount,
                 currency: 'IDR',

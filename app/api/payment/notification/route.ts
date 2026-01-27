@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
                 updated_at: new Date().toISOString()
             })
             .eq('order_id', order_id)
-            .select('user_id, plan')
+            .select('user_id, plan, tool_id')
             .single()
 
         if (updateError) {
@@ -72,13 +72,35 @@ export async function POST(request: NextRequest) {
         if (paymentStatus === 'success' && payment) {
             const startsAt = new Date()
             const endsAt = new Date()
-            endsAt.setMonth(endsAt.getMonth() + 1) // 1 month subscription
+
+            // Adjust duration based on plan
+            if (payment.plan === 'sponsor') {
+                endsAt.setDate(endsAt.getDate() + 7) // 1 week
+            } else {
+                endsAt.setMonth(endsAt.getMonth() + 1) // 1 month
+            }
+
+            // Update Tool status if tool_id exists
+            if (payment.tool_id) {
+                await supabase
+                    .from('tools')
+                    .update({
+                        plan: payment.plan.charAt(0).toUpperCase() + payment.plan.slice(1), // Capitalize
+                        subscription_starts_at: startsAt.toISOString(),
+                        subscription_ends_at: endsAt.toISOString(),
+                        status: 'pending', // Keep pending for review, or 'published' if trusted
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', payment.tool_id)
+            }
 
             // Check for existing active subscription
             const { data: existingSub } = await supabase
                 .from('subscriptions')
                 .select('id')
                 .eq('user_id', payment.user_id)
+                // If we want per-tool subscriptions, we should also check tool_id
+                .eq('tool_id', payment.tool_id || null)
                 .eq('status', 'active')
                 .single()
 
@@ -102,6 +124,7 @@ export async function POST(request: NextRequest) {
                     .from('subscriptions')
                     .insert({
                         user_id: payment.user_id,
+                        tool_id: payment.tool_id || null,
                         plan: payment.plan,
                         amount: parseFloat(gross_amount),
                         currency: 'IDR',

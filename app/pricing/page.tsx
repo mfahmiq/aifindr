@@ -336,7 +336,7 @@ export default function PricingPage() {
                                         How do I provide my logo and link?
                                     </AccordionTrigger>
                                     <AccordionContent className="text-muted-foreground">
-                                        After selecting your plan and completing payment, you will receive a submission form where you can upload your assets. We review usually within 24 hours.
+                                        Fill out the submission form with your tool's details, logo, and link. Payment (if applicable) is the final step of the submission process.
                                     </AccordionContent>
                                 </AccordionItem>
                                 <AccordionItem value="item-2" className="border-muted/50">
@@ -402,6 +402,6 @@ export default function PricingPage() {
                     </Card>
                 </motion.div>
             </div>
-        </div>
+        </div >
     )
 }

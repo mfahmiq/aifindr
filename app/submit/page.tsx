@@ -29,13 +29,18 @@ import {
     ArrowRight,
     Megaphone,
     Calendar as CalendarIcon,
-    Loader2
+    Loader2,
+    Eye
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { createBrowserClient } from "@supabase/ssr"
 import { useRouter } from "next/navigation"
+
+import { ToolCard } from "@/components/tool-card"
+import { FeaturedToolCard } from "@/components/featured-tool-card"
+import { ToolWithRelations } from "@/lib/types"
 
 interface Category {
     id: string
@@ -45,9 +50,23 @@ interface Category {
 
 import { Suspense } from 'react'
 import { extractDominantColor } from "@/lib/colorUtils"
+import Script from 'next/script'
+
+declare global {
+    interface Window {
+        snap: any;
+    }
+}
 
 const SubmitToolContent = () => {
     const searchParams = useSearchParams()
+
+    // Midtrans Configuration
+    const snapUrl = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true'
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js'
+    const clientKey = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || ''
+
     const router = useRouter()
     const initialPlan = searchParams.get('plan') || 'free'
 
@@ -225,7 +244,10 @@ const SubmitToolContent = () => {
             }
 
             // Insert into DB
-            const { error } = await supabase
+            const isPaidPlan = selectedPlan !== 'free'
+            const initialStatus = isPaidPlan ? 'pending_payment' : 'pending'
+
+            const { data: toolData, error } = await supabase
                 .from('tools')
                 .insert({
                     name,
@@ -242,16 +264,57 @@ const SubmitToolContent = () => {
                     submitted_by: userId,
                     owner_id: userId,
                     submitted_email: userEmail,
-                    status: 'pending',
+                    status: initialStatus,
                     is_verified: false,
                     is_priority: false,
                     has_backlink: false,
                     created_at: new Date().toISOString()
                 })
+                .select('id')
+                .single()
 
             if (error) throw error
 
-            setSubmitted(true)
+            if (isPaidPlan && toolData) {
+                // Call Payment API
+                const response = await fetch('/api/payment/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId,
+                        toolId: toolData.id,
+                        plan: selectedPlan,
+                        name,
+                        email: userEmail
+                    })
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+
+                // Trigger Snap
+                if (window.snap) {
+                    window.snap.pay(result.token, {
+                        onSuccess: (result: any) => {
+                            setSubmitted(true);
+                        },
+                        onPending: (result: any) => {
+                            setSubmitted(true);
+                        },
+                        onError: (result: any) => {
+                            console.error("Payment Error", result);
+                            alert("Payment failed! Please try again.");
+                        },
+                        onClose: () => {
+                            console.log("Payment popup closed");
+                        }
+                    })
+                } else {
+                    alert("Payment gateway not loaded. Please refresh.");
+                }
+            } else {
+                setSubmitted(true)
+            }
         } catch (error: any) {
             console.error("Submission error:", error)
             alert(error.message || "Failed to submit tool")
@@ -333,6 +396,81 @@ const SubmitToolContent = () => {
     const isPaidPlan = selectedPlan !== 'free'
     const canUploadVideo = ['pro', 'featured', 'sponsor'].includes(selectedPlan)
 
+    // Construct mock tool for preview
+    const mockTool: ToolWithRelations = {
+        id: 'preview',
+        name: (formRef.current?.elements.namedItem('name') as HTMLInputElement)?.value || "Your Tool Name",
+        slug: 'preview-tool',
+        short_description: (formRef.current?.elements.namedItem('description') as HTMLTextAreaElement)?.value || "Your tool's short description will appear here. Capture the essence of your tool in a few sentences.",
+        long_description: null,
+        website_url: (formRef.current?.elements.namedItem('url') as HTMLInputElement)?.value || "https://example.com",
+        logo_url: logoPreview,
+        video_url: null,
+        dominant_color: dominantColor,
+        pricing_type: (formRef.current?.elements.namedItem('pricing_type') as HTMLSelectElement)?.value || "Freemium",
+        plan: selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        status: 'pending',
+        is_verified: selectedPlan !== 'free',
+        is_priority: ['pro', 'featured', 'sponsor'].includes(selectedPlan),
+        has_backlink: false,
+        category_id: (formRef.current?.elements.namedItem('category') as HTMLSelectElement)?.value || null,
+        submitted_by: userId,
+        owner_id: userId,
+        submitted_email: userEmail,
+        view_count: 1250,
+        favorite_count: 42,
+        rating: 4.9,
+        review_count: 12,
+        has_api: false,
+        has_premium_support: false,
+        has_free_trial: false,
+        is_open_source: false,
+        image_url: null,
+        rejection_reason: null,
+        subscription_ends_at: null,
+        subscription_starts_at: null,
+        category: categories.find(c => c.id === ((formRef.current?.elements.namedItem('category') as HTMLSelectElement)?.value)) as any || { name: "Category" },
+        reviews: [
+            {
+                id: 'mock-review',
+                tool_id: 'preview',
+                user_id: 'mock-user',
+                rating: 5,
+                comment: "This is a preview of how a review might look.",
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                status: 'approved',
+                title: 'Great tool!',
+                guest_name: 'John Doe',
+                guest_email: null,
+                helpful_count: 5
+            }
+        ]
+    }
+
+    // Force update when form values change (handled by native onChange in form inputs but we need React state for these to trigger re-renders if we want real-time preview)
+    // Actually, for the preview to be "live", we need state for name, description, url, pricing_type.
+    // Currently, they are unregulated inputs. I should create state for them.
+
+    // NOTE: To avoid refactoring the entire form to controlled components right now (which is safer but bigger change),
+    // I will add state variables just for capturing the input for preview purposes, or switch the inputs to be controlled.
+    // Switching to controlled inputs is cleaner.
+
+    const [previewName, setPreviewName] = useState("Your Tool Name")
+    const [previewDesc, setPreviewDesc] = useState("Your tool's short description will appear here.")
+    const [previewPricing, setPreviewPricing] = useState("Freemium")
+    const [previewCategory, setPreviewCategory] = useState<string>("")
+
+    // Update mockTool with state values
+    mockTool.name = previewName || "Your Tool Name"
+    mockTool.short_description = previewDesc || "Your tool's short description will appear here."
+    mockTool.pricing_type = previewPricing
+    const selectedCategoryObj = categories.find(c => c.id === previewCategory)
+    // @ts-ignore
+    mockTool.category = selectedCategoryObj ? { name: selectedCategoryObj.name } : { name: "Category" }
+
     if (submitted) {
         return (
             <div className="min-h-screen flex items-center justify-center px-4">
@@ -364,6 +502,16 @@ const SubmitToolContent = () => {
 
     return (
         <div className="min-h-screen">
+            <Script
+                src={snapUrl}
+                data-client-key={clientKey}
+                strategy="lazyOnload"
+            />
+
+            {/* Live Preview Mobile (Floating or Bottom?) - Optional, for now just hiding on mobile or showing at bottom. 
+                The sidebar is hidden on small screens in grid layout? No, it's just stacked.
+            */}
+
             {/* Hero Section */}
             <div className="relative bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 overflow-hidden">
                 <div className="absolute inset-0">
@@ -496,6 +644,30 @@ const SubmitToolContent = () => {
                                 )
                             })}
                         </div>
+
+                        {/* Live Preview Section */}
+                        <div className="mt-8 sticky top-4">
+                            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                <Eye className="w-5 h-5 text-primary" />
+                                Live Preview
+                            </h2>
+                            <div className="transform scale-90 origin-top-left sm:scale-100">
+                                {(selectedPlan === 'featured' || selectedPlan === 'sponsor') ? (
+                                    <div className="w-full">
+                                        <FeaturedToolCard
+                                            tool={mockTool}
+                                            remainingSlots={featuredSlots.remaining}
+                                            totalSlots={featuredSlots.total}
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-2 text-center">
+                                            * Featured layout may vary based on screen size
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <ToolCard tool={mockTool} />
+                                )}
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* Form */}
@@ -520,7 +692,14 @@ const SubmitToolContent = () => {
                                     <div className="grid gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="name">Tool Name <span className="text-red-500">*</span></Label>
-                                            <Input name="name" id="name" placeholder="e.g. Magic Writer AI" required className="h-12" />
+                                            <Input
+                                                name="name"
+                                                id="name"
+                                                placeholder="e.g. Magic Writer AI"
+                                                required
+                                                className="h-12"
+                                                onChange={(e) => setPreviewName(e.target.value)}
+                                            />
                                         </div>
 
                                         <div className="grid gap-2">
@@ -530,14 +709,22 @@ const SubmitToolContent = () => {
 
                                         <div className="grid gap-2">
                                             <Label htmlFor="description">Short Description <span className="text-red-500">*</span></Label>
-                                            <Textarea name="description" id="description" placeholder="Briefly describe what your tool does (Max 200 chars)" maxLength={200} required className="min-h-[100px]" />
+                                            <Textarea
+                                                name="description"
+                                                id="description"
+                                                placeholder="Briefly describe what your tool does (Max 200 chars)"
+                                                maxLength={200}
+                                                required
+                                                className="min-h-[100px]"
+                                                onChange={(e) => setPreviewDesc(e.target.value)}
+                                            />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="category">Category <span className="text-red-500">*</span></Label>
-                                            <Select name="category" required>
+                                            <Select name="category" required onValueChange={setPreviewCategory}>
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Category" />
                                                 </SelectTrigger>
@@ -551,7 +738,7 @@ const SubmitToolContent = () => {
 
                                         <div className="grid gap-2">
                                             <Label>Pricing Model <span className="text-red-500">*</span></Label>
-                                            <Select name="pricing_type" required>
+                                            <Select name="pricing_type" required onValueChange={setPreviewPricing}>
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Pricing" />
                                                 </SelectTrigger>

@@ -273,6 +273,29 @@ CREATE TABLE ads (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- RLS Policies for Ads
+ALTER TABLE ads ENABLE ROW LEVEL SECURITY;
+
+-- 1. Everyone can view active ads
+CREATE POLICY "Active ads are viewable by everyone" ON ads
+  FOR SELECT USING (is_active = true);
+
+-- 2. Users can view their own ads (even if inactive)
+CREATE POLICY "Users can view own ads" ON ads
+  FOR SELECT USING (auth.jwt() ->> 'email' = advertiser_email);
+
+-- 3. Users can insert their own ads
+CREATE POLICY "Users can create ads" ON ads
+  FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = advertiser_email);
+
+-- 4. Users can update their own ads
+CREATE POLICY "Users can update own ads" ON ads
+  FOR UPDATE USING (auth.jwt() ->> 'email' = advertiser_email);
+
+-- 5. Users can delete their own ads
+CREATE POLICY "Users can delete own ads" ON ads
+  FOR DELETE USING (auth.jwt() ->> 'email' = advertiser_email);
+
 -- =====================================================
 -- 13. NEWSLETTER SUBSCRIBERS
 -- =====================================================

@@ -239,7 +239,7 @@ CREATE TABLE ads (
     
     -- Type of ad placement
     placement VARCHAR(50) NOT NULL 
-        CHECK (placement IN ('top_banner', 'sidebar', 'inline', 'footer_cta')),
+        CHECK (placement IN ('sidebar', 'navbar', 'hero', 'inline', 'top_banner', 'footer_cta')),
     
     -- Content
     title VARCHAR(255),

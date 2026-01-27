@@ -270,14 +270,15 @@ const SubmitToolContent = () => {
 
             if (error) throw error
 
-            if (isPaidPlan && toolData) {
+            // Temporary disable payment as requested
+            if (false && isPaidPlan && toolData) {
                 // Call Payment API
                 const response = await fetch('/api/payment/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         userId,
-                        toolId: toolData.id,
+                        toolId: toolData?.id,
                         plan: selectedPlan,
                         name,
                         email: userEmail
@@ -622,10 +623,10 @@ const SubmitToolContent = () => {
                                                     <SelectValue placeholder="Select Pricing" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="Free">Free</SelectItem>
-                                                    <SelectItem value="Freemium">Freemium</SelectItem>
-                                                    <SelectItem value="Paid">Paid</SelectItem>
-                                                    <SelectItem value="Free Trial">Free Trial</SelectItem>
+                                                    <SelectItem value="free">Free</SelectItem>
+                                                    <SelectItem value="freemium">Freemium</SelectItem>
+                                                    <SelectItem value="paid">Paid</SelectItem>
+                                                    <SelectItem value="free_trial">Free Trial</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>

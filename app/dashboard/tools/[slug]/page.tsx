@@ -53,6 +53,7 @@ export default function ToolManagePage() {
     const [saving, setSaving] = useState(false)
 
     const [isSponsor, setIsSponsor] = useState(false)
+    const [isPremium, setIsPremium] = useState(false)
     const [ads, setAds] = useState<ActiveAd[]>([])
 
     // File Upload State
@@ -102,9 +103,10 @@ export default function ToolManagePage() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 if (user) {
-                    const plan = await subscriptionService.getUserPlan(user.id)
-                    const isSponsorPlan = plan === 'sponsor'
+                    const effectivePlan = await subscriptionService.getEffectivePlan(user.id)
+                    const isSponsorPlan = effectivePlan === 'sponsor'
                     setIsSponsor(isSponsorPlan)
+                    setIsPremium(['pro', 'featured', 'sponsor'].includes(effectivePlan))
 
                     if (isSponsorPlan) {
                         // Fetch ads
@@ -566,16 +568,32 @@ export default function ToolManagePage() {
                             <div className="flex items-center justify-center py-16 text-center">
                                 <div>
                                     <BarChart3 className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                                    <h3 className="font-semibold mb-2">Analytics Coming Soon</h3>
-                                    <p className="text-sm text-muted-foreground max-w-md">
-                                        Detailed analytics with charts and insights will be available here.
-                                        Upgrade to Pro to access this feature.
+                                    <h3 className="font-semibold mb-2">
+                                        {isPremium ? 'Analytics Coming Soon' : 'Analytics'}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+                                        Detailed analytics with views, clicks, and conversion tracking will be available here.
                                     </p>
-                                    <Link href="/pricing">
-                                        <Button className="mt-4" variant="outline">
-                                            Upgrade to Pro
-                                        </Button>
-                                    </Link>
+
+                                    {!isPremium && (
+                                        <>
+                                            <p className="text-sm text-muted-foreground mb-4">
+                                                Upgrade to Pro to access this feature.
+                                            </p>
+                                            <Link href="/pricing">
+                                                <Button variant="outline">
+                                                    Upgrade to Pro
+                                                </Button>
+                                            </Link>
+                                        </>
+                                    )}
+
+                                    {isPremium && (
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-sm font-medium">
+                                            <Sparkles className="w-4 h-4" />
+                                            <span>Included in your plan</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </CardContent>

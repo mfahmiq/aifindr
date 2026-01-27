@@ -224,37 +224,41 @@ function HomeContent() {
               </div>
             ) : tools.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {tools.map((tool, index) => (
-                  <React.Fragment key={tool.id}>
-                    {/* @ts-ignore */}
-                    <ToolCard
-                      tool={tool}
-                      index={index}
-                      rank={filters.category !== 'All' ? ((currentPage - 1) * ITEMS_PER_PAGE) + index + 1 : undefined}
-                    />
+                {(() => {
+                  // 1. Deduplicate: Find tools that are already in inlineAds and filter them out
+                  const adToolSlugs = inlineAds
+                    .map(ad => ad.link_url?.match(/\/tool\/([^/?#]+)/)?.[1])
+                    .filter(Boolean);
 
-                    {/* Inject Ad after 3rd item (index 2) using first ad */}
-                    {index === 2 && inlineAds.length > 0 && (
-                      <div className="col-span-1">
-                        <InlineToolAd adData={inlineAds[0]} />
-                      </div>
-                    )}
+                  const filteredTools = tools.filter(tool => !adToolSlugs.includes(tool.slug));
 
-                    {/* Inject Ad after 9th item (index 8) using second ad */}
-                    {index === 8 && inlineAds.length > 1 && (
-                      <div className="col-span-1">
-                        <InlineToolAd adData={inlineAds[1]} />
-                      </div>
-                    )}
+                  // 2. Randomized scattering of ads
+                  // We'll calculate 2-3 random indices to inject ads
+                  const adIndices = [2, 7, 12]; // Base positions
+                  // Slightly randomize indices if we have enough items
+                  if (filteredTools.length > 5) {
+                    adIndices[0] = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+                    adIndices[1] = Math.floor(Math.random() * 4) + 6; // 6, 7, 8, 9
+                  }
 
-                    {/* Inject Ad after 15th item (index 14) using third ad */}
-                    {index === 14 && inlineAds.length > 2 && (
-                      <div className="col-span-1">
-                        <InlineToolAd adData={inlineAds[2]} />
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))}
+                  return filteredTools.map((tool, index) => (
+                    <React.Fragment key={tool.id}>
+                      {/* @ts-ignore */}
+                      <ToolCard
+                        tool={tool}
+                        index={index}
+                        rank={filters.category !== 'All' ? ((currentPage - 1) * ITEMS_PER_PAGE) + index + 1 : undefined}
+                      />
+
+                      {/* Dynamic Ad Injection */}
+                      {adIndices.includes(index) && (
+                        <div className="col-span-1">
+                          <InlineToolAd adData={inlineAds[adIndices.indexOf(index)] || inlineAds[0]} />
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ));
+                })()}
               </div>
             ) : (
               <div className="text-center py-20 text-muted-foreground">

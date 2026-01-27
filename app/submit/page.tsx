@@ -30,7 +30,10 @@ import {
     Megaphone,
     Calendar as CalendarIcon,
     Loader2,
-    Eye
+    Eye,
+    LayoutGrid,
+    Sidebar as SidebarIcon,
+    Monitor
 } from "lucide-react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
@@ -40,7 +43,10 @@ import { useRouter } from "next/navigation"
 
 import { ToolCard } from "@/components/tool-card"
 import { FeaturedToolCard } from "@/components/featured-tool-card"
+import { TopBannerAd, SidebarAd, InlineToolAd, SponsorToolBanner } from "@/components/ad-sections"
 import { ToolWithRelations } from "@/lib/types"
+import { Ad } from "@/lib/services/adsService"
+
 
 interface Category {
     id: string
@@ -462,6 +468,7 @@ const SubmitToolContent = () => {
     const [previewDesc, setPreviewDesc] = useState("Your tool's short description will appear here.")
     const [previewPricing, setPreviewPricing] = useState("Freemium")
     const [previewCategory, setPreviewCategory] = useState<string>("")
+    const [previewPlacement, setPreviewPlacement] = useState<string>("sidebar")
 
     // Update mockTool with state values
     mockTool.name = previewName || "Your Tool Name"
@@ -470,6 +477,27 @@ const SubmitToolContent = () => {
     const selectedCategoryObj = categories.find(c => c.id === previewCategory)
     // @ts-ignore
     mockTool.category = selectedCategoryObj ? { name: selectedCategoryObj.name } : { name: "Category" }
+
+    // Mock Ad for Preview
+    const mockAd: Ad = {
+        id: 'preview-ad',
+        title: mockTool.name,
+        description: mockTool.short_description || "Ad Description",
+        link_url: mockTool.website_url,
+        cta_text: "View Tool",
+        image_url: mockTool.logo_url,
+        placement: previewPlacement as any,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        starts_at: new Date().toISOString(),
+        ends_at: new Date().toISOString(),
+        views: 0,
+        clicks: 0,
+        user_id: 'preview-user',
+        advertiser_name: 'Preview User',
+        advertiser_email: 'preview@example.com'
+    }
 
     if (submitted) {
         return (
@@ -651,13 +679,57 @@ const SubmitToolContent = () => {
                                 <Eye className="w-5 h-5 text-primary" />
                                 Live Preview
                             </h2>
-                            <div className="transform scale-90 origin-top-left sm:scale-100">
-                                {(selectedPlan === 'featured' || selectedPlan === 'sponsor') ? (
+                            <div className="transform origin-top-left transition-all duration-300">
+                                {selectedPlan === 'sponsor' ? (
+                                    <div className="bg-muted/30 p-4 rounded-xl border border-dashed border-primary/20">
+                                        <p className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wider">
+                                            {previewPlacement === 'sidebar' && "Sidebar Banner Preview"}
+                                            {previewPlacement === 'navbar' && "Navbar Premium Preview"}
+                                            {previewPlacement === 'hero' && "Hero Banner Preview"}
+                                            {previewPlacement === 'inline' && "Inline Feed Preview"}
+                                        </p>
+
+                                        {/* Context Wrappers */}
+                                        {previewPlacement === 'sidebar' && (
+                                            <div className="flex gap-4">
+                                                <div className="hidden sm:block flex-1 bg-muted/20 rounded h-64 animate-pulse opacity-20" />
+                                                <div className="w-64 shrink-0">
+                                                    <SidebarAd adData={mockAd} />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {previewPlacement === 'navbar' && (
+                                            <div className="w-full space-y-2">
+                                                <div className="w-full h-12 bg-muted/20 rounded-t-lg opacity-20" />
+                                                <TopBannerAd adData={mockAd} />
+                                                <div className="w-full h-32 bg-muted/20 rounded-b-lg opacity-20" />
+                                            </div>
+                                        )}
+
+                                        {previewPlacement === 'hero' && (
+                                            <div className="w-full">
+                                                <div className="w-full h-24 bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-lg mb-2 opacity-20" />
+                                                <SponsorToolBanner tool={mockTool} />
+                                                <div className="w-full h-24 bg-muted/20 rounded-b-lg mt-2 opacity-20" />
+                                            </div>
+                                        )}
+
+                                        {previewPlacement === 'inline' && (
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="h-64 bg-muted/20 rounded-xl animate-pulse opacity-20" />
+                                                <InlineToolAd adData={mockAd} />
+                                                <div className="h-64 bg-muted/20 rounded-xl animate-pulse opacity-20" />
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (selectedPlan === 'featured') ? (
                                     <div className="w-full">
                                         <FeaturedToolCard
                                             tool={mockTool}
                                             remainingSlots={featuredSlots.remaining}
                                             totalSlots={featuredSlots.total}
+                                            forceVertical={true}
                                         />
                                         <p className="text-xs text-muted-foreground mt-2 text-center">
                                             * Featured layout may vary based on screen size
@@ -751,6 +823,110 @@ const SubmitToolContent = () => {
                                             </Select>
                                         </div>
                                     </div>
+
+                                    {/* Sponsor Options */}
+                                    {selectedPlan === 'sponsor' && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            className="space-y-4 pt-4 border-t border-border"
+                                        >
+                                            <Label className="text-amber-500 font-bold flex items-center gap-2">
+                                                <Megaphone className="w-4 h-4" />
+                                                Sponsor Options <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 text-[10px] border-amber-500/20">Exclusive</Badge>
+                                            </Label>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {/* Sidebar Banner */}
+                                                <div
+                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'sidebar' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
+                                                    onClick={() => setPreviewPlacement('sidebar')}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div className="font-semibold flex items-center gap-2">
+                                                            <SidebarIcon className="w-4 h-4 text-muted-foreground" />
+                                                            Sidebar Banner
+                                                        </div>
+                                                        <Badge variant="outline" className="bg-background">5 slots left</Badge>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mb-3">Appears on tool detail pages</p>
+                                                    <div className="text-right">
+                                                        <div className="text-xs line-through text-muted-foreground">Rp 150,000</div>
+                                                        <div className="text-sm font-bold text-amber-500">Rp 49,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
+                                                    </div>
+                                                    {previewPlacement === 'sidebar' && (
+                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
+                                                    )}
+                                                </div>
+
+                                                {/* Navbar Premium */}
+                                                <div
+                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'navbar' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
+                                                    onClick={() => setPreviewPlacement('navbar')}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div className="font-semibold flex items-center gap-2">
+                                                            <Monitor className="w-4 h-4 text-muted-foreground" />
+                                                            Navbar Premium
+                                                        </div>
+                                                        <Badge variant="outline" className="bg-background">2 slots left</Badge>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mb-3">Top of homepage navigation</p>
+                                                    <div className="text-right">
+                                                        <div className="text-xs line-through text-muted-foreground">Rp 250,000</div>
+                                                        <div className="text-sm font-bold text-amber-500">Rp 99,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
+                                                    </div>
+                                                    {previewPlacement === 'navbar' && (
+                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
+                                                    )}
+                                                </div>
+
+                                                {/* Hero Banner */}
+                                                <div
+                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'hero' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
+                                                    onClick={() => setPreviewPlacement('hero')}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div className="font-semibold flex items-center gap-2">
+                                                            <LayoutGrid className="w-4 h-4 text-muted-foreground" />
+                                                            Hero Banner
+                                                        </div>
+                                                        <Badge variant="outline" className="bg-background">1 slot left</Badge>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mb-3">Large banner on homepage</p>
+                                                    <div className="text-right">
+                                                        <div className="text-xs line-through text-muted-foreground">Rp 1,000,000</div>
+                                                        <div className="text-sm font-bold text-amber-500">Rp 299,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
+                                                    </div>
+                                                    {previewPlacement === 'hero' && (
+                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
+                                                    )}
+                                                </div>
+
+                                                {/* Inline Feed */}
+                                                <div
+                                                    className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer hover:border-amber-500/50 ${previewPlacement === 'inline' ? 'border-amber-500 bg-amber-500/5' : 'border-border bg-card'}`}
+                                                    onClick={() => setPreviewPlacement('inline')}
+                                                >
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div className="font-semibold flex items-center gap-2">
+                                                            <LayoutGrid className="w-4 h-4 text-muted-foreground" />
+                                                            Inline Feed
+                                                        </div>
+                                                        <Badge variant="outline" className="bg-background">3 slots left</Badge>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mb-3">Within tools listing grid</p>
+                                                    <div className="text-right">
+                                                        <div className="text-xs line-through text-muted-foreground">Rp 75,000</div>
+                                                        <div className="text-sm font-bold text-amber-500">Rp 29,000<span className="text-xs font-normal text-muted-foreground">/week</span></div>
+                                                    </div>
+                                                    {previewPlacement === 'inline' && (
+                                                        <div className="absolute inset-0 border-2 border-amber-500 rounded-xl pointer-events-none" />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
 
                                     {/* Logo Upload - Available for all */}
                                     <div className="grid gap-2">

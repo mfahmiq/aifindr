@@ -15,9 +15,10 @@ interface FeaturedToolCardProps {
     index?: number
     remainingSlots?: number
     totalSlots?: number
+    forceVertical?: boolean
 }
 
-export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlots = 10 }: FeaturedToolCardProps) {
+export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlots = 10, forceVertical = false }: FeaturedToolCardProps) {
     // Shared Badge Logic
     const isVerified = tool.is_verified;
     // Featured cards are by definition at least "Featured" or "Sponsor" usually,
@@ -64,9 +65,9 @@ export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlo
                     className="absolute inset-0 opacity-5 pointer-events-none"
                     style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }}
                 />
-                <div className="flex flex-col md:flex-row h-full">
+                <div className={`flex ${forceVertical ? 'flex-col' : 'flex-col md:flex-row'} h-full`}>
                     {/* Left: Image/Logo Area */}
-                    <div className="w-full md:w-2/5 bg-gray-100 dark:bg-gray-800 relative min-h-[200px] md:min-h-full flex items-center justify-center p-6 overflow-hidden">
+                    <div className={`w-full ${forceVertical ? 'h-[200px]' : 'md:w-2/5 md:min-h-full'} bg-gray-100 dark:bg-gray-800 relative min-h-[200px] flex items-center justify-center p-6 overflow-hidden`}>
                         {/* Background Pattern */}
                         <div
                             className="absolute inset-0 opacity-10"
@@ -106,7 +107,7 @@ export function FeaturedToolCard({ tool, index = 0, remainingSlots = 2, totalSlo
                     </div>
 
                     {/* Right: Content Area */}
-                    <div className="w-full md:w-3/5 p-6 md:p-8 flex flex-col">
+                    <div className={`w-full ${forceVertical ? '' : 'md:w-3/5'} p-6 md:p-8 flex flex-col`}>
                         <div className="flex items-start justify-between mb-2">
                             <div>
                                 <h3 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-2 leading-tight line-clamp-2">

@@ -124,6 +124,23 @@ export const subscriptionService = {
     },
 
     /**
+     * Get user's latest subscription (regardless of status)
+     */
+    async getLatestSubscription(userId: string) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle()
+
+        if (error && error.code !== 'PGRST116') throw error
+        return data as Subscription | null
+    },
+
+    /**
      * Get all subscriptions for a user
      */
     async getUserSubscriptions(userId: string) {

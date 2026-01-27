@@ -257,15 +257,13 @@ function BillingTabContent() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 if (user) {
-                    // Get effective plan first (this is the source of truth for status)
+                    // Get effective plan
                     const effectivePlan = await subscriptionService.getEffectivePlan(user.id)
                     setPlan(effectivePlan)
 
-                    // Get subscription details (for start/end dates etc)
-                    const activeSub = await subscriptionService.getActiveSubscription(user.id)
-                    if (activeSub) {
-                        setSubscription(activeSub)
-                    }
+                    // Get latest subscription details (active, cancelled, or expired)
+                    const latestSub = await subscriptionService.getLatestSubscription(user.id)
+                    setSubscription(latestSub)
                 }
             } catch (error) {
                 console.error("Error fetching subscription:", error)
@@ -277,6 +275,16 @@ function BillingTabContent() {
         fetchSubscription()
     }, [])
 
+    const formatDate = (dateString: string | null | undefined) => {
+        if (!dateString) return "N/A"
+        const date = new Date(dateString)
+        if (isNaN(date.getTime())) return "N/A"
+        return date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })
+    }
 
     const handleCancel = async () => {
         if (!subscription) return
@@ -302,6 +310,10 @@ function BillingTabContent() {
         )
     }
 
+    // A subscription is considered "really active" if status is active and date is valid
+    const isTrulyActive = subscription?.status === 'active' &&
+        (!subscription.ends_at || new Date(subscription.ends_at) > new Date())
+
     return (
         <Card>
             <CardHeader>
@@ -314,21 +326,67 @@ function BillingTabContent() {
                         <div className="flex items-center gap-2">
                             <h3 className="font-semibold text-lg capitalize">{plan} Plan</h3>
                             {plan !== 'free' && (
-                                <Badge variant={subscription?.status === 'active' ? "default" : "secondary"}>
-                                    {subscription?.status || 'Active'}
+                                <Badge variant={isTrulyActive ? "default" : "secondary"}>
+                                    {isTrulyActive ? 'Active' : (subscription?.status || 'Inactive')}
                                 </Badge>
                             )}
                         </div>
                         <p className="text-sm text-muted-foreground">
                             {plan === 'free'
                                 ? "You are currently on the Free plan."
-                                : `Your ${plan} plan ${subscription?.status === 'active' ? 'renews' : 'expires'} on ${new Date(subscription?.ends_at || '').toLocaleDateString()}`
+                                : isTrulyActive
+                                    ? `Your ${plan} plan renews on ${formatDate(subscription?.ends_at)}`
+                                    : subscription?.status === 'cancelled'
+                                        ? `Your ${plan} plan has been cancelled and expires on ${formatDate(subscription?.ends_at)}`
+                                        : `Your ${plan} plan has expired.`
                             }
                         </p>
                     </div>
                 </div>
 
-                {plan === 'free' ? (
+                <div className="space-y-4">
+                    {/* Always show plan details if there was a subscription */}
+                    {subscription && (
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="p-4 border rounded-lg">
+                                <span className="text-sm text-muted-foreground block mb-1">Last Period</span>
+                                <span className="font-medium">
+                                    {formatDate(subscription.starts_at)} - {formatDate(subscription.ends_at)}
+                                </span>
+                            </div>
+                            <div className="p-4 border rounded-lg">
+                                <span className="text-sm text-muted-foreground block mb-1">Amount</span>
+                                <span className="font-medium">
+                                    {(subscription.amount || 0).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
+                                    <span className="text-muted-foreground text-sm font-normal"> / month</span>
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                        <Button variant="outline" className="flex-1" asChild>
+                            <a href="/pricing">Change Plan</a>
+                        </Button>
+                        {isTrulyActive && (
+                            <Button
+                                variant="destructive"
+                                className="flex-1"
+                                onClick={handleCancel}
+                            >
+                                Cancel Subscription
+                            </Button>
+                        )}
+                        {subscription?.status === 'cancelled' && !isTrulyActive && (
+                            <Button variant="secondary" className="flex-1" disabled>
+                                Cancelled
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                {plan === 'free' && !subscription && (
                     <div className="p-4 rounded-lg bg-primary/5 border border-primary/10 space-y-3">
                         <h4 className="font-medium flex items-center gap-2 text-primary">
                             <CreditCard className="w-4 h-4" />
@@ -340,38 +398,6 @@ function BillingTabContent() {
                         <Button className="w-full sm:w-auto" asChild>
                             <a href="/pricing">View Plans</a>
                         </Button>
-                    </div>
-                ) : (
-                    <div className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="p-4 border rounded-lg">
-                                <span className="text-sm text-muted-foreground block mb-1">Current Period</span>
-                                <span className="font-medium">
-                                    {new Date(subscription?.starts_at || '').toLocaleDateString()} - {new Date(subscription?.ends_at || '').toLocaleDateString()}
-                                </span>
-                            </div>
-                            <div className="p-4 border rounded-lg">
-                                <span className="text-sm text-muted-foreground block mb-1">Amount</span>
-                                <span className="font-medium">
-                                    {(subscription?.amount || 0).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}
-                                    <span className="text-muted-foreground text-sm font-normal"> / month</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                            <Button variant="outline" className="flex-1" asChild>
-                                <a href="/pricing">Change Plan</a>
-                            </Button>
-                            <Button
-                                variant="destructive"
-                                className="flex-1"
-                                onClick={handleCancel}
-                                disabled={subscription?.status !== 'active'}
-                            >
-                                {subscription?.status === 'active' ? 'Cancel Subscription' : 'Cancelled'}
-                            </Button>
-                        </div>
                     </div>
                 )}
             </CardContent>

@@ -496,7 +496,11 @@ const SubmitToolContent = () => {
         impressions: 0,
         clicks: 0,
         advertiser_name: 'Preview User',
-        advertiser_email: 'preview@example.com'
+        advertiser_email: 'preview@example.com',
+        gradient_from: null,
+        gradient_to: null,
+        price_paid: 0,
+        target_categories: []
     }
 
     if (submitted) {

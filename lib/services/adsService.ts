@@ -356,5 +356,23 @@ export const adsService = {
             used,
             remaining
         }
+    },
+
+    /**
+     * Get ALL ads for a specific tool (including scheduled/inactive)
+     */
+    async getAdsByTool(slug: string) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('ads')
+            .select('*')
+            .ilike('link_url', `%${slug}%`)
+            .order('created_at', { ascending: false })
+
+        if (error) {
+            console.error('Error fetching tool ads:', error)
+            return []
+        }
+        return data as Ad[]
     }
 }

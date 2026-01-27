@@ -116,10 +116,8 @@ export function AdManagement({ tool }: AdManagementProps) {
     const fetchAds = async () => {
         try {
             setLoading(true)
-            // Ideally we fetch ads for THIS tool (by filtering link_url or having a tool_id column in ads)
-            // Since schema doesn't seem to link ads to tool_id directly, we filter by name or link
-            const allAds = await adsService.getActiveAds()
-            const myAds = allAds.filter(ad => ad.link_url.includes(tool.slug) || ad.name.includes(tool.name))
+            // Fetch all ads for this tool (active, scheduled, inactive)
+            const myAds = await adsService.getAdsByTool(tool.slug)
             setAds(myAds)
 
             // Fetch slots stats
@@ -178,18 +176,50 @@ export function AdManagement({ tool }: AdManagementProps) {
         // Extensions cost extra.
 
         let total = 0
+
+        // Check if there is already an ACTIVE or SCHEDULED ad for this placement
+        // If so, the "Included" benefit is already used (or this is a second ad), so they pay base price.
+        const hasActiveAd = ads.some(a =>
+            a.placement === selectedPlacement &&
+            a.is_active &&
+            (new Date(a.ends_at || '') > new Date())
+        )
+
+        // Add extension cost
         if (duration > 30) {
             const extraWeeks = Math.ceil((duration - 30) / 7)
             total += extraWeeks * placement.extensionPrice
         }
 
-        // Add base price if not "included" (assuming it is included for this user)
-        // For now, let's assume the "Base Price" shown is what they paid for the plan, so 0 extra for base.
+        // Add base price if logic dictates (e.g. if they already have one, or if they want another)
+        if (hasActiveAd) {
+            total += placement.price
+        }
 
         return total
     }
 
+    // Check if placement is free/included
+    const isIncluded = (placementId: string) => {
+        const placement = PLACEMENTS.find(p => p.id === placementId)
+        if (!placement?.baseIncluded) return false
+
+        // If they already have an active ad in this slot, it's NOT included anymore (pay for extra)
+        const hasActiveAd = ads.some(a =>
+            a.placement === placementId &&
+            a.is_active &&
+            (new Date(a.ends_at || '') > new Date())
+        )
+        return !hasActiveAd
+    }
+
+    // Calculate total price
     const totalPrice = calculateTotal()
+
+    // Calculate total price
+
+
+
 
     if (loading) {
         return (
@@ -338,8 +368,14 @@ export function AdManagement({ tool }: AdManagementProps) {
                                             {placement.title}
                                         </div>
                                         <div className="text-right">
-                                            <div className="text-xs text-gray-400 line-through decoration-gray-600">Rp {placement.price.toLocaleString()}</div>
-                                            <div className="text-xs font-bold text-green-500">Included</div>
+                                            {isIncluded(placement.id) ? (
+                                                <>
+                                                    <div className="text-xs text-gray-400 line-through decoration-gray-600">Rp {placement.price.toLocaleString()}</div>
+                                                    <div className="text-xs font-bold text-green-500">Included</div>
+                                                </>
+                                            ) : (
+                                                <div className="text-xs font-bold text-white">Rp {placement.price.toLocaleString()}</div>
+                                            )}
                                         </div>
                                     </div>
                                     <p className="text-xs text-gray-500 leading-snug mb-3 pr-8">

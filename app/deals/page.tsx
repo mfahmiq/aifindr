@@ -209,7 +209,7 @@ export default function DealsPage() {
 
                                         <CardHeader className="pb-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-inner overflow-hidden border border-white/5 group-hover:border-white/10 transition-colors">
+                                                <div className="w-16 h-16 rounded-2xl bg-muted/60 dark:bg-zinc-900 flex items-center justify-center shadow-inner overflow-hidden border border-border dark:border-white/5 group-hover:border-primary/20 transition-colors">
                                                     {tool?.logo_url ? (
                                                         <img
                                                             src={tool.logo_url}
@@ -221,7 +221,7 @@ export default function DealsPage() {
                                                             }}
                                                         />
                                                     ) : null}
-                                                    <div className={`w-full h-full flex items-center justify-center font-bold text-xl text-white/90 bg-gradient-to-br from-gray-700 to-gray-900 ${tool?.logo_url ? 'hidden' : ''}`}>
+                                                    <div className={`w-full h-full flex items-center justify-center font-bold text-xl text-primary/60 dark:text-white/90 bg-gradient-to-br from-muted to-muted/80 dark:from-gray-700 dark:to-gray-900 ${tool?.logo_url ? 'hidden' : ''}`}>
                                                         {tool?.name?.substring(0, 2).toUpperCase() || '??'}
                                                     </div>
                                                 </div>
@@ -247,13 +247,13 @@ export default function DealsPage() {
                                             </div>
 
                                             {deal.code && (
-                                                <div className="relative mt-4 p-4 rounded-xl bg-zinc-900 border border-dashed border-white/20 group-hover:border-primary/40 transition-colors shadow-inner">
+                                                <div className="relative mt-4 p-4 rounded-xl bg-muted/50 dark:bg-black/40 border border-dashed border-border dark:border-white/20 group-hover:border-primary/40 transition-colors shadow-inner">
                                                     <div className="flex items-center justify-between">
                                                         <div className="space-y-1">
-                                                            <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest block">
+                                                            <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest block">
                                                                 Promo Code
                                                             </span>
-                                                            <code className="font-mono font-black text-xl text-white tracking-widest">{deal.code}</code>
+                                                            <code className="font-mono font-black text-xl text-foreground dark:text-white tracking-widest">{deal.code}</code>
                                                         </div>
                                                         <Button
                                                             size="sm"
@@ -263,8 +263,8 @@ export default function DealsPage() {
                                                                 copyCode(deal.code!);
                                                             }}
                                                             className={cn(
-                                                                "h-9 px-4 bg-white/10 hover:bg-white/20 transition-all text-white border border-white/10",
-                                                                copiedCode === deal.code && "bg-green-500 text-white hover:bg-green-600 border-0"
+                                                                "h-9 px-4 bg-background dark:bg-white/10 hover:bg-muted dark:hover:bg-white/20 transition-all text-foreground dark:text-white border border-border dark:border-white/10",
+                                                                copiedCode === deal.code && "bg-green-600 text-white hover:bg-green-700 border-0"
                                                             )}
                                                         >
                                                             {copiedCode === deal.code ? (
@@ -289,8 +289,8 @@ export default function DealsPage() {
                                                 <div className={cn(
                                                     "flex items-center gap-2 text-xs w-full px-4 py-2.5 rounded-full font-medium transition-colors",
                                                     daysLeft <= 3
-                                                        ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                                                        : "bg-white/5 text-muted-foreground border border-white/5"
+                                                        ? "bg-red-500/10 text-red-600 dark:text-red-500 border border-red-500/20"
+                                                        : "bg-muted/50 text-muted-foreground border border-border dark:border-white/5"
                                                 )}>
                                                     <Clock className="w-3.5 h-3.5" />
                                                     <span>
@@ -324,9 +324,9 @@ export default function DealsPage() {
                     transition={{ delay: 0.5 }}
                     className="mt-16"
                 >
-                    <Card className="bg-zinc-900 text-white border-0 overflow-hidden relative shadow-2xl">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32" />
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] -ml-32 -mb-32" />
+                    <Card className="bg-white dark:bg-zinc-900 text-foreground dark:text-white border border-border dark:border-0 overflow-hidden relative shadow-xl dark:shadow-2xl">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 dark:bg-primary/20 rounded-full blur-[100px] -mr-32 -mt-32 opacity-50 dark:opacity-100" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[100px] -ml-32 -mb-32 opacity-50 dark:opacity-100" />
 
                         <CardContent className="py-16 text-center relative z-10">
                             <motion.div
@@ -336,7 +336,7 @@ export default function DealsPage() {
                                 <Sparkles className="w-16 h-16 mx-auto mb-6 text-primary" />
                             </motion.div>
                             <h2 className="text-4xl font-black mb-4 tracking-tight">Want More Deals?</h2>
-                            <p className="text-gray-400 mb-10 max-w-lg mx-auto text-lg">
+                            <p className="text-muted-foreground dark:text-gray-400 mb-10 max-w-lg mx-auto text-lg">
                                 Subscribe to our newsletter and get exclusive, limited-time deals delivered straight to your inbox.
                             </p>
 
@@ -344,31 +344,31 @@ export default function DealsPage() {
                                 <motion.div
                                     initial={{ scale: 0.9, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
-                                    className="bg-primary/20 border border-primary/30 rounded-2xl p-6 max-w-md mx-auto"
+                                    className="bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30 rounded-2xl p-6 max-w-md mx-auto"
                                 >
                                     <div className="flex items-center justify-center gap-3 text-primary font-bold text-xl mb-2">
                                         <CheckCircle className="w-6 h-6" />
                                         Success!
                                     </div>
-                                    <p className="text-gray-300">You're now on the list. Keep an eye on your inbox!</p>
+                                    <p className="text-muted-foreground dark:text-gray-300">You're now on the list. Keep an eye on your inbox!</p>
                                 </motion.div>
                             ) : (
-                                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto px-4 md:px-0">
                                     <div className="flex-1 relative group">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                         <Input
                                             type="email"
                                             placeholder="Enter your email address"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="h-14 pl-12 bg-white/5 border-white/10 focus:border-primary/50 text-white rounded-2xl text-lg transition-all"
+                                            className="h-14 pl-12 bg-muted/50 dark:bg-white/5 border-border dark:border-white/10 focus:border-primary/50 text-foreground dark:text-white rounded-2xl text-lg transition-all"
                                             required
                                         />
                                     </div>
                                     <Button
                                         type="submit"
                                         disabled={subscribing}
-                                        className="h-14 px-10 bg-primary hover:bg-primary/90 text-white rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(hsl(var(--primary)),0.3)] hover:shadow-[0_0_30px_rgba(hsl(var(--primary)),0.5)] transition-all shrink-0"
+                                        className="h-14 px-10 bg-primary hover:bg-primary/90 text-white dark:text-white rounded-2xl font-bold text-lg shadow-[0_0_20px_rgba(hsl(var(--primary)),0.2)] hover:shadow-[0_0_30px_rgba(hsl(var(--primary)),0.4)] transition-all shrink-0"
                                     >
                                         {subscribing ? (
                                             <Loader2 className="w-6 h-6 animate-spin" />
@@ -381,8 +381,8 @@ export default function DealsPage() {
                                     </Button>
                                 </form>
                             )}
-                            <p className="text-xs text-gray-500 mt-6">
-                                Join 1,000+ AI hunters. No spam, ever. Unsubscribe at any time.
+                            <p className="text-xs text-muted-foreground/60 dark:text-gray-500 mt-6">
+                                Join 1,000+ AI enthusiasts. No spam, ever. Unsubscribe at any time.
                             </p>
                         </CardContent>
                     </Card>

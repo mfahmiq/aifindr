@@ -23,7 +23,7 @@ export const analyticsService = {
         const { data: tools, error: toolsError } = await supabase
             .from('tools')
             .select('id, name, view_count, favorite_count, status, plan')
-            .eq('user_id', user.id)
+            .eq('owner_id', user.id)
 
         if (toolsError) throw toolsError
 

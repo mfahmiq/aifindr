@@ -371,5 +371,20 @@ export const toolsService = {
 
         if (error) throw error
         return data
+    },
+
+    async getUserTools(userId: string, client?: SupabaseClient) {
+        const supabase = client || createClient()
+        const { data, error } = await supabase
+            .from('tools')
+            .select(`
+                *,
+                categories (name, slug, icon)
+            `)
+            .eq('owner_id', userId)
+            .order('created_at', { ascending: false })
+
+        if (error) throw error
+        return data as ToolWithRelations[]
     }
 }

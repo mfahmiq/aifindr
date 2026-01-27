@@ -23,15 +23,31 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
+import { createClient } from "@/lib/supabase/client"
+import { toolsService } from "@/lib/services/toolsService"
 
 export default function DashboardToolsPage() {
     const [tools, setTools] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        // In real app, fetch owned tools
-        setLoading(false)
-        setTools([])
+        const fetchTools = async () => {
+            try {
+                const supabase = createClient()
+                const { data: { user } } = await supabase.auth.getUser()
+
+                if (user) {
+                    const data = await toolsService.getUserTools(user.id)
+                    setTools(data)
+                }
+            } catch (error) {
+                console.error("Error fetching user tools:", error)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchTools()
     }, [])
 
     if (loading) {

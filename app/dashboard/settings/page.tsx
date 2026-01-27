@@ -184,12 +184,14 @@ function BillingTabContent() {
                 const { data: { user } } = await supabase.auth.getUser()
 
                 if (user) {
-                    // Try to get active subscription first
-                    const activeSub = await subscriptionService.getActiveSubscription(user.id)
+                    // Get effective plan first (this is the source of truth for status)
+                    const effectivePlan = await subscriptionService.getEffectivePlan(user.id)
+                    setPlan(effectivePlan)
 
+                    // Get subscription details (for start/end dates etc)
+                    const activeSub = await subscriptionService.getActiveSubscription(user.id)
                     if (activeSub) {
                         setSubscription(activeSub)
-                        setPlan(activeSub.plan)
                     }
                 }
             } catch (error) {

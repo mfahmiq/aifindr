@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { adsService, ActiveAd } from "@/lib/services/adsService"
-import { ToolWithRelations } from "@/lib/types"
+import { ToolWithRelations, AdWithLogo } from "@/lib/types"
 import { createClient } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 import { format, addDays } from "date-fns"
@@ -315,9 +315,13 @@ export function AdManagement({ tool }: AdManagementProps) {
                     {ads.map(ad => (
                         <Card key={ad.id} className="overflow-hidden">
                             <div className="flex items-center p-4 gap-4">
-                                <div className="w-24 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0">
-                                    {ad.image_url ? (
-                                        <img src={ad.image_url} alt={ad.name} className="w-full h-full object-cover" />
+                                <div className="w-24 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center p-2 border border-border">
+                                    {(ad as unknown as AdWithLogo).tool_logo_url || ad.image_url ? (
+                                        <img
+                                            src={(ad as unknown as AdWithLogo).tool_logo_url || ad.image_url || ''}
+                                            alt={ad.name}
+                                            className="w-full h-full object-contain"
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-accent">
                                             <Monitor className="w-6 h-6 text-muted-foreground" />

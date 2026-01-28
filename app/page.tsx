@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, Suspense } from "react"
+import React, { useState, useEffect, Suspense, useMemo } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { TrendingUp, ArrowRight, Loader2, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
@@ -14,9 +14,10 @@ import { CategoryLists } from "@/components/category-lists"
 import { Button } from "@/components/ui/button"
 import { ToolWithRelations } from "@/lib/types"
 import { Footer } from "@/components/footer"
-const ITEMS_PER_PAGE = 12
+const ITEMS_PER_PAGE = 15
 
 import { FeaturedToolCard } from "@/components/featured-tool-card"
+import { SubmitToolFiller, AdvertiseFiller } from "@/components/filler-card"
 
 // ... imports
 
@@ -143,10 +144,48 @@ function HomeContent() {
       }
     }
 
-    // Debounce search slightly
     const timer = setTimeout(fetchTools, 300)
     return () => clearTimeout(timer)
   }, [filters, currentPage])
+
+  // Deduplicate and Distribute Ads
+  // Ensure we don't show an ad for a tool that is already visible on the page (Featured or in the List)
+  const availableInlineAds = useMemo(() => {
+    if (!inlineAds.length) return []
+
+    // 1. Get slugs of all tools currently visible on page + featured
+    // Only consider featured tools visible if we are on Page 1 and filters are default
+    const isFeaturedVisible = currentPage === 1 && filters.category === 'All' && !filters.search
+
+    const visibleSlugs = new Set([
+      ...(isFeaturedVisible ? featuredTools.map(t => t.slug) : []),
+      ...tools.map(t => t.slug)
+    ])
+
+    // 2. Filter ads that link to any visible slug
+    const uniqueAds = inlineAds.filter(ad => {
+      // Extract slug from link_url (assuming format /tool/slug)
+      // or check if title matches exactly as a fallback
+      const adSlugMatch = ad.link_url?.match(/\/tool\/([^/?#]+)/)
+      const adSlug = adSlugMatch ? adSlugMatch[1] : null
+
+      // If we can't extract a slug, we assume it's a generic link and allow it (unless title match?)
+      // Let's rely on slug for now as it's cleaner.
+      if (adSlug && visibleSlugs.has(adSlug)) return false
+
+      return true
+    })
+
+    // 3. Shuffle or rotate ads based on page number to vary them across pagination
+    // Simple rotation: offset by (page - 1)
+    const offset = (currentPage - 1) % Math.max(1, uniqueAds.length)
+    const rotated = [
+      ...uniqueAds.slice(offset),
+      ...uniqueAds.slice(0, offset)
+    ]
+
+    return rotated
+  }, [inlineAds, tools, featuredTools, currentPage, filters])
 
   return (
     <div className="min-h-screen">
@@ -159,7 +198,8 @@ function HomeContent() {
 
       <div className="container mx-auto px-4 py-12">
         {/* Editor's Choice / Spotlight Section - Psychological Anchor */}
-        {!featuredLoading && featuredTools.length > 0 && filters.category === 'All' && !filters.search && (
+        {/* Only show on first page */}
+        {!featuredLoading && featuredTools.length > 0 && filters.category === 'All' && !filters.search && currentPage === 1 && (
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-8">
               <Sparkles className="w-6 h-6 text-amber-500 animate-pulse" />
@@ -224,40 +264,60 @@ function HomeContent() {
               </div>
             ) : tools.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {tools.map((tool, index) => (
+                  <React.Fragment key={tool.id}>
+                    {/* @ts-ignore */}
+                    <ToolCard
+                      tool={tool}
+                      index={index}
+                      rank={filters.category !== 'All' ? ((currentPage - 1) * ITEMS_PER_PAGE) + index + 1 : undefined}
+                    />
+
+                    {/* Inject Ad after 3rd item (index 2) using first available ad */}
+                    {index === 2 && availableInlineAds.length > 0 && (
+                      <div className="col-span-1 border-t border-b py-8 lg:border-none lg:py-0">
+                        {/* Enhanced wrapper for spacing on mobile */}
+                        <InlineToolAd adData={availableInlineAds[0]} />
+                      </div>
+                    )}
+
+                    {/* Inject Ad after 9th item (index 8) using second available ad */}
+                    {index === 8 && availableInlineAds.length > 1 && (
+                      <div className="col-span-1 border-t border-b py-8 lg:border-none lg:py-0">
+                        <InlineToolAd adData={availableInlineAds[1]} />
+                      </div>
+                    )}
+
+                    {/* Inject Ad after 15th item (index 14) using third available ad */}
+                    {index === 14 && availableInlineAds.length > 2 && (
+                      <div className="col-span-1 border-t border-b py-8 lg:border-none lg:py-0">
+                        <InlineToolAd adData={availableInlineAds[2]} />
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+
+                {/* Grid Alignment Fillers */}
                 {(() => {
-                  // 1. Deduplicate: Find tools that are already in inlineAds and filter them out
-                  const adToolSlugs = inlineAds
-                    .map(ad => ad.link_url?.match(/\/tool\/([^/?#]+)/)?.[1])
-                    .filter(Boolean);
+                  // Calculate how many items are effectively displaying
+                  // Base tools: tools.length
+                  // Ads Injected: Depends on indices 2, 8, 14 existing in tools
+                  let adCount = 0
+                  if (availableInlineAds.length > 0 && tools.length > 2) adCount++
+                  if (availableInlineAds.length > 1 && tools.length > 8) adCount++
+                  if (availableInlineAds.length > 2 && tools.length > 14) adCount++
 
-                  const filteredTools = tools.filter(tool => !adToolSlugs.includes(tool.slug));
+                  const totalItems = tools.length + adCount
+                  const needed = (3 - (totalItems % 3)) % 3
 
-                  // 2. Randomized scattering of ads
-                  // We'll calculate 2-3 random indices to inject ads
-                  const adIndices = [2, 7, 12]; // Base positions
-                  // Slightly randomize indices if we have enough items
-                  if (filteredTools.length > 5) {
-                    adIndices[0] = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
-                    adIndices[1] = Math.floor(Math.random() * 4) + 6; // 6, 7, 8, 9
-                  }
+                  if (needed === 0) return null
 
-                  return filteredTools.map((tool, index) => (
-                    <React.Fragment key={tool.id}>
-                      {/* @ts-ignore */}
-                      <ToolCard
-                        tool={tool}
-                        index={index}
-                        rank={filters.category !== 'All' ? ((currentPage - 1) * ITEMS_PER_PAGE) + index + 1 : undefined}
-                      />
-
-                      {/* Dynamic Ad Injection */}
-                      {adIndices.includes(index) && (
-                        <div className="col-span-1">
-                          <InlineToolAd adData={inlineAds[adIndices.indexOf(index)] || inlineAds[0]} />
-                        </div>
-                      )}
-                    </React.Fragment>
-                  ));
+                  return (
+                    <>
+                      {needed >= 1 && <SubmitToolFiller />}
+                      {needed >= 2 && <AdvertiseFiller />}
+                    </>
+                  )
                 })()}
               </div>
             ) : (

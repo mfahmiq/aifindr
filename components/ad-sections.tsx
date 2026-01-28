@@ -392,6 +392,7 @@ export function CompactSidebarAd() {
 }
 
 // Inline Ad - Appears between tool cards (maximum exposure)
+// Redesigned to EXACTLY match standard ToolCard layout for grid consistency
 export function InlineToolAd({ adData }: { adData?: Ad }) {
     const [ad, setAd] = useState<Ad | null>(adData || null)
 
@@ -414,11 +415,22 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
 
     if (!ad) return null
 
+    // Use Tool data if available (Authoritative source), otherwise fallback to Ad manual data
+    const displayAd = {
+        ...ad,
+        title: (ad as any).tool_name || ad.title,
+        description: (ad as any).tool_description || ad.description,
+        logo: (ad as any).tool_logo_url || (ad as any).image_url || ad.image_url,
+        color: (ad as any).tool_dominant_color || '#8b5cf6'
+    }
+
+    const dynamicColor = displayAd.color || '#f59e0b'
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="col-span-1 h-full"
+            className="h-full"
         >
             <a
                 href={ad.link_url || '#'}
@@ -432,54 +444,114 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
                     rounded-3xl
                     transition-all duration-300 ease-out
                     group overflow-hidden
-                    rgb-border bg-transparent border-0 shadow-lg hover:shadow-2xl hover:-translate-y-1
+                    bg-white dark:bg-gray-900/50 border border-amber-200 dark:border-amber-900/30 shadow-sm hover:shadow-xl hover:-translate-y-1
                 `}>
-                    {/* Glow Effect Background - simulating tool.dominant_color */}
+                    {/* Glow Effect Background */}
                     <div
                         className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                         style={{
-                            backgroundImage: `linear-gradient(to top, #3b82f615, transparent)`
+                            backgroundImage: `linear-gradient(to top, #f59e0b15, transparent)`
                         }}
                     />
 
-                    <CardContent className="p-0 flex-1 flex flex-col items-center text-center z-10 w-full relative">
-                        <div className="w-full flex justify-between mb-4">
-                            <Badge className="bg-primary text-primary-foreground font-black text-[10px] tracking-widest px-2.5 py-1 shadow-lg ring-1 ring-white/20">
-                                ⭐ PROMOTED
-                            </Badge>
-                            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                    {/* Top Row: Header Info using Grid for true centering matching ToolCard */}
+                    <div className="w-full grid grid-cols-3 items-start mb-4 z-10 relative">
+                        {/* Left: Promoted Indicator (matches Vote area) */}
+                        <div className="flex flex-col gap-1 justify-self-start">
+                            <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-500 font-bold text-xs uppercase tracking-wider">
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>Ad</span>
+                            </div>
                         </div>
 
-                        {/* Centered Logo like ToolCard */}
-                        <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-110 transition-transform duration-500">
+                        {/* Center Group: Badge (matches Premium Badge area) */}
+                        <div className="flex flex-col items-center justify-start gap-1 justify-self-center pt-0.5 w-full">
+                            <div className="flex items-center gap-1.5">
+                                <Star className="w-3.5 h-3.5 text-amber-500 fill-current animate-pulse" />
+                                <span className="font-bold text-sm uppercase tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 whitespace-nowrap">
+                                    Promoted
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Right: Badge (matches Pricing area) */}
+                        <div className="justify-self-end flex flex-col items-end gap-1">
+                            <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-950/30 dark:text-amber-400 border-amber-200/50 text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 text-center min-w-[60px]">
+                                Sponsor
+                            </Badge>
+                        </div>
+                    </div>
+
+                    {/* Main Content: Logo, Name, Description */}
+                    <div className="flex-1 flex flex-col items-center text-center z-10 w-full px-2 mt-2">
+                        {/* Logo */}
+                        <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-105 transition-transform duration-500">
                             {(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url ? (
-                                <img src={(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url || ''} alt={(ad as Ad).title || ''} className="w-full h-full object-cover" />
+                                <img
+                                    src={(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url || ''}
+                                    alt={(ad as Ad).title || ''}
+                                    className="w-full h-full object-cover"
+                                />
                             ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
+                                <div className="w-full h-full bg-gradient-to-br from-amber-500/10 to-amber-500/5 flex items-center justify-center font-black text-amber-500 text-xl">
                                     {ad.title?.substring(0, 2) || 'AD'}
                                 </div>
                             )}
                         </div>
 
+                        {/* Name + Badges */}
                         <div className="flex flex-col items-center gap-2 mb-3">
-                            <h3 className="font-black text-xl text-gray-900 dark:text-white group-hover:text-primary transition-colors text-center line-clamp-2">
-                                {ad.title}
-                            </h3>
-                            <div className="text-[10px] text-primary/80 border border-primary/20 rounded-full px-2 py-0.5 w-fit bg-primary/5 font-black uppercase tracking-widest shadow-sm">
-                                Sponsor
+                            <div className="flex items-center justify-center gap-2">
+                                <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-amber-600 transition-colors text-center line-clamp-2">
+                                    {ad.title}
+                                </h3>
+                                {/* Gold Shield for Sponsor Ad */}
+                                <div className="relative shrink-0" title="Promoted Tool">
+                                    <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
+                                        <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="0.5" />
+                                        <path d="M11 1L21 5V12C21 18.5 16.5 23 11 25C5.5 23 1 18.5 1 12V5L11 1Z" fill="url(#goldShimmer)" style={{ mixBlendMode: 'overlay' }} />
+                                        <path d="M6 15L8 10L11 13L14 10L16 15H6Z" fill="#FFF8DC" stroke="#B8860B" strokeWidth="0.3" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
 
-                        <p className="text-sm text-gray-500 dark:text-gray-400 flex-1 line-clamp-3 mb-6 leading-relaxed font-medium px-2">
-                            &laquo; {ad.description} &raquo;
+                        {/* Description */}
+                        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 mb-4 leading-relaxed px-2">
+                            &laquo; {displayAd.description} &raquo;
                         </p>
+                    </div>
 
-                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-black tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02] mt-auto">
-                            <Zap className="w-4 h-4 mr-2" />
-                            {ad.cta_text || 'GET ACCESS'}
-                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    {/* Footer: Visit Button */}
+                    <div className="w-full z-10 mt-auto pt-4 flex gap-2">
+                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-amber-600 hover:text-white dark:hover:bg-amber-400 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
+                            <ExternalLink className="w-3.5 h-3.5 mr-2" />
+                            {ad.cta_text || 'Visit'}
                         </Button>
-                    </CardContent>
+                        <Button variant="outline" className="h-full aspect-square rounded-xl px-3 hover:bg-gray-100 dark:hover:bg-gray-800 border-amber-200 dark:border-amber-900/30 text-amber-600" title="Promoted">
+                            <Sparkles className="w-4 h-4" />
+                        </Button>
+                    </div>
+
+                    {/* SVG Defs for Shield (Required if not already in global scope) */}
+                    {/* Since this is a separate component, we should include the defs locally or rely on them being in DOM. 
+                        Safest to include locally with unique ID to avoid conflicts. */}
+                    <svg width="0" height="0" className="absolute">
+                        <defs>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#FFD700" />
+                                <stop offset="50%" stopColor="#FFA500" />
+                                <stop offset="100%" stopColor="#FF8C00" />
+                            </linearGradient>
+                            <linearGradient id="goldShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="white" stopOpacity="0" />
+                                <stop offset="50%" stopColor="white" stopOpacity="0.7" />
+                                <stop offset="100%" stopColor="white" stopOpacity="0" />
+                                <animate attributeName="x1" values="-100%; 200%" dur="2.5s" repeatCount="indefinite" />
+                                <animate attributeName="x2" values="0%; 300%" dur="2.5s" repeatCount="indefinite" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </Card>
             </a>
         </motion.div>

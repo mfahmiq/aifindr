@@ -99,5 +99,83 @@ export const collectionService = {
             ...collection,
             items: items || []
         }
+    },
+
+    // 5. Delete a collection
+    async deleteCollection(id: string) {
+        const supabase = createClient()
+        const { error } = await supabase
+            .from('collections')
+            .delete()
+            .eq('id', id)
+
+        if (error) throw error
+        return true
+    },
+
+    // 6. Update a collection
+    async updateCollection(id: string, updates: {
+        name?: string,
+        description?: string,
+        is_public?: boolean
+    }) {
+        const supabase = createClient()
+        const { data, error } = await supabase
+            .from('collections')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single()
+
+        if (error) throw error
+        return data
+    },
+
+    // 7. Remove tool from collection
+    async removeToolFromCollection(collectionId: string, toolId: string) {
+        const supabase = createClient()
+        const { error } = await supabase
+            .from('collection_items')
+            .delete()
+            .eq('collection_id', collectionId)
+            .eq('tool_id', toolId)
+
+        if (error) throw error
+        return true
+    },
+
+    // 8. Get Collection by ID (for private editing in dashboard)
+    async getCollectionById(id: string) {
+        const supabase = createClient()
+
+        // Fetch Metadata
+        const { data: collection, error } = await supabase
+            .from('collections')
+            .select('*')
+            .eq('id', id)
+            .single()
+
+        if (error) throw error
+
+        // Fetch Items (Using same structure as slug method for consistency if needed, or simplified)
+        const { data: items, error: itemsError } = await supabase
+            .from('collection_items')
+            .select(`
+                *,
+                tools (
+                    id, name, slug, logo_url, short_description, plan, 
+                    is_verified, is_featured, rating, review_count, dominant_color,
+                    categories(name, slug)
+                )
+            `)
+            .eq('collection_id', id)
+            .order('created_at', { ascending: true })
+
+        if (itemsError) throw itemsError
+
+        return {
+            ...collection,
+            items: items || []
+        }
     }
 }

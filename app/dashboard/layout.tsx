@@ -12,7 +12,8 @@ import {
     LogOut,
     Crown,
     Sparkles,
-    ChevronRight
+    ChevronRight,
+    Folder
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -35,6 +36,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navItems = [
     { href: '/dashboard', label: 'Overview', icon: Home },
     { href: '/dashboard/tools', label: 'My Tools', icon: Package },
+    { href: '/dashboard/collections', label: 'Collections', icon: Folder },
     { href: '/dashboard/analytics', label: 'Analytics', icon: LineChart },
     { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]

@@ -229,19 +229,24 @@ export const adsService = {
 
         const { data: tools } = await supabase
             .from('tools')
-            .select('slug, logo_url')
+            .select('slug, logo_url, name, short_description, image_url, dominant_color')
             .in('slug', slugs)
 
         if (!tools) return ads
 
-        const toolMap = Object.fromEntries(tools.map(t => [t.slug, t.logo_url]))
+        const toolMap = Object.fromEntries(tools.map(t => [t.slug, t]))
 
         return ads.map(ad => {
             const matches = ad.link_url?.match(/\/tool\/([^/?#]+)/)
             const slug = matches ? matches[1] : null
+            const tool = slug ? toolMap[slug] : null
             return {
                 ...ad,
-                tool_logo_url: slug ? toolMap[slug] : null
+                tool_logo_url: tool?.logo_url || null,
+                tool_name: tool?.name || null,
+                tool_description: tool?.short_description || null,
+                tool_image_url: tool?.image_url || null,
+                tool_dominant_color: tool?.dominant_color || null
             }
         })
     },
@@ -338,8 +343,9 @@ export const adsService = {
             return {
                 sidebar: 5,
                 navbar: 2,
-                banner: 1,
-                inline: 3
+                top_banner: 1,
+                inline: 3,
+                footer_cta: 1
             }
         }
 
@@ -413,7 +419,7 @@ export const adsService = {
             console.error('Error fetching tool ads:', error)
             return []
         }
-        return data as Ad[]
+        return this.enrichAdsWithLogos(data) as Promise<Ad[]>
     },
 
     /**
@@ -431,6 +437,6 @@ export const adsService = {
             console.error('Error fetching email ads:', error)
             return []
         }
-        return data as Ad[]
+        return this.enrichAdsWithLogos(data) as Promise<Ad[]>
     }
 }

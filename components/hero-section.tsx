@@ -133,6 +133,7 @@ export function HeroSection() {
                             width={96}
                             height={96}
                             priority
+                            sizes="(max-width: 768px) 80px, 96px"
                             className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(139,92,246,0.5)]"
                         />
                     </div>

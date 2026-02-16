@@ -179,7 +179,8 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                                 height={64}
                                 className="w-full h-full object-cover"
                                 onError={() => setImageError(true)}
-                                unoptimized={true} // Use unoptimized to avoid "hostname not configured" generic errors if wildcard fails or for faster testing
+                                unoptimized={false}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                         ) : (
                             <div className="w-full h-full bg-white dark:bg-gray-700 flex items-center justify-center text-4xl font-extrabold text-gray-400 uppercase">
@@ -281,17 +282,19 @@ export function ToolCard({ tool, index = 0, rank }: ToolCardProps) {
                 </div>
                 {/* Footer: Visit Button + Save */}
                 <div className="w-full z-10 mt-auto pt-4 flex gap-2">
-                    <Link href={`/tool/${tool.slug}`} className="flex-1">
-                        <Button className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
-                            <ExternalLink className="w-3.5 h-3.5 mr-2" />
-                            Visit
+                    <div className="flex-1 w-full">
+                        <Button asChild className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary hover:text-white dark:hover:bg-gray-200 dark:hover:text-slate-900 border-0 rounded-xl py-6 font-semibold tracking-wide transition-all shadow-none hover:shadow-lg hover:scale-[1.02]">
+                            <Link href={`/tool/${tool.slug}`} className="flex items-center justify-center">
+                                <ExternalLink className="w-3.5 h-3.5 mr-2" />
+                                Visit
+                            </Link>
                         </Button>
-                    </Link>
+                    </div>
                     <AddToCollectionModal
                         toolId={tool.id}
                         toolName={tool.name}
                         trigger={
-                            <Button variant="outline" className="h-full aspetto-square rounded-xl px-3 hover:bg-gray-100 dark:hover:bg-gray-800" title="Add to Collection">
+                            <Button variant="outline" className="h-full aspect-square rounded-xl px-3 hover:bg-gray-100 dark:hover:bg-gray-800" title="Add to Collection" aria-label="Add to Collection">
                                 <Sparkles className="w-4 h-4" />
                             </Button>
                         }

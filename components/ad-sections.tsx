@@ -11,6 +11,8 @@ import Link from "next/link"
 import { Ad, AdWithLogo, ToolWithRelations } from "@/lib/types"
 
 // Sponsor Tool Banner - Displays tools with Sponsor plan as promotional banners
+import Image from "next/image"
+
 export function SponsorToolBanner({ excludeToolId }: { excludeToolId?: string }) {
     const [tools, setTools] = useState<ToolWithRelations[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -67,8 +69,16 @@ export function SponsorToolBanner({ excludeToolId }: { excludeToolId?: string })
                         </Badge>
                         <div className="flex items-center gap-3">
                             {tool.logo_url && (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={tool.logo_url} alt={tool.name} className="w-8 h-8 rounded-lg object-cover" />
+                                <div className="relative w-8 h-8 shrink-0">
+                                    <Image
+                                        src={tool.logo_url}
+                                        alt={tool.name}
+                                        fill
+                                        sizes="32px"
+                                        className="rounded-lg object-cover"
+                                        unoptimized={tool.logo_url.endsWith('.gif')} // Handle GIFs if needed, otherwise optional
+                                    />
+                                </div>
                             )}
                             <span className="font-bold text-base">
                                 {tool.name}
@@ -145,10 +155,15 @@ export function SponsorSidebarCard({ excludeToolId }: { excludeToolId?: string }
                     <Card className="border-2 border-amber-500/20 hover:border-amber-500/50 bg-gradient-to-br from-amber-500/5 to-transparent transition-all duration-300">
                         <CardContent className="p-3">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform">
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform relative">
                                     {tool.logo_url ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={tool.logo_url} alt={tool.name} className="w-full h-full object-cover" />
+                                        <Image
+                                            src={tool.logo_url}
+                                            alt={tool.name}
+                                            fill
+                                            sizes="40px"
+                                            className="object-cover"
+                                        />
                                     ) : (
                                         <Zap className="w-5 h-5 text-amber-500" />
                                     )}
@@ -289,7 +304,13 @@ export function SidebarAd() {
                             >
                                 <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-110 transition-transform duration-500">
                                     {ad.tool_logo_url || ad.image_url ? (
-                                        <img src={ad.tool_logo_url || ad.image_url || ''} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                        <Image
+                                            src={ad.tool_logo_url || ad.image_url || ''}
+                                            alt={ad.title || ''}
+                                            fill
+                                            sizes="64px"
+                                            className="object-cover"
+                                        />
                                     ) : (
                                         <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center font-black text-primary text-xl">
                                             {ad.title?.substring(0, 2) || 'AD'}
@@ -364,7 +385,13 @@ export function CompactSidebarAd() {
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-full bg-white shadow-md border border-primary/10 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform overflow-hidden relative">
                                 {ad.image_url ? (
-                                    <img src={ad.image_url} alt={ad.title || ''} className="w-full h-full object-cover" />
+                                    <Image
+                                        src={ad.image_url}
+                                        alt={ad.title || ''}
+                                        fill
+                                        sizes="48px"
+                                        className="object-cover"
+                                    />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-primary/5">
                                         {ad.title?.substring(0, 2) || 'AD'}
@@ -487,10 +514,12 @@ export function InlineToolAd({ adData }: { adData?: Ad }) {
                         {/* Logo */}
                         <div className="w-16 h-16 mb-4 rounded-full overflow-hidden shadow-md bg-white border border-gray-100 dark:border-gray-800 relative group-hover:scale-105 transition-transform duration-500">
                             {(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url ? (
-                                <img
+                                <Image
                                     src={(ad as AdWithLogo).tool_logo_url || (ad as Ad).image_url || ''}
                                     alt={(ad as Ad).title || ''}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    sizes="64px"
+                                    className="object-cover"
                                 />
                             ) : (
                                 <div className="w-full h-full bg-gradient-to-br from-amber-500/10 to-amber-500/5 flex items-center justify-center font-black text-amber-500 text-xl">

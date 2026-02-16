@@ -163,9 +163,8 @@ export default function Navbar() {
                         {/* Mobile Menu */}
                         <Sheet open={open} onOpenChange={setOpen}>
                             <SheetTrigger asChild>
-                                <Button variant="ghost" size="icon" className="md:hidden -ml-2">
+                                <Button variant="ghost" size="icon" className="md:hidden -ml-2" aria-label="Toggle menu">
                                     <Menu className="h-5 w-5" />
-                                    <span className="sr-only">Toggle menu</span>
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0 z-[100]">
@@ -252,7 +251,7 @@ export default function Navbar() {
                         {user ? (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="rounded-full">
+                                    <Button variant="ghost" size="icon" className="rounded-full" aria-label="User menu">
                                         <Avatar className="h-8 w-8">
                                             <AvatarImage src={userProfile?.avatar_url || user.user_metadata?.avatar_url} alt={userProfile?.name || 'User'} />
                                             <AvatarFallback className="bg-primary text-primary-foreground text-xs">

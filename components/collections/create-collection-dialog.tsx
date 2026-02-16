@@ -41,7 +41,7 @@ const formSchema = z.object({
     description: z.string().max(200, {
         message: "Description cannot exceed 200 characters.",
     }).optional(),
-    isPublic: z.boolean().default(true),
+    isPublic: z.boolean(),
 })
 
 interface CreateCollectionDialogProps {

@@ -1,31 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { createTransaction, generateOrderId } from '@/lib/midtrans'
 import { PLAN_PRICING } from '@/lib/services/subscriptionService'
 
-// Use service role client since this is a server-side API
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export async function POST(request: NextRequest) {
     try {
+        // Authenticate user via session
+        const authSupabase = await createClient()
+        const { data: { user }, error: authError } = await authSupabase.auth.getUser()
+
+        if (authError || !user) {
+            return NextResponse.json(
+                { error: 'Authentication required' },
+                { status: 401 }
+            )
+        }
+
         const body = await request.json()
-        const { userId, plan, email, name, toolId } = body
+        const { plan, toolId } = body
 
         // Validate plan
         if (!plan || !['pro', 'featured', 'sponsor'].includes(plan)) {
             return NextResponse.json(
                 { error: 'Invalid plan selected' },
-                { status: 400 }
-            )
-        }
-
-        // Validate user
-        if (!userId) {
-            return NextResponse.json(
-                { error: 'User ID is required' },
                 { status: 400 }
             )
         }
@@ -39,6 +37,11 @@ export async function POST(request: NextRequest) {
             )
         }
 
+        // Use authenticated user's ID — not from request body
+        const userId = user.id
+        const email = user.email || ''
+        const name = user.user_metadata?.full_name || user.user_metadata?.name || 'Customer'
+
         // Generate unique order ID
         const orderId = generateOrderId(userId, plan)
 
@@ -46,13 +49,14 @@ export async function POST(request: NextRequest) {
         const transaction = await createTransaction({
             orderId,
             amount,
-            customerName: name || 'Customer',
-            customerEmail: email || '',
+            customerName: name,
+            customerEmail: email,
             plan,
             itemName: `AIFindr ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan - 1 Month`
         })
 
-        // Create pending payment record
+        // Create pending payment record using admin client (bypasses RLS)
+        const supabase = createAdminClient()
         const { error: paymentError } = await supabase
             .from('payments')
             .insert({

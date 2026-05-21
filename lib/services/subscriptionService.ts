@@ -166,9 +166,20 @@ export const subscriptionService = {
     async getEffectivePlan(userId: string): Promise<SubscriptionPlan> {
         const supabase = createClient()
 
-        // 1. Get Active Subscription
-        const activeSub = await this.getActiveSubscription(userId)
-        let effectivePlan: SubscriptionPlan = (activeSub?.plan as SubscriptionPlan) || 'free'
+        // 1. Fetch active subscription, owned tools, and submitted tools in parallel to eliminate N+1 latency bottlenecks
+        const [activeSub, ownedToolsResult, submittedToolsResult] = await Promise.all([
+            this.getActiveSubscription(userId),
+            supabase.from('tools').select('plan').eq('owner_id', userId),
+            supabase.from('tools').select('plan').eq('submitted_by', userId)
+        ])
+
+        const ownedTools = ownedToolsResult.data
+        const submittedTools = submittedToolsResult.data
+
+        let effectivePlan: SubscriptionPlan = 'free'
+        if (activeSub?.plan) {
+            effectivePlan = activeSub.plan.toLowerCase() as SubscriptionPlan
+        }
 
         // Plan hierarchy weights
         const planWeight: Record<string, number> = {
@@ -178,21 +189,7 @@ export const subscriptionService = {
             'sponsor': 3
         }
 
-        // 2. Check Owned Tools
-        // Note: We avoid importing toolClaimsService to prevent potential circular deps if it ever imports this.
-        // Instead we query directly or use the imported service if safe.
-        // Checking imports: toolClaimsService does NOT import subscriptionService. Safe to import.
-
-        // Using direct queries for speed and to avoid extra deps if possible, 
-        // but let's use the service if we can import it. 
-        // Ideally we should import it at the top. 
-        // For now, I'll allow the import at top of file.
-
-        const { data: ownedTools } = await supabase
-            .from('tools')
-            .select('plan')
-            .eq('owner_id', userId)
-
+        // 2. Check Owned Tools and resolve highest plan defensively
         ownedTools?.forEach(tool => {
             const toolPlan = (tool.plan || 'free').toLowerCase()
             if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {
@@ -202,12 +199,7 @@ export const subscriptionService = {
             }
         })
 
-        // 3. Check Submitted Tools
-        const { data: submittedTools } = await supabase
-            .from('tools')
-            .select('plan')
-            .eq('submitted_by', userId)
-
+        // 3. Check Submitted Tools and resolve highest plan defensively
         submittedTools?.forEach(tool => {
             const toolPlan = (tool.plan || 'free').toLowerCase()
             if ((planWeight[toolPlan] || 0) > (planWeight[effectivePlan] || 0)) {

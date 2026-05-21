@@ -1,0 +1,29 @@
+name: AI Tools Auto-Ingestion Cron
+
+on:
+  schedule:
+    # Run twice a day (every 12 hours) to respect Gemini Free Tier limits safely
+    - cron: '0 */12 * * *'
+  workflow_dispatch: # Enable manual run from GitHub Actions UI
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Auto-Ingestion
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: node scripts/auto-ingest.js

@@ -21,7 +21,9 @@ import {
     DollarSign,
     Megaphone,
     Sparkles,
-    Crown
+    Crown,
+    History,
+    Zap
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -43,6 +45,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navItems = [
     { href: '/admin', label: 'Dashboard', icon: Home, badge: null },
     { href: '/admin/tools', label: 'Tools', icon: Package, badge: null },
+    { href: '/admin/aggregate', label: 'Auto Ingest', icon: Sparkles, badge: null },
+    { href: '/admin/automation', label: 'Automation Engine', icon: Zap, badge: null },
     { href: '/admin/categories', label: 'Categories', icon: FolderOpen, badge: null },
     { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare, badge: null },
     { href: '/admin/blog', label: 'Blog', icon: BookOpen, badge: null },
@@ -50,6 +54,7 @@ const navItems = [
     { href: '/admin/ads', label: 'Ads', icon: Megaphone, badge: null },
     { href: '/admin/subscriptions', label: 'Subscriptions', icon: Crown, badge: null },
     { href: '/admin/claims', label: 'Tool Claims', icon: DollarSign, badge: null },
+    { href: '/admin/logs', label: 'Audit Logs', icon: History, badge: null },
     { href: '/admin/subscribers', label: 'Newsletter', icon: Mail, badge: null },
     { href: '/admin/users', label: 'Users', icon: Users, badge: null },
     { href: '/admin/analytics', label: 'Analytics', icon: LineChart, badge: null },
@@ -140,7 +145,7 @@ export default function AdminLayout({
                                 <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                                 Main
                             </div>
-                            {navItems.slice(0, 2).map(item => (
+                            {navItems.slice(0, 4).map(item => (
                                 <Link
                                     key={item.href}
                                     href={item.href}
@@ -163,7 +168,7 @@ export default function AdminLayout({
                                 <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
                                 Content
                             </div>
-                            {navItems.slice(2, 8).map(item => (
+                            {navItems.slice(4, 10).map(item => (
                                 <Link
                                     key={item.href}
                                     href={item.href}
@@ -184,7 +189,7 @@ export default function AdminLayout({
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                                 System
                             </div>
-                            {navItems.slice(8).map(item => (
+                            {navItems.slice(10).map(item => (
                                 <Link
                                     key={item.href}
                                     href={item.href}

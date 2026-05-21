@@ -84,6 +84,117 @@ const SubmitToolContent = () => {
     const [userId, setUserId] = useState<string | null>(null)
     const [userEmail, setUserEmail] = useState<string | null>(null)
 
+    // Auto-Fill Form States
+    const [toolName, setToolName] = useState("")
+    const [toolUrl, setToolUrl] = useState("")
+    const [toolDescription, setToolDescription] = useState("")
+    const [toolCategory, setToolCategory] = useState("")
+    const [toolPricing, setToolPricing] = useState("")
+
+    // Auto-fill trigger states
+    const [autoFillUrl, setAutoFillUrl] = useState("")
+    const [isAutoFilling, setIsAutoFilling] = useState(false)
+    const [autoFillSuccess, setAutoFillSuccess] = useState<string | null>(null)
+
+    // Fetch external logo and convert to uploadable File object
+    const fetchExternalLogo = async (url: string) => {
+        try {
+            const res = await fetch(url)
+            if (!res.ok) throw new Error("Failed to fetch logo")
+            const blob = await res.blob()
+            const file = new File([blob], "logo.png", { type: blob.type || "image/png" })
+            setLogoFile(file)
+            
+            const reader = new FileReader()
+            reader.onloadend = async () => {
+                const result = reader.result as string
+                setLogoPreview(result)
+                try {
+                    const color = await extractDominantColor(result)
+                    setDominantColor(color)
+                } catch (e) {
+                    console.error("Failed to extract color", e)
+                }
+            }
+            reader.readAsDataURL(file)
+        } catch (err) {
+            console.error("Error fetching external logo:", err)
+        }
+    }
+
+    // Call aggregate API to extract and parse metadata from tool website
+    const handleAutoFill = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        if (!autoFillUrl) {
+            alert("Please enter a website URL first")
+            return
+        }
+
+        setIsAutoFilling(true)
+        setAutoFillSuccess(null)
+
+        try {
+            const res = await fetch("/api/admin/aggregate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: autoFillUrl, saveToDb: false })
+            })
+
+            const result = await res.json()
+            if (!res.ok) {
+                throw new Error(result.error || "Failed to auto-fill details")
+            }
+
+            if (result.duplicate) {
+                alert(`Note: ${result.message}`)
+                if (!result.data) {
+                    setIsAutoFilling(false)
+                    return
+                }
+            }
+
+            const data = result.data
+            if (data) {
+                setToolName(data.name || "")
+                setToolUrl(data.website_url || autoFillUrl)
+                setToolDescription(data.short_description || "")
+                
+                // Map category
+                if (data.category_id) {
+                    setToolCategory(data.category_id)
+                }
+
+                // Map pricing type
+                if (data.pricing_type) {
+                    const val = data.pricing_type.toLowerCase()
+                    if (val.includes("free trial") || val === "trial") {
+                        setToolPricing("Trial")
+                    } else if (val.includes("freemium")) {
+                        setToolPricing("Freemium")
+                    } else if (val.includes("free")) {
+                        setToolPricing("Free")
+                    } else if (val.includes("paid") || val.includes("subscription")) {
+                        setToolPricing("Paid")
+                    } else {
+                        setToolPricing("Free")
+                    }
+                }
+
+                // Fetch logo preview
+                if (data.logo_url) {
+                    await fetchExternalLogo(data.logo_url)
+                }
+
+                setAutoFillSuccess("Successfully extracted and populated tool details! ✨")
+            }
+        } catch (err: any) {
+            console.error("Auto-fill error:", err)
+            alert(err.message || "Failed to auto-fill details. Please check the URL and try again.")
+        } finally {
+            setIsAutoFilling(false)
+        }
+    }
+
     // Form refs
     const formRef = useRef<HTMLFormElement>(null)
     const logoInputRef = useRef<HTMLInputElement>(null)
@@ -650,27 +761,120 @@ const SubmitToolContent = () => {
                             </CardHeader>
                             <CardContent className="p-6">
                                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                                    {/* Auto-Fill with AI Section */}
+                                    <div className="bg-gradient-to-br from-primary/5 via-purple-500/5 to-pink-500/5 border border-primary/20 rounded-xl p-5 mb-6 relative overflow-hidden backdrop-blur-sm">
+                                        <div className="absolute -top-10 -right-10 w-24 h-24 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-full blur-2xl" />
+                                        <div className="flex items-center justify-between mb-3 relative z-10">
+                                            <div className="flex items-center gap-2">
+                                                <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                                                <h3 className="font-semibold text-sm md:text-base">Auto-Fill with AI ✨</h3>
+                                            </div>
+                                            <Badge variant="outline" className="bg-background/50 border-primary/30 text-xs text-primary font-medium">
+                                                Free & Instant
+                                            </Badge>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground mb-4 relative z-10">
+                                            Masukkan URL beranda tool AI Anda. AI kami akan secara otomatis mengambil nama, deskripsi, kategori, logo, dan model harga untuk Anda secara gratis!
+                                        </p>
+                                        <div className="flex flex-col sm:flex-row gap-2 relative z-10">
+                                            <Input
+                                                type="url"
+                                                placeholder="https://your-ai-tool.com"
+                                                value={autoFillUrl}
+                                                onChange={(e) => setAutoFillUrl(e.target.value)}
+                                                className="bg-background/80 border-muted h-11 flex-1 text-sm"
+                                                disabled={isAutoFilling}
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={handleAutoFill}
+                                                disabled={isAutoFilling || !autoFillUrl}
+                                                className="h-11 px-5 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/95 hover:to-purple-600/95 text-white font-medium shadow-md shadow-primary/10 shrink-0 gap-2 text-sm"
+                                            >
+                                                {isAutoFilling ? (
+                                                    <>
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                        Mengekstrak...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Sparkles className="w-4 h-4" />
+                                                        Auto-Fill
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </div>
+                                        {autoFillSuccess && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="mt-3 text-xs text-emerald-500 font-medium flex items-center gap-1.5"
+                                            >
+                                                <Check className="w-4 h-4 shrink-0" />
+                                                {autoFillSuccess}
+                                            </motion.div>
+                                        )}
+                                    </div>
+
+                                    {/* Divider */}
+                                    <div className="relative flex py-2 items-center">
+                                        <div className="flex-grow border-t border-muted"></div>
+                                        <span className="flex-shrink mx-4 text-muted-foreground text-xs font-semibold uppercase tracking-wider">Atau Isi Manual</span>
+                                        <div className="flex-grow border-t border-muted"></div>
+                                    </div>
+
                                     <div className="grid gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="name">Tool Name <span className="text-red-500">*</span></Label>
-                                            <Input name="name" id="name" placeholder="e.g. Magic Writer AI" required className="h-12" />
+                                            <Input
+                                                name="name"
+                                                id="name"
+                                                placeholder="e.g. Magic Writer AI"
+                                                required
+                                                className="h-12"
+                                                value={toolName}
+                                                onChange={(e) => setToolName(e.target.value)}
+                                            />
                                         </div>
 
                                         <div className="grid gap-2">
                                             <Label htmlFor="url">Website URL <span className="text-red-500">*</span></Label>
-                                            <Input name="url" id="url" type="url" placeholder="https://your-tool.com" required className="h-12" />
+                                            <Input
+                                                name="url"
+                                                id="url"
+                                                type="url"
+                                                placeholder="https://your-tool.com"
+                                                required
+                                                className="h-12"
+                                                value={toolUrl}
+                                                onChange={(e) => setToolUrl(e.target.value)}
+                                            />
                                         </div>
 
                                         <div className="grid gap-2">
                                             <Label htmlFor="description">Short Description <span className="text-red-500">*</span></Label>
-                                            <Textarea name="description" id="description" placeholder="Briefly describe what your tool does (Max 200 chars)" maxLength={200} required className="min-h-[100px]" />
+                                            <Textarea
+                                                name="description"
+                                                id="description"
+                                                placeholder="Briefly describe what your tool does (Max 200 chars)"
+                                                maxLength={200}
+                                                required
+                                                className="min-h-[100px]"
+                                                value={toolDescription}
+                                                onChange={(e) => setToolDescription(e.target.value)}
+                                            />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="grid gap-2">
                                             <Label htmlFor="category">Category <span className="text-red-500">*</span></Label>
-                                            <Select name="category" required>
+                                            <Select
+                                                name="category"
+                                                required
+                                                value={toolCategory}
+                                                onValueChange={setToolCategory}
+                                            >
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Category" />
                                                 </SelectTrigger>
@@ -684,7 +888,12 @@ const SubmitToolContent = () => {
 
                                         <div className="grid gap-2">
                                             <Label>Pricing Model <span className="text-red-500">*</span></Label>
-                                            <Select name="pricing_type" required>
+                                            <Select
+                                                name="pricing_type"
+                                                required
+                                                value={toolPricing}
+                                                onValueChange={setToolPricing}
+                                            >
                                                 <SelectTrigger className="h-12">
                                                     <SelectValue placeholder="Select Pricing" />
                                                 </SelectTrigger>

@@ -6,10 +6,20 @@ export async function GET() {
     try {
         const supabase = await createClient()
 
-        // Check if user is admin (you might want to add more robust auth here)
+        // Verify user is admin
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
+        const { data: userProfile } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+        if (userProfile?.role !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 })
         }
 
         const stats = await toolsService.getAdminStats(supabase)

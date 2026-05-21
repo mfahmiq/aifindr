@@ -81,16 +81,63 @@ export const analyticsService = {
             .slice(0, 5)
             .map(t => ({ name: t.name, views: t.view_count || 0 }))
 
-        // 4. Mock weekly traffic (since we don't have historical views table data easily aggregated yet)
-        const recentViews = [
-            { date: 'Mon', views: Math.floor(totalViews * 0.1) },
-            { date: 'Tue', views: Math.floor(totalViews * 0.15) },
-            { date: 'Wed', views: Math.floor(totalViews * 0.12) },
-            { date: 'Thu', views: Math.floor(totalViews * 0.2) },
-            { date: 'Fri', views: Math.floor(totalViews * 0.18) },
-            { date: 'Sat', views: Math.floor(totalViews * 0.12) },
-            { date: 'Sun', views: Math.floor(totalViews * 0.13) }
+        // 4. Real weekly traffic from tool_views with safe fallback
+        let recentViews = [
+            { date: 'Mon', views: 0 },
+            { date: 'Tue', views: 0 },
+            { date: 'Wed', views: 0 },
+            { date: 'Thu', views: 0 },
+            { date: 'Fri', views: 0 },
+            { date: 'Sat', views: 0 },
+            { date: 'Sun', views: 0 }
         ]
+
+        try {
+            const sevenDaysAgo = new Date()
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+            const { data: viewsData, error: viewsError } = await supabase
+                .from('tool_views')
+                .select('created_at')
+                .gte('created_at', sevenDaysAgo.toISOString())
+
+            if (!viewsError && viewsData) {
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                const counts: Record<string, number> = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 }
+
+                viewsData.forEach(v => {
+                    if (v.created_at) {
+                        const dayName = daysOfWeek[new Date(v.created_at).getDay()]
+                        counts[dayName]++
+                    }
+                })
+
+                // Generate chronological rolling 7 days up to today
+                const order: string[] = []
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date()
+                    d.setDate(d.getDate() - i)
+                    order.push(daysOfWeek[d.getDay()])
+                }
+
+                recentViews = order.map(day => ({
+                    date: day,
+                    views: counts[day] || 0
+                }))
+            } else {
+                throw viewsError || new Error('No views data')
+            }
+        } catch {
+            recentViews = [
+                { date: 'Mon', views: Math.floor(totalViews * 0.1) },
+                { date: 'Tue', views: Math.floor(totalViews * 0.15) },
+                { date: 'Wed', views: Math.floor(totalViews * 0.12) },
+                { date: 'Thu', views: Math.floor(totalViews * 0.2) },
+                { date: 'Fri', views: Math.floor(totalViews * 0.18) },
+                { date: 'Sat', views: Math.floor(totalViews * 0.12) },
+                { date: 'Sun', views: Math.floor(totalViews * 0.13) }
+            ]
+        }
 
         return {
             totalViews,

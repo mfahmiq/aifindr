@@ -6,7 +6,11 @@ import { Mail, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 
-export function NewsletterSection() {
+interface NewsletterSectionProps {
+    source?: string
+}
+
+export function NewsletterSection({ source = 'homepage' }: NewsletterSectionProps) {
     const [email, setEmail] = useState("")
     const [subscribed, setSubscribed] = useState(false)
 
@@ -21,7 +25,7 @@ export function NewsletterSection() {
             const res = await fetch('/api/newsletter', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email, source })
             })
 
             if (res.ok) {

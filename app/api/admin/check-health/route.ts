@@ -51,6 +51,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Verify admin role
+    const { data: userProfile } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+    if (userProfile?.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 })
+    }
+
     try {
         const body = await request.json()
         const { toolIds, limit = 10 } = body

@@ -1,13 +1,13 @@
 import { createClient } from "@/lib/supabase/client"
 
 export const newsletterService = {
-    async subscribe(email: string, supabaseClient?: any) {
+    async subscribe(email: string, source: string = 'homepage', supabaseClient?: any) {
         const supabase = supabaseClient || createClient()
         const { error } = await supabase
             .from('newsletter_subscribers')
             .insert({
                 email,
-                source: 'deals_page',
+                source,
                 is_verified: true,
                 is_active: true
             })
@@ -21,3 +21,4 @@ export const newsletterService = {
         return { success: true }
     }
 }
+

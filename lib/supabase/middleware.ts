@@ -43,7 +43,6 @@ export async function updateSession(request: NextRequest) {
             return NextResponse.redirect(url)
         }
 
-        console.log("Middleware: User found:", user.id)
 
         // 2. Must be admin
         const { data: userProfile, error } = await supabase
@@ -52,10 +51,8 @@ export async function updateSession(request: NextRequest) {
             .eq('id', user.id)
             .single()
 
-        console.log("Middleware: Role fetch result:", { userProfile, error })
 
         if (userProfile?.role !== 'admin') {
-            console.log("Middleware: User is not admin, redirecting to dashboard. Role:", userProfile?.role)
             const url = request.nextUrl.clone()
             url.pathname = '/dashboard'
             return NextResponse.redirect(url)

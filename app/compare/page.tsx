@@ -44,9 +44,20 @@ export default function ComparePage() {
         fetchTools()
     }, [])
 
-    const addTool = (tool: ToolWithRelations) => {
+    const addTool = async (tool: ToolWithRelations) => {
         if (selectedTools.length < 3 && !selectedTools.find(t => t.id === tool.id)) {
-            setSelectedTools([...selectedTools, tool])
+            try {
+                // Fetch full details of the tool by slug to get tool_features
+                const detailedTool = await toolsService.getToolBySlug(tool.slug)
+                if (detailedTool) {
+                    setSelectedTools([...selectedTools, detailedTool])
+                } else {
+                    setSelectedTools([...selectedTools, tool])
+                }
+            } catch (err) {
+                console.error("Error fetching detailed tool:", err)
+                setSelectedTools([...selectedTools, tool])
+            }
         }
         setShowSelector(false)
     }
@@ -68,7 +79,9 @@ export default function ComparePage() {
         { label: 'Rating', key: 'rating', isRating: true },
         { label: 'Reviews', key: 'review_count' },
         { label: 'Verified', key: 'is_verified', isBoolean: true },
-        { label: 'Featured', key: 'is_featured', isBoolean: true },
+        { label: 'Free Trial', key: 'has_free_trial', isBoolean: true },
+        { label: 'API Available', key: 'has_api', isBoolean: true },
+        { label: 'Open Source', key: 'is_open_source', isBoolean: true },
     ]
 
     if (loading) {
@@ -301,6 +314,27 @@ export default function ComparePage() {
                                                     })}
                                                 </tr>
                                             ))}
+                                            <tr className="border-b bg-muted/5">
+                                                <td className="py-4 px-6 font-medium align-top">Unique Features</td>
+                                                {selectedTools.map(tool => {
+                                                    const features = (tool as any).features || []
+                                                    return (
+                                                        <td key={tool.id} className="py-4 px-6 text-left align-top">
+                                                            {features.length > 0 ? (
+                                                                <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-300">
+                                                                    {features.map((f: any, idx: number) => (
+                                                                        <li key={idx} className="leading-relaxed">
+                                                                            {f.feature}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            ) : (
+                                                                <span className="text-muted-foreground text-xs italic">No specific features listed</span>
+                                                            )}
+                                                        </td>
+                                                    )
+                                                })}
+                                            </tr>
                                             <tr className="bg-gradient-to-r from-primary/5 to-primary/10">
                                                 <td className="py-6 px-6 font-semibold">Visit Website</td>
                                                 {selectedTools.map(tool => (

@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { verifySignature, getTransactionStatus } from '@/lib/midtrans'
 import { subscriptionService } from '@/lib/services/subscriptionService'
 
-// Use service role client since this is a webhook
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export async function POST(request: NextRequest) {
+    const supabase = createAdminClient()
     try {
         const body = await request.json()
 

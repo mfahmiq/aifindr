@@ -7,6 +7,7 @@ import {
     InsertTables,
     UpdateTables
 } from "@/lib/types"
+import { activityLogsService } from "./activityLogsService"
 
 export const toolClaimsService = {
     /**
@@ -139,7 +140,7 @@ export const toolClaimsService = {
         // Get the claim
         const { data: claim, error: claimError } = await supabase
             .from('tool_claims')
-            .select('tool_id, user_id')
+            .select('tool_id, user_id, verification_method')
             .eq('id', claimId)
             .single()
 
@@ -157,13 +158,27 @@ export const toolClaimsService = {
 
         if (updateError) throw updateError
 
-        // Set the tool owner
+        // Set the tool owner and set is_verified to true
         const { error: toolError } = await supabase
             .from('tools')
-            .update({ owner_id: claim.user_id })
+            .update({ 
+                owner_id: claim.user_id,
+                is_verified: true 
+            })
             .eq('id', claim.tool_id)
 
         if (toolError) throw toolError
+
+        // Log the activity
+        await activityLogsService.log({
+            user_id: reviewerId,
+            action: 'claim.approve',
+            entity_type: 'claim',
+            entity_id: claimId,
+            old_values: { status: 'pending', is_verified: false },
+            new_values: { status: 'approved', is_verified: true },
+            notes: `Admin approved claim manually. Verification method: ${claim.verification_method}`
+        }, supabase)
 
         return true
     },
@@ -184,6 +199,18 @@ export const toolClaimsService = {
             .eq('id', claimId)
 
         if (error) throw error
+
+        // Log the activity
+        await activityLogsService.log({
+            user_id: reviewerId,
+            action: 'claim.reject',
+            entity_type: 'claim',
+            entity_id: claimId,
+            old_values: { status: 'pending' },
+            new_values: { status: 'rejected', rejection_reason: reason },
+            notes: `Admin rejected claim. Reason: ${reason}`
+        }, supabase)
+
         return true
     },
 

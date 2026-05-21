@@ -68,7 +68,14 @@ export const toolsService = {
 
         // Filter by subscription plan
         if (filters?.plan) {
-            query = query.eq('plan', filters.plan)
+            const planMap: Record<string, string> = {
+                'free': 'Free',
+                'pro': 'Pro',
+                'featured': 'Featured',
+                'sponsor': 'Sponsor'
+            }
+            const normalizedPlan = planMap[filters.plan.toLowerCase()] || filters.plan
+            query = query.eq('plan', normalizedPlan)
         }
 
         // Highlight/Featured Filter (IndoAI Selection)
@@ -91,7 +98,11 @@ export const toolsService = {
         }
 
         if (filters?.search) {
-            query = query.or(`name.ilike.%${filters.search}%,short_description.ilike.%${filters.search}%`)
+            // Sanitize search input to prevent PostgREST filter injection
+            const sanitizedSearch = filters.search.replace(/[%_().,\\]/g, '')
+            if (sanitizedSearch.trim()) {
+                query = query.or(`name.ilike.%${sanitizedSearch}%,short_description.ilike.%${sanitizedSearch}%`)
+            }
         }
 
         if (filters?.category && filters.category !== 'All') {
@@ -323,7 +334,7 @@ export const toolsService = {
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Featured'),
             supabase.from('tools').select('*', { count: 'exact', head: true }).eq('plan', 'Sponsor'),
             supabase.from('tools').select('view_count, favorite_count'),
-            supabase.from('subscriptions').select('amount, plan_id').eq('status', 'active')
+            supabase.from('subscriptions').select('amount, plan').eq('status', 'active')
         ])
 
         const totalViews = aggregateStats?.reduce((sum: number, t: any) => sum + (t.view_count || 0), 0) || 0
@@ -335,9 +346,10 @@ export const toolsService = {
 
         subscriptionStats?.forEach((s: any) => {
             const amount = s.amount || 0
-            if (s.plan_id?.includes('pro')) proRevenue += amount
-            else if (s.plan_id?.includes('sponsor')) sponsorRevenue += amount
-            else if (s.plan_id?.includes('featured')) featuredRevenue += amount
+            const plan = (s.plan || '').toLowerCase()
+            if (plan === 'pro') proRevenue += amount
+            else if (plan === 'sponsor') sponsorRevenue += amount
+            else if (plan === 'featured') featuredRevenue += amount
         })
 
         const totalRevenue = proRevenue + sponsorRevenue + featuredRevenue

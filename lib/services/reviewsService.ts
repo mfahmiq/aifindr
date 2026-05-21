@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/client"
 import { Review, ReviewWithUser } from "@/lib/types"
+import { activityLogsService } from "./activityLogsService"
 
 
 export const reviewsService = {
@@ -140,6 +141,14 @@ export const reviewsService = {
      */
     async updateStatus(reviewId: string, status: 'approved' | 'rejected' | 'flagged') {
         const supabase = createClient()
+
+        // Fetch original status
+        const { data: original } = await supabase
+            .from('reviews')
+            .select('status, comment, tool_id')
+            .eq('id', reviewId)
+            .single()
+
         const { data, error } = await supabase
             .from('reviews')
             .update({ status, updated_at: new Date().toISOString() })
@@ -148,6 +157,23 @@ export const reviewsService = {
             .single()
 
         if (error) throw error
+
+        // Get admin user doing the review moderation
+        const { data: { user } } = await supabase.auth.getUser()
+
+        // Log the activity
+        if (original) {
+            await activityLogsService.log({
+                user_id: user?.id || null,
+                action: `review.${status}`,
+                entity_type: 'review',
+                entity_id: reviewId,
+                old_values: { status: original.status },
+                new_values: { status: status },
+                notes: `Review status changed from "${original.status}" to "${status}" for review: "${original.comment?.substring(0, 60)}..."`
+            }, supabase)
+        }
+
         return data
     },
 

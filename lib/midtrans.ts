@@ -1,18 +1,30 @@
 import midtransClient from 'midtrans-client'
 
-// Midtrans Snap client for creating transactions
-const snap = new midtransClient.Snap({
-    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
-    serverKey: process.env.MIDTRANS_SERVER_KEY!,
-    clientKey: process.env.MIDTRANS_CLIENT_KEY!
-})
+// Lazy-initialized Midtrans clients to avoid top-level env var access
+let _snap: any = null
+let _coreApi: any = null
 
-// Midtrans Core API client for checking transaction status
-const coreApi = new midtransClient.CoreApi({
-    isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
-    serverKey: process.env.MIDTRANS_SERVER_KEY!,
-    clientKey: process.env.MIDTRANS_CLIENT_KEY!
-})
+function getSnap() {
+    if (!_snap) {
+        _snap = new midtransClient.Snap({
+            isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
+            serverKey: process.env.MIDTRANS_SERVER_KEY!,
+            clientKey: process.env.MIDTRANS_CLIENT_KEY!
+        })
+    }
+    return _snap
+}
+
+function getCoreApi() {
+    if (!_coreApi) {
+        _coreApi = new midtransClient.CoreApi({
+            isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
+            serverKey: process.env.MIDTRANS_SERVER_KEY!,
+            clientKey: process.env.MIDTRANS_CLIENT_KEY!
+        })
+    }
+    return _coreApi
+}
 
 export interface CreateTransactionParams {
     orderId: string
@@ -51,7 +63,7 @@ export async function createTransaction(params: CreateTransactionParams) {
         }
     }
 
-    const transaction = await snap.createTransaction(parameter)
+    const transaction = await getSnap().createTransaction(parameter)
     return {
         token: transaction.token,
         redirectUrl: transaction.redirect_url
@@ -62,7 +74,7 @@ export async function createTransaction(params: CreateTransactionParams) {
  * Get transaction status from Midtrans
  */
 export async function getTransactionStatus(orderId: string) {
-    return await coreApi.transaction.status(orderId)
+    return await getCoreApi().transaction.status(orderId)
 }
 
 /**
@@ -94,4 +106,4 @@ export function generateOrderId(userId: string, plan: string): string {
     return `SUB-${plan.toUpperCase()}-${timestamp}-${random}`
 }
 
-export { snap, coreApi }
+export { getSnap as snap, getCoreApi as coreApi }

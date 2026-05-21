@@ -7,13 +7,91 @@ export interface RateLimitResult {
     resetTime: Date
 }
 
+// =============================================
+// In-Memory Fallback Rate Limiter
+// =============================================
+// Used when Supabase rate_limits table doesn't exist yet.
+// Works per serverless instance (not globally shared), but still
+// provides meaningful protection against abuse.
+
+interface InMemoryEntry {
+    count: number
+    resetTime: number // unix ms
+}
+
+const memoryStore = new Map<string, InMemoryEntry>()
+
+// Cleanup stale entries every 5 minutes to prevent memory leaks
+const CLEANUP_INTERVAL = 5 * 60 * 1000
+let lastCleanup = Date.now()
+
+function cleanupMemoryStore() {
+    const now = Date.now()
+    if (now - lastCleanup < CLEANUP_INTERVAL) return
+    lastCleanup = now
+    for (const [ip, entry] of memoryStore.entries()) {
+        if (now > entry.resetTime) {
+            memoryStore.delete(ip)
+        }
+    }
+}
+
+function checkRateLimitInMemory(
+    ip: string,
+    limit: number,
+    windowMs: number
+): RateLimitResult {
+    cleanupMemoryStore()
+    const now = Date.now()
+
+    const existing = memoryStore.get(ip)
+
+    // First request or window expired
+    if (!existing || now > existing.resetTime) {
+        const resetTime = now + windowMs
+        memoryStore.set(ip, { count: 1, resetTime })
+        return {
+            success: true,
+            limit,
+            remaining: limit - 1,
+            resetTime: new Date(resetTime)
+        }
+    }
+
+    // Rate limit exceeded
+    if (existing.count >= limit) {
+        return {
+            success: false,
+            limit,
+            remaining: 0,
+            resetTime: new Date(existing.resetTime)
+        }
+    }
+
+    // Increment counter
+    existing.count += 1
+    return {
+        success: true,
+        limit,
+        remaining: limit - existing.count,
+        resetTime: new Date(existing.resetTime)
+    }
+}
+
+// Track whether DB table exists (cached per instance lifetime)
+let dbTableAvailable: boolean | null = null
+
 /**
- * AIFindr Supabase-Backed Rate Limiter
+ * AIFindr Hybrid Rate Limiter
  * 
- * Uses a fixed-window strategy:
- * - Each IP gets `limit` requests per `windowMs` milliseconds
- * - State is stored centrally in Supabase `rate_limits` table
- * - Fail-safe: if DB is down, requests pass through (never crash the site)
+ * Strategy:
+ *   1. Try Supabase `rate_limits` table (centralized, works across all serverless instances)
+ *   2. If table doesn't exist → fall back to in-memory rate limiting (per-instance)
+ *   3. If DB error → fail-safe: allow request through
+ * 
+ * The system is fully functional from the first deploy — no manual SQL setup required.
+ * Once the rate_limits table is created in Supabase, it automatically upgrades to
+ * centralized mode.
  * 
  * @param ip        Client IP address
  * @param limit     Maximum requests allowed per window (default: 60)
@@ -24,10 +102,16 @@ export async function checkRateLimit(
     limit: number = 60,
     windowMs: number = 60 * 1000
 ): Promise<RateLimitResult> {
-    const supabase = createAdminClient()
     const now = new Date()
 
+    // If we already know the DB table doesn't exist, skip DB entirely
+    if (dbTableAvailable === false) {
+        return checkRateLimitInMemory(ip, limit, windowMs)
+    }
+
     try {
+        const supabase = createAdminClient()
+
         // 1. Fetch existing record for this IP
         const { data, error } = await supabase
             .from('rate_limits')
@@ -39,16 +123,20 @@ export async function checkRateLimit(
         // PGRST205 = table not in schema cache (table doesn't exist yet)
         if (error) {
             if (error.code === 'PGRST205') {
-                // Table doesn't exist yet — fail-safe: allow request to pass
-                console.warn('[RateLimiter] rate_limits table not found. Run migration. Allowing request.')
-                return { success: true, limit, remaining: limit, resetTime: now }
+                // Table doesn't exist — switch to in-memory mode permanently for this instance
+                console.warn('[RateLimiter] rate_limits table not found. Using in-memory fallback.')
+                dbTableAvailable = false
+                return checkRateLimitInMemory(ip, limit, windowMs)
             }
             if (error.code !== 'PGRST116') {
-                // Unexpected DB error — fail-safe: allow request to pass
-                console.error('[RateLimiter] DB error, allowing request:', error.message)
-                return { success: true, limit, remaining: limit, resetTime: now }
+                // Unexpected DB error — fail-safe: use in-memory
+                console.error('[RateLimiter] DB error, using in-memory fallback:', error.message)
+                return checkRateLimitInMemory(ip, limit, windowMs)
             }
         }
+
+        // Mark DB as available
+        dbTableAvailable = true
 
         // 2. No record exists — first request from this IP
         if (!data) {
@@ -101,9 +189,9 @@ export async function checkRateLimit(
         }
 
     } catch (err: any) {
-        // Fail-safe: never crash on rate limit errors
-        console.error('[RateLimiter] Unexpected error, allowing request:', err.message)
-        return { success: true, limit, remaining: limit, resetTime: now }
+        // Fail-safe: fall back to in-memory on any unexpected error
+        console.error('[RateLimiter] Unexpected error, using in-memory fallback:', err.message)
+        return checkRateLimitInMemory(ip, limit, windowMs)
     }
 }
 

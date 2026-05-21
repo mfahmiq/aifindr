@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { getLoadBalancedGeminiKey } from "@/lib/utils/rateLimiter"
 
 // Helper to call Gemini 1.5 Flash to generate a blog post
 async function generateBlogPostWithGemini(
@@ -127,6 +128,13 @@ Instructions:
 
     if (!response.ok) {
         const errorText = await response.text()
+        // 429 = Quota exceeded — caller handles retry with different key
+        if (response.status === 429) {
+            const err: any = new Error(`Gemini quota exceeded (429): ${errorText}`)
+            err.isQuotaError = true
+            err.statusCode = 429
+            throw err
+        }
         throw new Error(`Gemini API Error (HTTP ${response.status}): ${errorText}`)
     }
 
@@ -200,13 +208,22 @@ export async function POST(request: Request) {
         const status = body.status || dbConfig.status || 'draft'
         const category = body.category || dbConfig.category || 'Listicles'
 
-        // 3. Resolve Gemini API Key
+        // 3. Resolve Gemini API Key with Load Balancer
+        // Supports comma-separated keys: GEMINI_API_KEY=key1,key2,key3
         const dbCreds = (settingsData?.feature_flags as any)?.automation_credentials || {}
-        const apiKey = process.env.GEMINI_API_KEY || dbCreds.gemini?.GEMINI_API_KEY
+        const rawApiKeys = process.env.GEMINI_API_KEY || dbCreds.gemini?.GEMINI_API_KEY || ''
+        
+        // Build pool of all available keys (env keys + db keys merged)
+        const envKeys = (process.env.GEMINI_API_KEY || '').split(',').map((k: string) => k.trim()).filter(Boolean)
+        const dbKey = dbCreds.gemini?.GEMINI_API_KEY || ''
+        const dbKeys = dbKey.split(',').map((k: string) => k.trim()).filter(Boolean)
+        const allKeys = [...new Set([...envKeys, ...dbKeys])].filter(Boolean)
 
-        if (!apiKey) {
+        if (allKeys.length === 0) {
             return NextResponse.json({ error: "Gemini API Key is not configured. Please add it to your environment or Automation dashboard." }, { status: 400 })
         }
+
+        console.log(`[BlogGenerator] API Key Load Balancer: ${allKeys.length} key(s) available`)
 
         // 4. Fetch Approved Tools
         // Get the latest approved tools
@@ -238,9 +255,35 @@ export async function POST(request: Request) {
             toolsToUse = approvedTools.slice(0, 2)
         }
 
-        // 5. Generate Article Content using Gemini
-        console.log(`Generating daily blog post in format: ${format}...`)
-        const generated = await generateBlogPostWithGemini(apiKey, format, toolsToUse, category)
+        // 5. Generate Article Content using Gemini (with load balancing + auto-retry on 429)
+        console.log(`[BlogGenerator] Generating blog post in format: ${format} using ${allKeys.length} key(s)...`)
+        
+        let generated: any = null
+        let lastError: any = null
+        
+        // Shuffle keys for better load distribution
+        const shuffledKeys = [...allKeys].sort(() => Math.random() - 0.5)
+        
+        for (let attempt = 0; attempt < shuffledKeys.length; attempt++) {
+            const currentKey = shuffledKeys[attempt]
+            try {
+                console.log(`[BlogGenerator] Attempt ${attempt + 1}/${shuffledKeys.length} with key ending in ...${currentKey.slice(-6)}`)
+                generated = await generateBlogPostWithGemini(currentKey, format, toolsToUse, category)
+                console.log(`[BlogGenerator] ✅ Success with key ${attempt + 1}`)
+                break // Success — exit retry loop
+            } catch (err: any) {
+                lastError = err
+                if (err.isQuotaError && attempt < shuffledKeys.length - 1) {
+                    console.warn(`[BlogGenerator] ⚠️ Key ${attempt + 1} hit quota limit (429). Trying next key...`)
+                    continue // Try next key
+                }
+                throw err // Non-quota error or all keys exhausted
+            }
+        }
+        
+        if (!generated) {
+            throw lastError || new Error('All Gemini API keys exhausted. Please add more keys or wait for quota reset.')
+        }
 
         // 6. Set Cover Image
         // Fallback to the first tool's logo URL

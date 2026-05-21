@@ -23,6 +23,6 @@ export interface SocialPostResult {
 export interface SocialAdapter {
     id: string
     name: string
-    isEnabled(): boolean
-    post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }>
+    isEnabled(credentials?: any): boolean
+    post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }>
 }

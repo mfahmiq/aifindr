@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { socialPosterService } from "@/lib/services/social"
+import { createAdminClient } from "@/lib/supabase/admin"
 
 export async function GET() {
     try {
@@ -22,6 +22,15 @@ export async function GET() {
             return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 })
         }
 
+        // Fetch database-stored credentials
+        const { data: settingsData } = await supabase
+            .from("site_settings")
+            .select("feature_flags")
+            .eq("id", "main")
+            .single()
+
+        const dbCreds = (settingsData?.feature_flags as any)?.automation_credentials || {}
+
         // 2. Build detailed adapter status
         const adaptersConfig = [
             {
@@ -30,10 +39,10 @@ export async function GET() {
                 icon: "Send",
                 description: "Post elegant rich HTML cards with direct tool & UTM links to your Telegram Channel.",
                 keys: [
-                    { key: "TELEGRAM_BOT_TOKEN", isSet: !!process.env.TELEGRAM_BOT_TOKEN },
-                    { key: "TELEGRAM_CHAT_ID", isSet: !!process.env.TELEGRAM_CHAT_ID }
+                    { key: "TELEGRAM_BOT_TOKEN", isSet: !!(process.env.TELEGRAM_BOT_TOKEN || dbCreds.telegram?.TELEGRAM_BOT_TOKEN) },
+                    { key: "TELEGRAM_CHAT_ID", isSet: !!(process.env.TELEGRAM_CHAT_ID || dbCreds.telegram?.TELEGRAM_CHAT_ID) }
                 ],
-                isEnabled: !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)
+                isEnabled: !!((process.env.TELEGRAM_BOT_TOKEN || dbCreds.telegram?.TELEGRAM_BOT_TOKEN) && (process.env.TELEGRAM_CHAT_ID || dbCreds.telegram?.TELEGRAM_CHAT_ID))
             },
             {
                 id: "discord",
@@ -41,9 +50,9 @@ export async function GET() {
                 icon: "MessageSquare",
                 description: "Send beautifully formatted embedded cards with colored buttons directly to a Discord text channel.",
                 keys: [
-                    { key: "DISCORD_WEBHOOK_URL", isSet: !!process.env.DISCORD_WEBHOOK_URL }
+                    { key: "DISCORD_WEBHOOK_URL", isSet: !!(process.env.DISCORD_WEBHOOK_URL || dbCreds.discord?.DISCORD_WEBHOOK_URL) }
                 ],
-                isEnabled: !!process.env.DISCORD_WEBHOOK_URL
+                isEnabled: !!(process.env.DISCORD_WEBHOOK_URL || dbCreds.discord?.DISCORD_WEBHOOK_URL)
             },
             {
                 id: "medium",
@@ -51,10 +60,10 @@ export async function GET() {
                 icon: "BookOpen",
                 description: "Publish SEO-optimized articles explaining the features and pricing of newly registered tools.",
                 keys: [
-                    { key: "MEDIUM_INTEGRATION_TOKEN", isSet: !!process.env.MEDIUM_INTEGRATION_TOKEN },
-                    { key: "MEDIUM_AUTHOR_ID", isSet: !!process.env.MEDIUM_AUTHOR_ID }
+                    { key: "MEDIUM_INTEGRATION_TOKEN", isSet: !!(process.env.MEDIUM_INTEGRATION_TOKEN || dbCreds.medium?.MEDIUM_INTEGRATION_TOKEN) },
+                    { key: "MEDIUM_PUBLISH_STATUS", isSet: !!(process.env.MEDIUM_PUBLISH_STATUS || dbCreds.medium?.MEDIUM_PUBLISH_STATUS || process.env.MEDIUM_PUBLISH_STATUS) }
                 ],
-                isEnabled: !!process.env.MEDIUM_INTEGRATION_TOKEN
+                isEnabled: !!(process.env.MEDIUM_INTEGRATION_TOKEN || dbCreds.medium?.MEDIUM_INTEGRATION_TOKEN)
             },
             {
                 id: "twitter",
@@ -62,12 +71,17 @@ export async function GET() {
                 icon: "Twitter",
                 description: "Tweet short, engaging launch announcements with high-performing tags and short UTM links.",
                 keys: [
-                    { key: "TWITTER_API_KEY", isSet: !!process.env.TWITTER_API_KEY },
-                    { key: "TWITTER_API_SECRET", isSet: !!process.env.TWITTER_API_SECRET },
-                    { key: "TWITTER_ACCESS_TOKEN", isSet: !!process.env.TWITTER_ACCESS_TOKEN },
-                    { key: "TWITTER_ACCESS_SECRET", isSet: !!process.env.TWITTER_ACCESS_SECRET }
+                    { key: "TWITTER_API_KEY", isSet: !!(process.env.TWITTER_API_KEY || dbCreds.twitter?.TWITTER_API_KEY) },
+                    { key: "TWITTER_API_SECRET", isSet: !!(process.env.TWITTER_API_SECRET || dbCreds.twitter?.TWITTER_API_SECRET) },
+                    { key: "TWITTER_ACCESS_TOKEN", isSet: !!(process.env.TWITTER_ACCESS_TOKEN || dbCreds.twitter?.TWITTER_ACCESS_TOKEN) },
+                    { key: "TWITTER_ACCESS_SECRET", isSet: !!(process.env.TWITTER_ACCESS_SECRET || dbCreds.twitter?.TWITTER_ACCESS_SECRET) }
                 ],
-                isEnabled: !!(process.env.TWITTER_API_KEY && process.env.TWITTER_API_SECRET && process.env.TWITTER_ACCESS_TOKEN && process.env.TWITTER_ACCESS_SECRET)
+                isEnabled: !!(
+                    (process.env.TWITTER_API_KEY || dbCreds.twitter?.TWITTER_API_KEY) &&
+                    (process.env.TWITTER_API_SECRET || dbCreds.twitter?.TWITTER_API_SECRET) &&
+                    (process.env.TWITTER_ACCESS_TOKEN || dbCreds.twitter?.TWITTER_ACCESS_TOKEN) &&
+                    (process.env.TWITTER_ACCESS_SECRET || dbCreds.twitter?.TWITTER_ACCESS_SECRET)
+                )
             },
             {
                 id: "linkedin",
@@ -75,10 +89,13 @@ export async function GET() {
                 icon: "Linkedin",
                 description: "Post professional launch updates on your corporate or directory page with standard UTM variables.",
                 keys: [
-                    { key: "LINKEDIN_ACCESS_TOKEN", isSet: !!process.env.LINKEDIN_ACCESS_TOKEN },
-                    { key: "LINKEDIN_ORGANIZATION_ID", isSet: !!process.env.LINKEDIN_ORGANIZATION_ID }
+                    { key: "LINKEDIN_ACCESS_TOKEN", isSet: !!(process.env.LINKEDIN_ACCESS_TOKEN || dbCreds.linkedin?.LINKEDIN_ACCESS_TOKEN) },
+                    { key: "LINKEDIN_ORGANIZATION_ID", isSet: !!(process.env.LINKEDIN_ORGANIZATION_ID || dbCreds.linkedin?.LINKEDIN_ORGANIZATION_ID) }
                 ],
-                isEnabled: !!(process.env.LINKEDIN_ACCESS_TOKEN && process.env.LINKEDIN_ORGANIZATION_ID)
+                isEnabled: !!(
+                    (process.env.LINKEDIN_ACCESS_TOKEN || dbCreds.linkedin?.LINKEDIN_ACCESS_TOKEN) &&
+                    (process.env.LINKEDIN_ORGANIZATION_ID || dbCreds.linkedin?.LINKEDIN_ORGANIZATION_ID)
+                )
             },
             {
                 id: "pinterest",
@@ -86,10 +103,13 @@ export async function GET() {
                 icon: "Pin",
                 description: "Pin tool logo graphics or generated screenshots to designated boards to gain lifetime visual referral search traffic.",
                 keys: [
-                    { key: "PINTEREST_ACCESS_TOKEN", isSet: !!process.env.PINTEREST_ACCESS_TOKEN },
-                    { key: "PINTEREST_BOARD_ID", isSet: !!process.env.PINTEREST_BOARD_ID }
+                    { key: "PINTEREST_ACCESS_TOKEN", isSet: !!(process.env.PINTEREST_ACCESS_TOKEN || dbCreds.pinterest?.PINTEREST_ACCESS_TOKEN) },
+                    { key: "PINTEREST_BOARD_ID", isSet: !!(process.env.PINTEREST_BOARD_ID || dbCreds.pinterest?.PINTEREST_BOARD_ID) }
                 ],
-                isEnabled: !!(process.env.PINTEREST_ACCESS_TOKEN && process.env.PINTEREST_BOARD_ID)
+                isEnabled: !!(
+                    (process.env.PINTEREST_ACCESS_TOKEN || dbCreds.pinterest?.PINTEREST_ACCESS_TOKEN) &&
+                    (process.env.PINTEREST_BOARD_ID || dbCreds.pinterest?.PINTEREST_BOARD_ID)
+                )
             }
         ]
 
@@ -117,5 +137,75 @@ export async function GET() {
     } catch (error) {
         console.error('Admin automation status error:', error)
         return NextResponse.json({ error: 'Failed to fetch automation stats' }, { status: 500 })
+    }
+}
+
+export async function POST(req: Request) {
+    try {
+        const supabase = await createClient()
+
+        // 1. Verify user is admin
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
+        const { data: userProfile } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+        if (userProfile?.role !== 'admin') {
+            return NextResponse.json({ error: 'Forbidden: admin access required' }, { status: 403 })
+        }
+
+        // 2. Parse request
+        const { adapterId, keys } = await req.json()
+        if (!adapterId || !keys) {
+            return NextResponse.json({ error: 'Missing required fields: adapterId and keys' }, { status: 400 })
+        }
+
+        // 3. Fetch existing site_settings using Admin Client (to bypass RLS write restrictions)
+        const adminClient = createAdminClient()
+        const { data: settings, error: fetchErr } = await adminClient
+            .from('site_settings')
+            .select('*')
+            .eq('id', 'main')
+            .single()
+
+        if (fetchErr) {
+            return NextResponse.json({ error: `Failed to fetch settings: ${fetchErr.message}` }, { status: 500 })
+        }
+
+        const featureFlags = (settings.feature_flags as any) || {}
+        const automationCredentials = featureFlags.automation_credentials || {}
+
+        // 4. Merge new keys for this adapter
+        automationCredentials[adapterId] = {
+            ...(automationCredentials[adapterId] || {}),
+            ...keys
+        }
+
+        featureFlags.automation_credentials = automationCredentials
+
+        // 5. Update site_settings table
+        const { error: updateErr } = await adminClient
+            .from('site_settings')
+            .update({
+                feature_flags: featureFlags,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', 'main')
+
+        if (updateErr) {
+            return NextResponse.json({ error: `Failed to update settings: ${updateErr.message}` }, { status: 500 })
+        }
+
+        return NextResponse.json({ success: true })
+
+    } catch (error: any) {
+        console.error('Save credentials error:', error)
+        return NextResponse.json({ error: error.message || 'Failed to save credentials' }, { status: 500 })
     }
 }

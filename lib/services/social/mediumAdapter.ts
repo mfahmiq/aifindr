@@ -16,18 +16,20 @@ export const mediumAdapter: SocialAdapter = {
     id: "medium",
     name: "Medium Publisher",
 
-    isEnabled(): boolean {
-        return !!process.env.MEDIUM_INTEGRATION_TOKEN
+    isEnabled(credentials?: any): boolean {
+        const token = credentials?.MEDIUM_INTEGRATION_TOKEN || process.env.MEDIUM_INTEGRATION_TOKEN
+        return !!token
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "Medium Integration Token is not configured in .env" }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const token = credentials?.MEDIUM_INTEGRATION_TOKEN || process.env.MEDIUM_INTEGRATION_TOKEN
+
+        if (!token) {
+            return { success: false, error: "Medium Integration Token is not configured" }
         }
 
-        const token = process.env.MEDIUM_INTEGRATION_TOKEN!
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
-        const publishStatus = process.env.MEDIUM_PUBLISH_STATUS || "public" // public or draft
+        const publishStatus = credentials?.MEDIUM_PUBLISH_STATUS || process.env.MEDIUM_PUBLISH_STATUS || "public" // public or draft
 
         const utmWebsiteUrl = appendUTM(tool.website_url, "medium", "social", "autopost")
         const utmDetailUrl = appendUTM(`${appUrl}/tool/${tool.slug}`, "medium", "social", "autopost")

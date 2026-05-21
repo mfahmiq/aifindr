@@ -16,16 +16,17 @@ export const discordAdapter: SocialAdapter = {
     id: "discord",
     name: "Discord Server Webhook",
 
-    isEnabled(): boolean {
-        return !!process.env.DISCORD_WEBHOOK_URL
+    isEnabled(credentials?: any): boolean {
+        const webhookUrl = credentials?.DISCORD_WEBHOOK_URL || process.env.DISCORD_WEBHOOK_URL
+        return !!webhookUrl
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "Discord Webhook URL is not configured in .env" }
-        }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const webhookUrl = credentials?.DISCORD_WEBHOOK_URL || process.env.DISCORD_WEBHOOK_URL
 
-        const webhookUrl = process.env.DISCORD_WEBHOOK_URL!
+        if (!webhookUrl) {
+            return { success: false, error: "Discord Webhook URL is not configured" }
+        }
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
 
         // Build URLs with UTM parameters

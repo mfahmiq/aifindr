@@ -73,6 +73,11 @@ export default function AdminAutomationPage() {
     const [broadcastResults, setBroadcastResults] = useState<any[] | null>(null)
     const [broadcastStatus, setBroadcastStatus] = useState<string>("")
 
+    // Credential config states
+    const [selectedAdapterForKeys, setSelectedAdapterForKeys] = useState<AdapterConfig | null>(null)
+    const [credentialFormValues, setCredentialFormValues] = useState<Record<string, string>>({})
+    const [savingKeys, setSavingKeys] = useState(false)
+
     const fetchData = async () => {
         setLoading(true)
         try {
@@ -142,6 +147,64 @@ export default function AdminAutomationPage() {
             setBroadcastStatus(`Failed: ${error.message}`)
         } finally {
             setBroadcastLoading(false)
+        }
+    }
+
+    const openKeyConfig = (adapter: AdapterConfig) => {
+        setSelectedAdapterForKeys(adapter)
+        const initialFormValues: Record<string, string> = {}
+        adapter.keys.forEach(k => {
+            initialFormValues[k.key] = ""
+        })
+        setCredentialFormValues(initialFormValues)
+    }
+
+    const handleSaveCredentials = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!selectedAdapterForKeys) return
+
+        // Validate that at least one non-empty value was provided if not already set
+        const keysToSave: Record<string, string> = {}
+        let hasChanges = false
+
+        for (const k of selectedAdapterForKeys.keys) {
+            const val = credentialFormValues[k.key]
+            if (val) {
+                keysToSave[k.key] = val
+                hasChanges = true
+            }
+        }
+
+        if (!hasChanges) {
+            toast.info("No changes to save.")
+            setSelectedAdapterForKeys(null)
+            return
+        }
+
+        setSavingKeys(true)
+        try {
+            const res = await fetch("/api/admin/automation/status", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    adapterId: selectedAdapterForKeys.id,
+                    keys: keysToSave
+                })
+            })
+
+            const data = await res.json()
+            if (res.ok && data.success) {
+                toast.success(`Successfully updated ${selectedAdapterForKeys.name} credentials!`)
+                setSelectedAdapterForKeys(null)
+                fetchData() // refresh configurations
+            } else {
+                throw new Error(data.error || "Failed to save credentials")
+            }
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error.message || "Failed to save credentials")
+        } finally {
+            setSavingKeys(false)
         }
     }
 
@@ -238,6 +301,15 @@ export default function AdminAutomationPage() {
                                 </div>
                             </div>
 
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs font-semibold gap-1.5 mt-1 bg-background/50 border hover:bg-muted"
+                                onClick={() => openKeyConfig(adapter)}
+                            >
+                                Manage Keys 🔑
+                            </Button>
+ 
                             {/* Enabled badge status */}
                             <div className="flex items-center justify-between border-t pt-3 mt-auto">
                                 <span className="text-xs text-muted-foreground">Adapter Status</span>
@@ -452,6 +524,71 @@ export default function AdminAutomationPage() {
                 </div>
 
             </div>
+
+            {/* Premium Credentials Configuration Modal */}
+            {selectedAdapterForKeys && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300">
+                    <div className="bg-card border-2 border-primary/20 rounded-3xl max-w-md w-full shadow-2xl overflow-hidden relative transition-transform duration-300 scale-100">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10" />
+                        
+                        <div className="p-6 border-b">
+                            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                                {getAdapterIcon(selectedAdapterForKeys.icon)}
+                                Configure {selectedAdapterForKeys.name} Keys
+                            </h3>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Securely configure API credentials. Saved credentials are stored inside database site settings.
+                            </p>
+                        </div>
+
+                        <form onSubmit={handleSaveCredentials}>
+                            <div className="p-6 space-y-4">
+                                {selectedAdapterForKeys.keys.map((k) => (
+                                    <div key={k.key} className="space-y-1.5">
+                                        <label className="text-xs font-semibold text-muted-foreground font-mono block text-left">
+                                            {k.key}
+                                        </label>
+                                        <input
+                                            type="password"
+                                            value={credentialFormValues[k.key] || ""}
+                                            onChange={(e) => setCredentialFormValues({
+                                                ...credentialFormValues,
+                                                [k.key]: e.target.value
+                                            })}
+                                            placeholder={k.isSet ? "•••••••••••••••• (Already Set)" : "Enter key value..."}
+                                            className="w-full p-2.5 rounded-xl border bg-muted/40 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-hidden font-mono text-white placeholder-muted-foreground"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="p-6 bg-muted/20 border-t flex justify-end gap-3">
+                                <Button 
+                                    type="button" 
+                                    variant="outline" 
+                                    onClick={() => setSelectedAdapterForKeys(null)}
+                                    disabled={savingKeys}
+                                    className="rounded-xl border bg-background/50 hover:bg-muted"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button 
+                                    type="submit" 
+                                    disabled={savingKeys}
+                                    className="bg-primary hover:bg-primary/95 text-white rounded-xl font-semibold px-5"
+                                >
+                                    {savingKeys ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                            Saving...
+                                        </>
+                                    ) : "Save Credentials"}
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

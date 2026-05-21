@@ -16,16 +16,19 @@ export const linkedinAdapter: SocialAdapter = {
     id: "linkedin",
     name: "LinkedIn Profile/Page",
 
-    isEnabled(): boolean {
-        return !!process.env.LINKEDIN_ACCESS_TOKEN
+    isEnabled(credentials?: any): boolean {
+        const token = credentials?.LINKEDIN_ACCESS_TOKEN || process.env.LINKEDIN_ACCESS_TOKEN
+        const orgId = credentials?.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_ORGANIZATION_ID
+        return !!(token && orgId)
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "LinkedIn Access Token is not configured in .env" }
-        }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const token = credentials?.LINKEDIN_ACCESS_TOKEN || process.env.LINKEDIN_ACCESS_TOKEN
+        const orgId = credentials?.LINKEDIN_ORGANIZATION_ID || process.env.LINKEDIN_ORGANIZATION_ID
 
-        const token = process.env.LINKEDIN_ACCESS_TOKEN!
+        if (!token || !orgId) {
+            return { success: false, error: "LinkedIn Access Token or Organization ID is not configured" }
+        }
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
 
         const utmWebsiteUrl = appendUTM(tool.website_url, "linkedin", "social", "autopost")
@@ -51,7 +54,7 @@ export const linkedinAdapter: SocialAdapter = {
             }
 
             const personId = meData.id
-            const authorUrn = `urn:li:person:${personId}`
+            const authorUrn = orgId ? `urn:li:organization:${orgId}` : `urn:li:person:${personId}`
 
             // 2. Draft Share Commentary
             const isVerifiedText = tool.is_verified ? " [Verified ✅]" : ""

@@ -24,17 +24,19 @@ export const telegramAdapter: SocialAdapter = {
     id: "telegram",
     name: "Telegram Channel",
 
-    isEnabled(): boolean {
-        return !!(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)
+    isEnabled(credentials?: any): boolean {
+        const token = credentials?.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN
+        const chatId = credentials?.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID
+        return !!(token && chatId)
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "Telegram Bot Token or Chat ID is not configured in .env" }
-        }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const botToken = credentials?.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN
+        const chatId = credentials?.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID
 
-        const botToken = process.env.TELEGRAM_BOT_TOKEN
-        const chatId = process.env.TELEGRAM_CHAT_ID
+        if (!botToken || !chatId) {
+            return { success: false, error: "Telegram Bot Token or Chat ID is not configured" }
+        }
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
 
         // Build URLs with UTM parameters

@@ -16,18 +16,21 @@ export const pinterestAdapter: SocialAdapter = {
     id: "pinterest",
     name: "Pinterest Pin",
 
-    isEnabled(): boolean {
-        return !!process.env.PINTEREST_ACCESS_TOKEN
+    isEnabled(credentials?: any): boolean {
+        const token = credentials?.PINTEREST_ACCESS_TOKEN || process.env.PINTEREST_ACCESS_TOKEN
+        const boardId = credentials?.PINTEREST_BOARD_ID || process.env.PINTEREST_BOARD_ID
+        return !!(token && boardId)
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "Pinterest Access Token is not configured in .env" }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const token = credentials?.PINTEREST_ACCESS_TOKEN || process.env.PINTEREST_ACCESS_TOKEN
+        let boardId = credentials?.PINTEREST_BOARD_ID || process.env.PINTEREST_BOARD_ID
+
+        if (!token || !boardId) {
+            return { success: false, error: "Pinterest Access Token or Board ID is not configured" }
         }
 
-        const token = process.env.PINTEREST_ACCESS_TOKEN!
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
-        let boardId = process.env.PINTEREST_BOARD_ID
 
         const utmDetailUrl = appendUTM(`${appUrl}/tool/${tool.slug}`, "pinterest", "social", "autopost")
         const pinImage = tool.logo_url || `${appUrl}/logo.png`

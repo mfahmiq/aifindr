@@ -75,11 +75,25 @@ export const socialPosterService = {
                 is_verified: tool.is_verified || false
             }
 
+            // Fetch database-stored credentials
+            let dbCreds: Record<string, any> = {}
+            try {
+                const { data: settingsData } = await supabase
+                    .from("site_settings")
+                    .select("feature_flags")
+                    .eq("id", "main")
+                    .single()
+                
+                dbCreds = (settingsData?.feature_flags as any)?.automation_credentials || {}
+            } catch (err) {
+                console.error("[SocialPoster] Error loading automation credentials from database:", err)
+            }
+
             // 3. Filter only enabled adapters
-            const activeAdapters = ALL_ADAPTERS.filter(adapter => adapter.isEnabled())
+            const activeAdapters = ALL_ADAPTERS.filter(adapter => adapter.isEnabled(dbCreds[adapter.id]))
 
             if (activeAdapters.length === 0) {
-                console.log("[SocialPoster] No social media credentials configured in .env. Skipping all posts.")
+                console.log("[SocialPoster] No social media credentials configured. Skipping all posts.")
                 return []
             }
 
@@ -88,7 +102,7 @@ export const socialPosterService = {
             // 4. Run all postings in parallel (Promise.allSettled to prevent single-channel crashes from blocking others)
             const postPromises = activeAdapters.map(async (adapter) => {
                 try {
-                    const result = await adapter.post(payload)
+                    const result = await adapter.post(payload, dbCreds[adapter.id])
                     return {
                         adapterId: adapter.id,
                         adapterName: adapter.name,

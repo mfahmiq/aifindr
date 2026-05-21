@@ -17,18 +17,22 @@ export const twitterAdapter: SocialAdapter = {
     id: "twitter",
     name: "X (Twitter)",
 
-    isEnabled(): boolean {
-        return !!(
-            process.env.TWITTER_API_KEY &&
-            process.env.TWITTER_API_SECRET &&
-            process.env.TWITTER_ACCESS_TOKEN &&
-            process.env.TWITTER_ACCESS_SECRET
-        )
+    isEnabled(credentials?: any): boolean {
+        const apiKey = credentials?.TWITTER_API_KEY || process.env.TWITTER_API_KEY
+        const apiSecret = credentials?.TWITTER_API_SECRET || process.env.TWITTER_API_SECRET
+        const accessToken = credentials?.TWITTER_ACCESS_TOKEN || process.env.TWITTER_ACCESS_TOKEN
+        const accessSecret = credentials?.TWITTER_ACCESS_SECRET || process.env.TWITTER_ACCESS_SECRET
+        return !!(apiKey && apiSecret && accessToken && accessSecret)
     },
 
-    async post(tool: SocialToolPayload): Promise<{ success: boolean; error?: string }> {
-        if (!this.isEnabled()) {
-            return { success: false, error: "Twitter API credentials are not fully configured in .env" }
+    async post(tool: SocialToolPayload, credentials?: any): Promise<{ success: boolean; error?: string }> {
+        const apiKey = credentials?.TWITTER_API_KEY || process.env.TWITTER_API_KEY
+        const apiSecret = credentials?.TWITTER_API_SECRET || process.env.TWITTER_API_SECRET
+        const accessToken = credentials?.TWITTER_ACCESS_TOKEN || process.env.TWITTER_ACCESS_TOKEN
+        const accessSecret = credentials?.TWITTER_ACCESS_SECRET || process.env.TWITTER_ACCESS_SECRET
+
+        if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
+            return { success: false, error: "Twitter API credentials are not fully configured" }
         }
 
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aifindr.com"
@@ -60,10 +64,10 @@ export const twitterAdapter: SocialAdapter = {
 
         try {
             const client = new TwitterApi({
-                appKey: process.env.TWITTER_API_KEY!,
-                appSecret: process.env.TWITTER_API_SECRET!,
-                accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-                accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+                appKey: apiKey,
+                appSecret: apiSecret,
+                accessToken: accessToken,
+                accessSecret: accessSecret,
             })
 
             const response = await client.v2.tweet(tweetText)

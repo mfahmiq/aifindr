@@ -78,15 +78,29 @@ export default function AdminAutomationPage() {
     const [credentialFormValues, setCredentialFormValues] = useState<Record<string, string>>({})
     const [savingKeys, setSavingKeys] = useState(false)
 
+    // Blog generator states
+    const [blogSettings, setBlogSettings] = useState({
+        format: 'listicle',
+        status: 'draft',
+        category: 'Listicles'
+    })
+    const [savingBlogSettings, setSavingBlogSettings] = useState(false)
+    const [blogGenerating, setBlogGenerating] = useState(false)
+    const [blogGenerateStatus, setBlogGenerateStatus] = useState("")
+    const [generatedPost, setGeneratedPost] = useState<any>(null)
+
     const fetchData = async () => {
         setLoading(true)
         try {
-            // 1. Fetch status of social integrations
+            // 1. Fetch status of social integrations & blog generator
             const statusRes = await fetch("/api/admin/automation/status")
             const statusData = await statusRes.json()
             if (statusRes.ok) {
                 setAdapters(statusData.adapters || [])
                 setLogs(statusData.logs || [])
+                if (statusData.blogGeneratorSettings) {
+                    setBlogSettings(statusData.blogGeneratorSettings)
+                }
             }
 
             // 2. Fetch approved tools for dropdown selection
@@ -205,6 +219,73 @@ export default function AdminAutomationPage() {
             toast.error(error.message || "Failed to save credentials")
         } finally {
             setSavingKeys(false)
+        }
+    }
+
+    const handleSaveBlogSettings = async (updates: Partial<typeof blogSettings>) => {
+        setSavingBlogSettings(true)
+        const newSettings = { ...blogSettings, ...updates }
+        try {
+            const res = await fetch("/api/admin/automation/status", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    blogSettings: updates
+                })
+            })
+
+            const data = await res.json()
+            if (res.ok && data.success) {
+                setBlogSettings(newSettings)
+                toast.success("AI Blog Generator settings updated successfully!")
+            } else {
+                throw new Error(data.error || "Failed to update blog settings")
+            }
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error.message || "Failed to update blog settings")
+        } finally {
+            setSavingBlogSettings(false)
+        }
+    }
+
+    const handleGenerateBlogPost = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setBlogGenerating(true)
+        setGeneratedPost(null)
+        setBlogGenerateStatus("Initializing Gemini 1.5 Flash Content Writer...")
+
+        try {
+            const res = await fetch("/api/admin/automation/blog-generator", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    format: blogSettings.format,
+                    status: blogSettings.status,
+                    category: blogSettings.category
+                })
+            })
+
+            const data = await res.json()
+            if (res.ok && data.success) {
+                setGeneratedPost(data.post)
+                setBlogGenerateStatus(`Successfully generated: "${data.post.title}"!`)
+                toast.success("AI Blog Post generated successfully!")
+                // Refresh logs
+                const statusRes = await fetch("/api/admin/automation/status")
+                const statusData = await statusRes.json()
+                if (statusRes.ok) {
+                    setLogs(statusData.logs || [])
+                }
+            } else {
+                throw new Error(data.error || "Failed to generate blog post")
+            }
+        } catch (error: any) {
+            console.error(error)
+            toast.error(error.message || "An error occurred during blog generation")
+            setBlogGenerateStatus(`Failed: ${error.message}`)
+        } finally {
+            setBlogGenerating(false)
         }
     }
 
@@ -431,6 +512,128 @@ export default function AdminAutomationPage() {
                                     <div>
                                         <strong>No active channels!</strong> Add environment variables to `.env` to enable auto-posting, then restart the server.
                                     </div>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* AIFindr Daily Blog Generator Panel */}
+                    <Card className="border-2 border-primary/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10" />
+                        
+                        <CardHeader className="bg-gradient-to-r from-primary/5 via-purple-500/5 to-transparent">
+                            <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-500 shadow-sm border border-purple-500/30">
+                                    <Sparkles className="w-4 h-4 fill-purple-500 text-purple-500" />
+                                </div>
+                                <div>
+                                    <CardTitle className="text-lg">AI Blog Generator Engine</CardTitle>
+                                    <CardDescription>Generate daily high-converting, SEO-optimized blog posts using Gemini 1.5 Flash.</CardDescription>
+                                </div>
+                            </div>
+                        </CardHeader>
+
+                        <CardContent className="pt-6 space-y-4">
+                            {/* Form settings */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label htmlFor="blog-format-select" className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
+                                        Content Format
+                                    </label>
+                                    <select
+                                        id="blog-format-select"
+                                        value={blogSettings.format}
+                                        onChange={(e) => handleSaveBlogSettings({ format: e.target.value })}
+                                        disabled={blogGenerating || savingBlogSettings}
+                                        className="w-full p-2.5 rounded-xl border bg-muted/40 text-xs focus:border-primary focus:outline-hidden transition-all text-foreground"
+                                    >
+                                        <option value="listicle" className="bg-background text-foreground">Listicle Roundup</option>
+                                        <option value="review" className="bg-background text-foreground">Deep-Dive Review</option>
+                                        <option value="comparison" className="bg-background text-foreground">Comparison & Alts</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label htmlFor="blog-status-select" className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
+                                        Default Status
+                                    </label>
+                                    <select
+                                        id="blog-status-select"
+                                        value={blogSettings.status}
+                                        onChange={(e) => handleSaveBlogSettings({ status: e.target.value })}
+                                        disabled={blogGenerating || savingBlogSettings}
+                                        className="w-full p-2.5 rounded-xl border bg-muted/40 text-xs focus:border-primary focus:outline-hidden transition-all text-foreground"
+                                    >
+                                        <option value="draft" className="bg-background text-foreground">Draft (Review first)</option>
+                                        <option value="published" className="bg-background text-foreground">Published (Autopilot)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label htmlFor="blog-category-select" className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block">
+                                    Target Category
+                                </label>
+                                <select
+                                    id="blog-category-select"
+                                    value={blogSettings.category}
+                                    onChange={(e) => handleSaveBlogSettings({ category: e.target.value })}
+                                    disabled={blogGenerating || savingBlogSettings}
+                                    className="w-full p-2.5 rounded-xl border bg-muted/40 text-xs focus:border-primary focus:outline-hidden transition-all text-foreground"
+                                >
+                                    <option value="Tutorials" className="bg-background text-foreground">Tutorials</option>
+                                    <option value="Listicles" className="bg-background text-foreground">Listicles</option>
+                                    <option value="Comparisons" className="bg-background text-foreground">Comparisons</option>
+                                    <option value="News" className="bg-background text-foreground">News</option>
+                                    <option value="Guides" className="bg-background text-foreground">Guides</option>
+                                    <option value="Reviews" className="bg-background text-foreground">Reviews</option>
+                                </select>
+                            </div>
+
+                            <Button
+                                type="button"
+                                onClick={handleGenerateBlogPost}
+                                disabled={blogGenerating || approvedTools.length === 0}
+                                className="w-full py-6 rounded-xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-600 hover:to-red-600 text-white flex items-center justify-center gap-2 shadow-md shadow-purple-500/20 group border-0"
+                            >
+                                {blogGenerating ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        Generating Post...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform text-white fill-white" />
+                                        Generate Today's Blog Post Now ⚡
+                                    </>
+                                )}
+                            </Button>
+
+                            {/* Execution Monitor for Blog Generator */}
+                            {blogGenerateStatus && (
+                                <div className="p-3.5 bg-muted/50 border rounded-2xl space-y-2 text-xs">
+                                    <div className="flex items-center gap-2 font-bold text-muted-foreground uppercase tracking-wider text-[10px]">
+                                        <Activity className="w-3.5 h-3.5 animate-pulse text-purple-500" />
+                                        Gemini Agent Monitor
+                                    </div>
+                                    <div className="font-mono text-[11px] leading-relaxed text-muted-foreground">
+                                        {blogGenerateStatus}
+                                    </div>
+
+                                    {generatedPost && (
+                                        <div className="border-t pt-2 mt-2 space-y-2 text-left">
+                                            <div className="flex items-center justify-between text-[11px]">
+                                                <span className="text-muted-foreground font-semibold">Post Title:</span>
+                                                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-[10px] font-bold uppercase">{generatedPost.status}</Badge>
+                                            </div>
+                                            <div className="font-bold text-foreground line-clamp-1">{generatedPost.title}</div>
+                                            <a
+                                                href={`/admin/blog`}
+                                                className="w-full py-2.5 rounded-xl border-2 border-purple-500/20 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all text-[11px] font-bold text-purple-500 text-center flex items-center justify-center gap-1.5"
+                                            >
+                                                Edit Draft in Blog Manager 📝
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </CardContent>

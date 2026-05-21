@@ -30,9 +30,24 @@ export async function GET() {
             .single()
 
         const dbCreds = (settingsData?.feature_flags as any)?.automation_credentials || {}
+        const blogGeneratorSettings = (settingsData?.feature_flags as any)?.blog_generator_settings || {
+            format: 'listicle',
+            status: 'draft',
+            category: 'Listicles'
+        }
 
         // 2. Build detailed adapter status
         const adaptersConfig = [
+            {
+                id: "gemini",
+                name: "Gemini AI Core",
+                icon: "Sparkles",
+                description: "Powered by Gemini 1.5 Flash. Used for daily blog post generation and smart metadata extraction.",
+                keys: [
+                    { key: "GEMINI_API_KEY", isSet: !!(process.env.GEMINI_API_KEY || dbCreds.gemini?.GEMINI_API_KEY) }
+                ],
+                isEnabled: !!(process.env.GEMINI_API_KEY || dbCreds.gemini?.GEMINI_API_KEY)
+            },
             {
                 id: "telegram",
                 name: "Telegram Channel",
@@ -113,14 +128,14 @@ export async function GET() {
             }
         ]
 
-        // 3. Fetch recent social posts activity logs (limit 20)
+        // 3. Fetch recent automation activity logs (limit 20)
         const { data: logs, error: logsError } = await supabase
             .from("activity_logs")
             .select(`
                 *,
                 tools:entity_id (id, name, logo_url, slug)
             `)
-            .eq("action", "social_auto_post")
+            .in("action", ["social_auto_post", "auto_blog_generate", "auto_aggregate"])
             .order("created_at", { ascending: false })
             .limit(20)
 
@@ -131,6 +146,7 @@ export async function GET() {
         return NextResponse.json({
             success: true,
             adapters: adaptersConfig,
+            blogGeneratorSettings,
             logs: logs || []
         })
 
@@ -161,9 +177,9 @@ export async function POST(req: Request) {
         }
 
         // 2. Parse request
-        const { adapterId, keys } = await req.json()
-        if (!adapterId || !keys) {
-            return NextResponse.json({ error: 'Missing required fields: adapterId and keys' }, { status: 400 })
+        const { adapterId, keys, blogSettings } = await req.json()
+        if (!adapterId && !blogSettings) {
+            return NextResponse.json({ error: 'Missing required fields: adapterId or blogSettings' }, { status: 400 })
         }
 
         // 3. Fetch existing site_settings using Admin Client (to bypass RLS write restrictions)
@@ -179,17 +195,26 @@ export async function POST(req: Request) {
         }
 
         const featureFlags = (settings.feature_flags as any) || {}
-        const automationCredentials = featureFlags.automation_credentials || {}
 
-        // 4. Merge new keys for this adapter
-        automationCredentials[adapterId] = {
-            ...(automationCredentials[adapterId] || {}),
-            ...keys
+        // 4. Update credentials if provided
+        if (adapterId && keys) {
+            const automationCredentials = featureFlags.automation_credentials || {}
+            automationCredentials[adapterId] = {
+                ...(automationCredentials[adapterId] || {}),
+                ...keys
+            }
+            featureFlags.automation_credentials = automationCredentials
         }
 
-        featureFlags.automation_credentials = automationCredentials
+        // 5. Update blog settings if provided
+        if (blogSettings) {
+            featureFlags.blog_generator_settings = {
+                ...(featureFlags.blog_generator_settings || {}),
+                ...blogSettings
+            }
+        }
 
-        // 5. Update site_settings table
+        // 6. Update site_settings table
         const { error: updateErr } = await adminClient
             .from('site_settings')
             .update({
@@ -205,7 +230,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true })
 
     } catch (error: any) {
-        console.error('Save credentials error:', error)
-        return NextResponse.json({ error: error.message || 'Failed to save credentials' }, { status: 500 })
+        console.error('Save credentials/settings error:', error)
+        return NextResponse.json({ error: error.message || 'Failed to save configuration' }, { status: 500 })
     }
 }
